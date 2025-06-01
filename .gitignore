@@ -1,5 +1,5 @@
 # Ignore .bolt folder in the root
-.bolt/
+/.bolt
 
 # Client-side ignores
 /client/node_modules/
