@@ -26,7 +26,7 @@ const LandingPage = () => {
                     </Link>
                     <Link
                         to="/"
-                        className="px-8 py-3 border border-gray-700 rounded-lg font-medium hover:bg-gray-800/50 transition-all duration-300 backdrop-blur-sm"
+                        className="px-6 py-3 border border-gray-700 rounded-lg font-medium hover:bg-gray-800/50 transition-all duration-300 backdrop-blur-sm"
                     >
                         Learn More
                     </Link>
@@ -90,7 +90,7 @@ const LandingPage = () => {
 
             {/* CTA Section */}
             <section className="max-w-3xl mx-auto px-6 py-16 text-center relative z-10">
-                <div className="p-8 bg-gray-800/30 rounded-xl border border-gray-700 backdrop-blur-sm">
+                <div className="p-8 bg-gray-800/30 rounded-xl border border-gray-700 backdrop-blur-lg shadow-lg hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4 text-white">
                         Ready to Supercharge Your EV Network?
                     </h2>

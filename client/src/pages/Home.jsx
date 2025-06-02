@@ -511,7 +511,7 @@ const Home = () => {
       </div>
   
       {/* Hero Section - matching landing page style */}
-      <section className="max-w-7xl mx-auto px-6 py-20 text-center relative z-10">
+      <section className="max-w-7xl mx-auto px-6 py-5 text-center relative z-10">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-300 leading-tight">
           Explore EV Charging Stations
         </h1>
@@ -671,7 +671,7 @@ const Home = () => {
                           </div>
                           <div className="flex items-center text-sm text-gray-400">
                             <FaBolt className="flex-shrink-0 mr-1.5 h-4 w-4 text-amber-400" />
-                            {station.powerOutput} kW • {station.type}
+                            {station.powerOutput} kW • {station.connectorType}
                           </div>
                         </div>
                       </div>

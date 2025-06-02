@@ -32,8 +32,6 @@ const Dashboard = () => {
               : 0
           };
           setStats(statsData);
-
-          // toast.success('Stations fetched successfully');
         }
       } catch (error) {
         setError(error);

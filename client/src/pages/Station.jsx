@@ -26,7 +26,6 @@ function Station() {
                 const response = await api.get(`/station/${id}`);
                 if (response.status === 200) {
                     setStation(response.data.station);
-                    toast.success('Station fetched successfully');
                 }
             } catch (error) {
                 setError(error);

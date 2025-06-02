@@ -51,7 +51,7 @@ const stationSchema = new mongoose.Schema({
 });
 
 // Update the updatedAt field on save
-stationSchema.pre('save', function(next) {
+stationSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });

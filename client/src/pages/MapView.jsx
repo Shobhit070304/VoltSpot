@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { stationsApi } from '../services/api';
-import { BatteryCharging as ChargingPile, Layers, ZoomIn, ZoomOut } from 'lucide-react';
 import { api } from '../services/api';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 const MapView = ({ station }) => {
   const [stations, setStations] = useState([]);
@@ -162,16 +161,17 @@ const MapView = ({ station }) => {
   //   </div>
   // );
 
+  const path = useLocation().pathname;
 
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 overflow-hidden">
+    <div className={`min-h-screen relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 overflow-hidden   ${path === '/map' && 'py-[10vh]'}`}>
       {/* Background glow effects - matching landing page */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
         <div className="absolute top-20 left-1/4 w-80 h-80 bg-blue-900/20 rounded-full filter blur-[100px]"></div>
         <div className="absolute bottom-20 right-1/4 w-80 h-80 bg-indigo-900/20 rounded-full filter blur-[100px]"></div>
       </div>
-  
+
       <div className="max-w-7xl mx-auto px-6 py-8 relative z-10">
         {/* Header Section */}
         <div className="md:flex md:items-center md:justify-between mb-8">
@@ -182,7 +182,7 @@ const MapView = ({ station }) => {
             <p className="text-gray-400 mt-2">View all charging stations on the map</p>
           </div>
         </div>
-  
+
         {/* Map Container */}
         <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700 rounded-xl overflow-hidden shadow-lg">
           <div className="relative h-[calc(100vh-260px)] min-h-[500px]">
@@ -199,7 +199,7 @@ const MapView = ({ station }) => {
             ) : (
               <>
                 <div id="map" className="h-full w-full z-0"></div>
-  
+
                 {/* Selected station info */}
                 {selectedStation && (
                   <div className="absolute right-4 top-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-xl p-4 max-w-xs w-full z-10 shadow-xl">
@@ -215,9 +215,9 @@ const MapView = ({ station }) => {
                         </svg>
                       </button>
                     </div>
-  
+
                     <p className="mt-1 text-sm text-gray-400">{selectedStation.location}</p>
-  
+
                     <div className="mt-4 grid grid-cols-2 gap-3">
                       <div>
                         <p className="text-xs font-medium text-gray-400">Status</p>
@@ -240,9 +240,9 @@ const MapView = ({ station }) => {
                         </p>
                       </div>
                     </div>
-  
+
                     <div className="mt-4 pt-4 border-t border-gray-700">
-                      <Link 
+                      <Link
                         to={`/station/${selectedStation._id}`}
                         className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 transition-all duration-300"
                       >

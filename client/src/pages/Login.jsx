@@ -10,11 +10,11 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated, login } = useAuth();
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
 
@@ -34,8 +34,13 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!rememberMe) {
+      toast.error('Please check the remember me checkbox to continue');
+      return;
+    }
     setError('');
     setIsLoading(true);
+
 
     try {
       const response = await api.post('/auth/login', formData);
@@ -117,8 +122,8 @@ const Login = () => {
             <div className="flex items-center">
               <input
                 id="remember-me"
-                onChange={handleChange}
-                value={formData.rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+                checked={rememberMe}
                 name="remember-me"
                 type="checkbox"
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-800/60"
@@ -128,14 +133,14 @@ const Login = () => {
               </label>
             </div>
 
-            <div className="text-sm">
+            {/* <div className="text-sm">
               <Link
                 to="/forgot-password"
                 className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
               >
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
           </div>
 
           <div>
