@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 import { BatteryCharging as ChargingPile } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
@@ -12,8 +12,14 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,7 +51,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center">

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
 import { LocateIcon } from 'lucide-react';
+import MapView from './MapView';
 
 
 function Station() {
@@ -19,7 +20,6 @@ function Station() {
                 const response = await api.get(`/station/${id}`);
                 if (response.status === 200) {
                     setStation(response.data.station);
-                    console.log(response.data.station);
                     toast.success('Station fetched successfully');
                 }
             } catch (error) {
@@ -108,15 +108,7 @@ function Station() {
 
                         {/* Map Section */}
                         <div className="mt-6 bg-white shadow rounded-lg overflow-hidden">
-                            <div className="px-6 py-5 border-b border-gray-200">
-                                <h2 className="text-lg font-medium text-gray-900">Location</h2>
-                            </div>
-                            <div className="p-4 h-64 bg-gray-100 flex items-center justify-center">
-                                <div className="text-center">
-                                    <FaMapMarkerAlt className="mx-auto h-12 w-12 text-red-500" />
-                                    <p className="mt-2 text-gray-500">Map view of {station?.location}</p>
-                                </div>
-                            </div>
+                            <MapView station={station} />
                         </div>
                     </div>
 

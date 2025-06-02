@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { BatteryCharging as ChargingPile, LogOut } from 'lucide-react';
-
+import logo from '../assets/charging.png';
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <ChargingPile className="h-8 w-8 text-blue-600" />
+              <img src={logo} alt="logo" className="h-8 w-8" />
               <span className="ml-2 text-2xl font-semibold text-gray-800">VoltSpot</span>
             </Link>
           </div>
@@ -27,7 +27,7 @@ const Navbar = () => {
             <Link
               to="/home"
               className='px-3 py-2 cursor-pointer rounded-md text-sm text-gray-700 font-medium flex items-center hover:bg-gray-200 hover:text-gray-900 transition-colors duration-150 ease-in-out'>
-              Home
+              Charging Stations
             </Link>
             {
               isAuthenticated && (

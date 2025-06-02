@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BatteryCharging as ChargingPile } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
+import { useAuth } from "../context/AuthContext.jsx"
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,13 @@ const Register = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { isAuthenticated } = useAuth();
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +60,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center">

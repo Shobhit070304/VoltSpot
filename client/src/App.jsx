@@ -1,13 +1,13 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
+
 
 // Pages
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import ChargingStations from './pages/ChargingStations';
 import MapView from './pages/MapView';
 import NotFound from './pages/NotFound';
 import Home from './pages/Home';
@@ -30,37 +30,36 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  const path = useLocation().pathname.split('/')[1];
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Navbar />
+      {path !== 'login' && path !== 'register' && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage />} />
-
           <Route path="/home" element={<Home />} />
-          <Route path="/station/:id" element={<Station />} />
-          <Route path="/dashboard" element={
-            // <ProtectedRoute>
-            <Dashboard />
-            // </ProtectedRoute>
+          <Route path="/station/:id" element={
+            <ProtectedRoute>
+              <Station />
+            </ProtectedRoute>
           } />
-          <Route path="/charging-stations" element={
-            // <ProtectedRoute>
-            <ChargingStations />
-            // </ProtectedRoute>
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
           } />
           <Route path="/map" element={
-            // <ProtectedRoute>
-            <MapView />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <MapView />
+            </ProtectedRoute>
           } />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <Footer />
+      {path !== 'login' && path !== 'register' && <Footer />}
       <Toaster position="top-right" />
     </div>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 const LandingPage = () => {
     return (
-        <div className="min-h-screen bg-white text-gray-800">
+        <div className="min-h-screen relative bg-white text-gray-800">
             {/* Hero Section */}
             <section className="max-w-4xl mx-auto px-6 py-20 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold mb-6">

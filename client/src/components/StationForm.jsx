@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
 
 const StationForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -11,18 +10,19 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
     powerOutput: initialData?.powerOutput || '',
     connectorType: initialData?.connectorType || '',
   });
-  
+
   const [errors, setErrors] = useState({});
-  
+
   const connectorTypes = ['Type 1', 'Type 2', 'CCS', 'CHAdeMO', 'CCS/CHAdeMO', 'Tesla'];
 
+  // Handle change & clear error
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    
+
     // Clear error when field is changed
     if (errors[name]) {
       setErrors({
@@ -32,55 +32,60 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
     }
   };
 
+
+
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    
+
     if (!formData.location.trim()) {
       newErrors.location = 'Location is required';
     }
-    
+
     if (!formData.latitude) {
       newErrors.latitude = 'Latitude is required';
     } else if (isNaN(formData.latitude) || formData.latitude < -90 || formData.latitude > 90) {
       newErrors.latitude = 'Latitude must be a number between -90 and 90';
     }
-    
+
     if (!formData.longitude) {
       newErrors.longitude = 'Longitude is required';
     } else if (isNaN(formData.longitude) || formData.longitude < -180 || formData.longitude > 180) {
       newErrors.longitude = 'Longitude must be a number between -180 and 180';
     }
-    
+
     if (!formData.powerOutput) {
       newErrors.powerOutput = 'Power output is required';
     } else if (isNaN(formData.powerOutput) || formData.powerOutput <= 0) {
       newErrors.powerOutput = 'Power output must be a positive number';
     }
-    
+
     if (!formData.connectorType) {
       newErrors.connectorType = 'Connector type is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       // Convert numeric fields
       const submissionData = {
-        ...formData,
+        name: formData.name,
+        location: formData.location,
         latitude: parseFloat(formData.latitude),
         longitude: parseFloat(formData.longitude),
+        status: formData.status,
         powerOutput: parseFloat(formData.powerOutput),
+        connectorType: formData.connectorType,
       };
-      
+
       onSubmit(submissionData);
     }
   };
@@ -101,7 +106,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         />
         {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
       </div>
-      
+
       <div>
         <label htmlFor="location" className="block text-sm font-medium text-gray-700">
           Address/Location
@@ -116,7 +121,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         />
         {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location}</p>}
       </div>
-      
+
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">
@@ -133,7 +138,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           />
           {errors.latitude && <p className="mt-1 text-sm text-red-600">{errors.latitude}</p>}
         </div>
-        
+
         <div>
           <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">
             Longitude
@@ -150,7 +155,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           {errors.longitude && <p className="mt-1 text-sm text-red-600">{errors.longitude}</p>}
         </div>
       </div>
-      
+
       <div>
         <label htmlFor="status" className="block text-sm font-medium text-gray-700">
           Status
@@ -166,7 +171,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           <option value="Inactive">Inactive</option>
         </select>
       </div>
-      
+
       <div>
         <label htmlFor="powerOutput" className="block text-sm font-medium text-gray-700">
           Power Output (kW)
@@ -182,7 +187,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         />
         {errors.powerOutput && <p className="mt-1 text-sm text-red-600">{errors.powerOutput}</p>}
       </div>
-      
+
       <div>
         <label htmlFor="connectorType" className="block text-sm font-medium text-gray-700">
           Connector Type
@@ -201,7 +206,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         </select>
         {errors.connectorType && <p className="mt-1 text-sm text-red-600">{errors.connectorType}</p>}
       </div>
-      
+
       <div className="pt-4 flex justify-end space-x-3 border-t border-gray-200">
         <button
           type="button"

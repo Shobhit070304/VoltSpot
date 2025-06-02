@@ -31,7 +31,7 @@ router.post(
 
 // Update a station
 router.put(
-  'update/:id',
+  '/update/:id',
   authUser,
   [
     body('name').notEmpty().withMessage('Name is required'),

@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { stationsApi } from '../services/api';
 import { PlusCircle, Search, Filter, ChevronDown, Edit, Trash2, X } from 'lucide-react';
 import StationForm from '../components/StationForm';
 import { api } from '../services/api';
-import { FaPlug } from 'react-icons/fa';
+import { FaChevronRight, FaPlug } from 'react-icons/fa';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
+// Connector types for filter dropdown
+const connectorTypes = ['Type 1', 'Type 2', 'CCS', 'CHAdeMO', 'CCS/CHAdeMO', 'Tesla'];
 
-
-const ChargingStations = ({ }) => {
-  const [stations, setStations] = useState([]);
+const ChargingStations = ({ stations, setStations }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -22,161 +23,84 @@ const ChargingStations = ({ }) => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  // Connector types for filter dropdown
-  const connectorTypes = ['Type 1', 'Type 2', 'CCS', 'CHAdeMO', 'CCS/CHAdeMO', 'Tesla'];
+  // // Fetch stations on mount
+  // useEffect(() => {
+  //   fetchStations();
+  // }, []);
 
-  useEffect(() => {
-    fetchStations();
-  }, []);
-
-  const fetchStations = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get('/station');
-      if (response.status === 200) {
-        setStations(response.data);
-        toast.success('Stations fetched successfully');
-      }
-    } catch (error) {
-      setError(error);
-      toast.error('Error fetching stations');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  
-
-  const createMockStations = () => {
-    // Generate mock data for demonstration
-    return [
-      {
-        id: 1,
-        name: 'Downtown Fast Charger',
-        location: '123 Main St, Downtown',
-        latitude: 40.7128,
-        longitude: -74.0060,
-        status: 'Active',
-        powerOutput: 150,
-        connectorType: 'CCS',
-        createdAt: '2023-04-10T14:30:00Z'
-      },
-      {
-        id: 2,
-        name: 'Riverside Charging Hub',
-        location: 'Riverside Park, East Wing',
-        latitude: 40.7214,
-        longitude: -74.0120,
-        status: 'Active',
-        powerOutput: 50,
-        connectorType: 'Type 2',
-        createdAt: '2023-04-15T10:45:00Z'
-      },
-      {
-        id: 3,
-        name: 'Shopping Mall Charger',
-        location: 'City Mall, Level P2',
-        latitude: 40.7310,
-        longitude: -73.9950,
-        status: 'Inactive',
-        powerOutput: 75,
-        connectorType: 'CCS/CHAdeMO',
-        createdAt: '2023-04-20T09:15:00Z'
-      },
-      {
-        id: 4,
-        name: 'North Station Fast Charge',
-        location: '45 North Ave',
-        latitude: 40.7350,
-        longitude: -74.0200,
-        status: 'Active',
-        powerOutput: 350,
-        connectorType: 'CCS',
-        createdAt: '2023-04-22T16:30:00Z'
-      },
-      {
-        id: 5,
-        name: 'East Side Parking Charger',
-        location: 'East Side Parking Garage, Level 1',
-        latitude: 40.7180,
-        longitude: -73.9830,
-        status: 'Inactive',
-        powerOutput: 22,
-        connectorType: 'Type 2',
-        createdAt: '2023-04-25T11:00:00Z'
-      }
-    ];
-  };
-
+  // Handle add station
   const handleAddStation = async (stationData) => {
     try {
-      // In a real app, this would make an API call
-      // const response = await stationsApi.create(stationData);
-
-      // For demo, simulate API response
-      const newStation = {
-        ...stationData,
-        id: stations.length + 1,
-        createdAt: new Date().toISOString()
-      };
-
-      setStations([newStation, ...stations]);
-      setShowForm(false);
-      // Show success message
+      const response = await api.post('/station/create', stationData);
+      if (response.status === 200) {
+        toast.success('Station created successfully');
+        fetchStations();
+        setShowForm(false);
+        window.location.reload();
+      }
+      else {
+        toast.error('Error creating station');
+      }
     } catch (err) {
       console.error('Error adding station:', err);
-      // Show error message
+      toast.error('Error adding station');
     }
   };
 
+  // Handle update station
   const handleUpdateStation = async (id, stationData) => {
     try {
-      // In a real app, this would make an API call
-      // const response = await stationsApi.update(id, stationData);
-
-      // For demo, update locally
-      const updatedStations = stations.map(station =>
-        station.id === id ? { ...station, ...stationData } : station
-      );
-
-      setStations(updatedStations);
-      setEditingStation(null);
-      setShowForm(false);
-      // Show success message
+      const response = await api.put(`/station/update/${id}`, stationData);
+      if (response.status === 200) {
+        toast.success('Station updated successfully');
+        fetchStations();
+        setEditingStation(null);
+        setShowForm(false);
+        window.location.reload();
+      }
+      else {
+        toast.error('Error updating station');
+      }
     } catch (err) {
       console.error('Error updating station:', err);
-      // Show error message
+      toast.error('Error updating station');
     }
   };
 
+  // Handle delete station
   const handleDeleteStation = async (id) => {
     if (!confirm('Are you sure you want to delete this charging station?')) {
       return;
     }
 
     try {
-      // In a real app, this would make an API call
-      // await stationsApi.delete(id);
-
-      // For demo, remove locally
-      const updatedStations = stations.filter(station => station.id !== id);
-      setStations(updatedStations);
-      // Show success message
+      const response = await api.delete(`/station/delete/${id}`);
+      if (response.status === 200) {
+        toast.success('Station deleted successfully');
+        setStations(stations.filter(station => station._id !== id));
+        window.location.reload();
+      }
+      else {
+        toast.error('Error deleting station');
+      }
     } catch (err) {
       console.error('Error deleting station:', err);
-      // Show error message
+      toast.error('Error deleting station');
     }
   };
 
+  // Handle edit station
   const handleEdit = (station) => {
     setEditingStation(station);
     setShowForm(true);
   };
 
+  // Handle search
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
+  // Handle filter change
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({
@@ -185,6 +109,7 @@ const ChargingStations = ({ }) => {
     });
   };
 
+  // Clear filters
   const clearFilters = () => {
     setFilters({
       status: '',
@@ -194,6 +119,7 @@ const ChargingStations = ({ }) => {
     });
   };
 
+  // Filter stations
   const filteredStations = stations.filter(station => {
     // Search filter
     const matchesSearch = station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -213,7 +139,7 @@ const ChargingStations = ({ }) => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <div className="md:flex md:items-center md:justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Charging Stations</h1>
@@ -273,7 +199,7 @@ const ChargingStations = ({ }) => {
                   name="status"
                   value={filters.status}
                   onChange={handleFilterChange}
-                  className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                  className="block w-full pl-3 pr-10 py-2 text-base border-2 border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 >
                   <option value="">All Statuses</option>
                   <option value="Active">Active</option>
@@ -290,7 +216,7 @@ const ChargingStations = ({ }) => {
                   name="connectorType"
                   value={filters.connectorType}
                   onChange={handleFilterChange}
-                  className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                  className="block w-full pl-3 pr-10 py-2 text-base border-2 border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 >
                   <option value="">All Types</option>
                   {connectorTypes.map(type => (
@@ -311,7 +237,7 @@ const ChargingStations = ({ }) => {
                   onChange={handleFilterChange}
                   placeholder="Min kW"
                   min="0"
-                  className="block w-full pl-3 pr-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                  className="block w-full pl-3 pr-3 py-2 text-base border-2 border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 />
               </div>
 
@@ -327,14 +253,14 @@ const ChargingStations = ({ }) => {
                   onChange={handleFilterChange}
                   placeholder="Max kW"
                   min="0"
-                  className="block w-full pl-3 pr-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                  className="block w-full pl-3 pr-3 py-2 text-base border-2 border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 />
               </div>
 
               <div className="sm:col-span-2 lg:col-span-4 flex justify-end">
                 <button
                   onClick={clearFilters}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 hover:text-blue-900"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium bg-blue-600 rounded-lg text-white hover:bg-blue-700"
                 >
                   <X className="h-4 w-4 mr-1" />
                   Clear Filters
@@ -361,7 +287,7 @@ const ChargingStations = ({ }) => {
           {filteredStations.length > 0 ? (
             <ul className="divide-y divide-gray-200">
               {filteredStations.map((station) => (
-                <li key={station.id}>
+                <li key={station._id}>
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
@@ -412,6 +338,9 @@ const ChargingStations = ({ }) => {
                           </span>
                         </p>
                       </div>
+                        <Link to={`/station/${station._id}`} className="ml-4 text-sm font-medium text-blue-600 hover:text-blue-500">
+                            Details <FaChevronRight className="inline ml-1" size={12} />
+                          </Link>
                     </div>
                   </div>
                 </li>
@@ -461,7 +390,7 @@ const ChargingStations = ({ }) => {
                         initialData={editingStation}
                         onSubmit={(data) => {
                           if (editingStation) {
-                            handleUpdateStation(editingStation.id, data);
+                            handleUpdateStation(editingStation._id, data);
                           } else {
                             handleAddStation(data);
                           }
