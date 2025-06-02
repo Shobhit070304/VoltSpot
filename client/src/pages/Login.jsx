@@ -4,16 +4,19 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { BatteryCharging as ChargingPile } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
+import { FaExclamationCircle } from 'react-icons/fa';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    rememberMe: false
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -51,18 +54,21 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
+    <div className="flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center">
-            <ChargingPile className="h-12 w-12 text-blue-500" />
+            <ChargingPile className="h-12 w-12 text-blue-400 drop-shadow-[0_0_10px_rgba(96,165,250,0.5)]" />
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-400">
             Or{' '}
-            <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link
+              to="/register"
+              className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+            >
               create a new account
             </Link>
           </p>
@@ -70,12 +76,15 @@ const Login = () => {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-              <p className="text-sm text-red-700">{error}</p>
+            <div className="bg-red-900/30 border border-red-800/50 p-4 rounded-lg backdrop-blur-sm">
+              <p className="text-sm text-red-200 flex items-center gap-2">
+                <FaExclamationCircle className="h-4 w-4" />
+                {error}
+              </p>
             </div>
           )}
 
-          <div className="rounded-md shadow-sm -space-y-px flex flex-col gap-2">
+          <div className="space-y-4">
             <div>
               <input
                 id="email"
@@ -85,7 +94,7 @@ const Login = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="w-full px-4 py-3 bg-gray-800/40 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all duration-200"
                 placeholder="Email address"
               />
             </div>
@@ -98,9 +107,34 @@ const Login = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="w-full px-4 py-3 bg-gray-800/40 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all duration-200"
                 placeholder="Password"
               />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                onChange={handleChange}
+                value={formData.rememberMe}
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-800/60"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <Link
+                to="/forgot-password"
+                className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Forgot password?
+              </Link>
             </div>
           </div>
 
@@ -108,15 +142,28 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-500 hover:to-indigo-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200 shadow-lg relative overflow-hidden group"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span className="relative z-10 flex items-center justify-center">
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign in'
+                )}
+              </span>
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-};
+}
 
 export default Login;

@@ -7,6 +7,12 @@ import { api } from '../services/api';
 import { LocateIcon } from 'lucide-react';
 import MapView from './MapView';
 
+const statusColors = {
+    Active: 'bg-green-100 text-green-800',
+    Inactive: 'bg-red-100 text-red-800',
+    Maintenance: 'bg-yellow-100 text-yellow-800'
+};
+
 
 function Station() {
     const { id } = useParams();
@@ -31,19 +37,15 @@ function Station() {
         fetchStation();
     }, [id]);
 
-    const statusColors = {
-        Active: "bg-emerald-100 text-emerald-800",
-        Maintenance: "bg-amber-100 text-amber-800",
-        Inactive: "bg-red-100 text-red-800"
-    };
+
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-900 text-gray-100 overflow-hidden py-[10vh]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Back button */}
                 <div className="mb-6">
                     <Link
                         to="/home"
-                        className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                        className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors"
                     >
                         <FaChevronLeft className="mr-2" size={14} />
                         Back to all stations
@@ -51,23 +53,23 @@ function Station() {
                 </div>
 
                 {/* Station Header */}
-                <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                     <div className="px-6 py-8 sm:px-8 sm:flex sm:items-center sm:justify-between">
                         <div className="flex items-center">
-                            <div className="flex-shrink-0 bg-blue-100 p-4 rounded-lg">
-                                <FaPlug className="text-blue-600" size={24} />
+                            <div className="flex-shrink-0 bg-blue-900 p-4 rounded-lg">
+                                <FaPlug className="text-blue-400" size={24} />
                             </div>
                             <div className="ml-5">
-                                <h1 className="text-2xl font-bold text-gray-900">{station?.name}</h1>
-                                <div className="mt-1 flex items-center text-sm text-gray-500">
-                                    <FaMapMarkerAlt className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                <h1 className="text-2xl font-bold text-white">{station?.name}</h1>
+                                <div className="mt-1 flex items-center text-sm text-gray-400">
+                                    <FaMapMarkerAlt className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-500" />
                                     {station?.location}
                                 </div>
                             </div>
                         </div>
                         <div className="mt-4 sm:mt-0">
                             <span className={`px-3 py-1 text-sm font-medium rounded-full ${statusColors[station?.status]}`}>
-                                {station?.status.charAt(0).toUpperCase() + station?.status.slice(1)}
+                                {station?.status}
                             </span>
                         </div>
                     </div>
@@ -77,30 +79,37 @@ function Station() {
                 <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
                     {/* Left Column - Station Details */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white shadow rounded-lg overflow-hidden">
-                            <div className="px-6 py-5 border-b border-gray-200">
-                                <h2 className="text-lg font-medium text-gray-900">Station Information</h2>
+                        {/* Station Information Card */}
+                        <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+                            <div className="px-6 py-5 border-b border-gray-700">
+                                <h2 className="text-lg font-medium text-white">Station Information</h2>
                             </div>
                             <div className="px-6 py-5">
                                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                     <div>
-                                        <h3 className="text-sm font-medium text-gray-500">Power Output</h3>
-                                        <div className="mt-1 flex items-center text-lg font-medium text-gray-900">
+                                        <h3 className="text-sm font-medium text-gray-400">Power Output</h3>
+                                        <div className="mt-1 flex items-center text-lg font-medium text-white">
                                             <FaBolt className="flex-shrink-0 mr-2 h-5 w-5 text-amber-400" />
-                                            {station?.powerOutput} {station?.type}
+                                            {station?.powerOutput} kW
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-medium text-gray-500">Connector Type</h3>
-                                        <p className="mt-1 text-lg text-gray-900">{station?.connectorType || 'Type 2'}</p>
+                                        <h3 className="text-sm font-medium text-gray-400">Connector Type</h3>
+                                        <p className="mt-1 text-lg text-white">{station?.connectorType}</p>
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-medium text-gray-500">Availability</h3>
-                                        <p className="mt-1 text-lg text-gray-900">{station?.availability || '24/7'}</p>
+                                        <h3 className="text-sm font-medium text-gray-400">Availability</h3>
+                                        <p className="mt-1 text-lg text-white">{station?.availability || '24/7'}</p>
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-medium text-gray-500">Price</h3>
-                                        <p className="mt-1 text-lg text-gray-900">{station?.price || '$0.35/kWh'}</p>
+                                        <h3 className="text-sm font-medium text-gray-400">Price</h3>
+                                        <p className="mt-1 text-lg text-white">${station?.pricePerKwh}/kWh</p>
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <h3 className="text-sm font-medium text-gray-400">Coordinates</h3>
+                                        <p className="mt-1 text-gray-300">
+                                            {station?.latitude}, {station?.longitude}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -115,9 +124,9 @@ function Station() {
                     {/* Right Column - Actions & Additional Info */}
                     <div className="space-y-6">
                         {/* Status Card */}
-                        <div className="bg-white shadow rounded-lg overflow-hidden">
-                            <div className="px-6 py-5 border-b border-gray-200">
-                                <h2 className="text-lg font-medium text-gray-900">Current Status</h2>
+                        <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+                            <div className="px-6 py-5 border-b border-gray-700">
+                                <h2 className="text-lg font-medium text-white">Current Status</h2>
                             </div>
                             <div className="px-6 py-5">
                                 <div className="flex items-center">
@@ -129,55 +138,64 @@ function Station() {
                                         )}
                                     </div>
                                     <div className="ml-5">
-                                        <p className="text-sm font-medium text-gray-500">This station is currently</p>
-                                        <p className="text-lg font-medium text-gray-900">
-                                            {station?.status === 'Active' ? 'Available' : 'Unavailable'}
+                                        <p className="text-sm font-medium text-gray-400">This station is currently</p>
+                                        <p className="text-lg font-medium text-white">
+                                            {station?.status === 'Active' ? 'Available for charging' : 'Unavailable'}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="mt-5">
+                                <div className="mt-5 space-y-3">
                                     <button
                                         type="button"
-                                        className={`w-full inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm ${station?.status === 'Active' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'}`}
+                                        className={`w-full inline-flex justify-center rounded-lg border border-transparent px-4 py-3 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${station?.status === 'Active'
+                                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500'
+                                            : 'bg-gray-600 cursor-not-allowed'
+                                            }`}
                                         disabled={station?.status !== 'Active'}
                                     >
                                         {station?.status === 'Active' ? 'Start Charging Session' : 'Currently Unavailable'}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="w-full inline-flex justify-center rounded-lg border border-gray-600 px-4 py-3 text-base font-medium text-gray-200 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                                    >
+                                        Report an Issue
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         {/* Amenities */}
-                        <div className="bg-white shadow rounded-lg overflow-hidden">
-                            <div className="px-6 py-5 border-b border-gray-200">
-                                <h2 className="text-lg font-medium text-gray-900">Amenities Nearby</h2>
+                        <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+                            <div className="px-6 py-5 border-b border-gray-700">
+                                <h2 className="text-lg font-medium text-white">Amenities Nearby</h2>
                             </div>
                             <div className="px-6 py-5">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="flex items-center">
-                                        <FaCoffee className="h-5 w-5 text-gray-400" />
-                                        <span className="ml-3 text-gray-700">Café</span>
+                                        <FaCoffee className="h-5 w-5 text-gray-500" />
+                                        <span className="ml-3 text-gray-300">Café (50m)</span>
                                     </div>
                                     <div className="flex items-center">
-                                        <FaShoppingBag className="h-5 w-5 text-gray-400" />
-                                        <span className="ml-3 text-gray-700">Shopping</span>
+                                        <FaShoppingBag className="h-5 w-5 text-gray-500" />
+                                        <span className="ml-3 text-gray-300">Shopping (200m)</span>
                                     </div>
                                     <div className="flex items-center">
-                                        <FaWifi className="h-5 w-5 text-gray-400" />
-                                        <span className="ml-3 text-gray-700">Free WiFi</span>
+                                        <FaWifi className="h-5 w-5 text-gray-500" />
+                                        <span className="ml-3 text-gray-300">Free WiFi</span>
                                     </div>
                                     <div className="flex items-center">
-                                        <FaRestroom className="h-5 w-5 text-gray-400" />
-                                        <span className="ml-3 text-gray-700">Restrooms</span>
+                                        <FaRestroom className="h-5 w-5 text-gray-500" />
+                                        <span className="ml-3 text-gray-300">Restrooms</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Reviews */}
-                        <div className="bg-white shadow rounded-lg overflow-hidden">
-                            <div className="px-6 py-5 border-b border-gray-200">
-                                <h2 className="text-lg font-medium text-gray-900">User Reviews</h2>
+                        <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+                            <div className="px-6 py-5 border-b border-gray-700">
+                                <h2 className="text-lg font-medium text-white">User Reviews</h2>
                             </div>
                             <div className="px-6 py-5">
                                 <div className="flex items-center">
@@ -185,15 +203,15 @@ function Station() {
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <FaStar
                                                 key={star}
-                                                className={`h-5 w-5 ${star <= 4 ? 'text-yellow-400' : 'text-gray-300'}`}
+                                                className={`h-5 w-5 ${star <= 4 ? 'text-yellow-400' : 'text-gray-600'}`}
                                             />
                                         ))}
                                     </div>
-                                    <span className="ml-2 text-gray-600">4.2 (12 reviews)</span>
+                                    <span className="ml-2 text-gray-400">4.2 (12 reviews)</span>
                                 </div>
                                 <button
                                     type="button"
-                                    className="mt-4 w-full inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                                    className="mt-4 w-full inline-flex justify-center rounded-lg border border-gray-600 px-4 py-2 text-sm font-medium text-gray-200 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                                 >
                                     Write a Review
                                 </button>
@@ -203,7 +221,8 @@ function Station() {
                 </div>
             </div>
         </div>
-    )
+    );
+
 }
 
 export default Station

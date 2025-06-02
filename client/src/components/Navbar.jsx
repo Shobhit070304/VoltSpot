@@ -13,60 +13,62 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="shadow-sm border-b border-gray-200 bg-white">
+    <nav className="fixed w-full top-0 z-50 bg-gray-900/50 border-b border-gray-800/30 backdrop-blur-lg transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
               <img src={logo} alt="logo" className="h-8 w-8" />
-              <span className="ml-2 text-2xl font-semibold text-gray-800">VoltSpot</span>
+              <span className="ml-2 text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-300">
+                VoltSpot
+              </span>
             </Link>
           </div>
 
-          <div className='flex items-center gap-8'>
+          {/* Navigation Links */}
+          <div className='flex items-center gap-2'>
             <Link
               to="/home"
-              className='px-3 py-2 cursor-pointer rounded-md text-sm text-gray-700 font-medium flex items-center hover:bg-gray-200 hover:text-gray-900 transition-colors duration-150 ease-in-out'>
+              className='px-3 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-md hover:bg-gray-800/50 transition-all duration-200'>
               Charging Stations
             </Link>
-            {
-              isAuthenticated && (
-                <>
-                  <Link
-                    to="/map"
-                    className='px-3 py-2 cursor-pointer rounded-md text-sm text-gray-700 font-medium flex items-center hover:bg-gray-200 hover:text-gray-900 transition-colors duration-150 ease-in-out'>
-                    Maps
-                  </Link>
-                  <Link
-                    to="/dashboard"
-                    className='px-3 py-2 cursor-pointer rounded-md text-sm text-gray-700 font-medium flex items-center hover:bg-gray-200 hover:text-gray-900 transition-colors duration-150 ease-in-out'>
-                    Dashboard
-                  </Link>
-                </>
-              )
-            }
+            {isAuthenticated && (
+              <>
+                <Link
+                  to="/map"
+                  className='px-3 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-md hover:bg-gray-800/50 transition-all duration-200'>
+                  Maps
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className='px-3 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-md hover:bg-gray-800/50 transition-all duration-200'>
+                  Dashboard
+                </Link>
+              </>
+            )}
           </div>
-          {
-            !isAuthenticated && (
+
+          {/* Auth Buttons */}
+          <div className="flex items-center gap-3">
+            {!isAuthenticated ? (
               <Link
                 to="/login"
-                className="px-3 py-2 border-[2px] rounded-lg  flex items-center text-sm text-white bg-black hover:text-black hover:bg-transparent transition-colors duration-150 ease-in-out"
+                className="px-4 py-2 flex items-center text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all duration-300 shadow-lg"
               >
-                <LogOut className="w-5 h-5 mr-1.5" />
+                <LogOut className="w-4 h-4 mr-2" />
                 Login
               </Link>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 flex items-center text-sm font-medium bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-lg hover:from-red-500 hover:to-pink-500 transition-all duration-300 shadow-lg"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </button>
             )}
-          {isAuthenticated && (
-
-            <button
-              onClick={handleLogout}
-              className="ml-2 px-3 py-2 rounded-md text-sm font-medium bg-red-500 text-white hover:bg-red-600 flex items-center transition-colors duration-150 ease-in-out"
-            >
-              <LogOut className="w-5 h-5 mr-1.5" />
-              Logout
-            </button>
-
-          )}
+          </div>
         </div>
       </div>
     </nav>
