@@ -1,6 +1,3 @@
-# Ignore .bolt folder in the root
-/.bolt
-
 # Client-side ignores
 /client/node_modules/
 /client/package-lock.json
