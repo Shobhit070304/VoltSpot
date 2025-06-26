@@ -31,7 +31,6 @@ const ChargingStations = ({ stations, setStations }) => {
         toast.success('Station created successfully');
         fetchStations();
         setShowForm(false);
-        window.location.reload();
       }
       else {
         toast.error('Error creating station');
@@ -51,7 +50,6 @@ const ChargingStations = ({ stations, setStations }) => {
         fetchStations();
         setEditingStation(null);
         setShowForm(false);
-        window.location.reload();
       }
       else {
         toast.error('Error updating station');
@@ -73,7 +71,7 @@ const ChargingStations = ({ stations, setStations }) => {
       if (response.status === 200) {
         toast.success('Station deleted successfully');
         setStations(stations.filter(station => station._id !== id));
-        window.location.reload();
+        fetchStations();
       }
       else {
         toast.error('Error deleting station');

@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { api } from '../services/api';
-import toast from 'react-hot-toast';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { api } from "../services/api";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -11,9 +11,10 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Load user from localStorage on initial render
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
     if (token && user) {
       setIsAuthenticated(true);
       setUser(JSON.parse(user));
@@ -21,32 +22,40 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  // Persist user to localStorage whenever it changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
   const login = async (userData) => {
     try {
-      localStorage.setItem('token', userData.token);
-      localStorage.setItem('user', JSON.stringify(userData.user));
-      setUser(userData.user);
+      localStorage.setItem("token", userData.token);
+      setUser(userData.user); // This will trigger the useEffect above
       setIsAuthenticated(true);
-      toast.success('Welcome back!');
+      toast.success("Welcome back!");
     } catch (error) {
       toast.error(error.message);
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
+    localStorage.removeItem("token");
+    setUser(null); // This will trigger the useEffect to clear the user
     setIsAuthenticated(false);
-    toast.success('Logged out successfully');
+    toast.success("Logged out successfully");
   };
 
   const value = {
     user,
+    setUser,
     isAuthenticated,
     loading,
     login,
-    logout
+    logout,
   };
 
   return (
