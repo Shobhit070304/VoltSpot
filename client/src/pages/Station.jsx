@@ -19,7 +19,7 @@ import { api } from "../services/api";
 import MapView from "./MapView";
 import ReviewForm from "../components/ReviewForm";
 import { useAuth } from "../context/AuthContext";
-import ReportForm from "../components/reportForm";
+import ReportForm from "../components/ReportForm";
 
 const statusColors = {
   Active: "bg-green-100 text-green-800",
