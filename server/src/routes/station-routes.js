@@ -23,7 +23,7 @@ router.get("/me", authUser, getMyStations);
 router.get("/saved-stations", authUser, getSavedStations);
 
 // Get station by ID
-router.get("/:id", authUser, getStationById);
+router.get("/:id", getStationById);
 
 // Create a new station
 router.post(

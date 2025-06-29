@@ -40,14 +40,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/home" element={<Home />} />
-          <Route
-            path="/station/:id"
-            element={
-              <ProtectedRoute>
-                <Station />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/station/:id" element={<Station />} />
           <Route
             path="/dashboard"
             element={

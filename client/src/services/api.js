@@ -3,10 +3,21 @@ import axios from 'axios';
 // Create axios instance with base URL
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
-  headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
-  }
 });
+
+// Add request interceptor to set token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Add a global response interceptor
 api.interceptors.response.use(

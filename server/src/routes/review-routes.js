@@ -12,6 +12,6 @@ const router = express.Router();
 router.post("/:stationId", authUser, createReview);
 
 // Get reviews for a station
-router.get("/:stationId", authUser, getReviewsByStation);
+router.get("/:stationId", getReviewsByStation);
 
 export default router;
