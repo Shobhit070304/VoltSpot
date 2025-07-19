@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   PlusCircle,
   Search,
@@ -10,7 +10,7 @@ import {
   ChevronRight,
   Zap,
 } from "lucide-react";
-import StationForm from "../components/StationForm";
+// import StationForm from "../components/StationForm"; // No longer needed here
 import { api } from "../services/api";
 import { FaChevronRight, FaPlug } from "react-icons/fa";
 import toast from "react-hot-toast";
@@ -26,11 +26,9 @@ const connectorTypes = [
   "Tesla",
 ];
 
-const ChargingStations = ({ stations, setStations }) => {
+const ChargingStations = ({ stations, setStations, onEdit }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [editingStation, setEditingStation] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     status: "",
@@ -39,41 +37,6 @@ const ChargingStations = ({ stations, setStations }) => {
     maxPower: "",
   });
   const [showFilters, setShowFilters] = useState(false);
-
-  // Handle add station
-  const handleAddStation = async (stationData) => {
-    try {
-      const response = await api.post("/station/create", stationData);
-      if (response.status === 200) {
-        toast.success("Station created successfully");
-        fetchStations();
-        setShowForm(false);
-      } else {
-        toast.error("Error creating station");
-      }
-    } catch (err) {
-      console.error("Error adding station:", err);
-      toast.error("Error adding station");
-    }
-  };
-
-  // Handle update station
-  const handleUpdateStation = async (id, stationData) => {
-    try {
-      const response = await api.put(`/station/update/${id}`, stationData);
-      if (response.status === 200) {
-        toast.success("Station updated successfully");
-        fetchStations();
-        setEditingStation(null);
-        setShowForm(false);
-      } else {
-        toast.error("Error updating station");
-      }
-    } catch (err) {
-      console.error("Error updating station:", err);
-      toast.error("Error updating station");
-    }
-  };
 
   // Handle delete station
   const handleDeleteStation = async (id) => {
@@ -86,7 +49,6 @@ const ChargingStations = ({ stations, setStations }) => {
       if (response.status === 200) {
         toast.success("Station deleted successfully");
         setStations(stations.filter((station) => station._id !== id));
-        fetchStations();
       } else {
         toast.error("Error deleting station");
       }
@@ -94,12 +56,6 @@ const ChargingStations = ({ stations, setStations }) => {
       console.error("Error deleting station:", err);
       toast.error("Error deleting station");
     }
-  };
-
-  // Handle edit station
-  const handleEdit = (station) => {
-    setEditingStation(station);
-    setShowForm(true);
   };
 
   // Handle search
@@ -169,10 +125,7 @@ const ChargingStations = ({ stations, setStations }) => {
         </div>
         <div className="mt-4 md:mt-0">
           <button
-            onClick={() => {
-              setEditingStation(null);
-              setShowForm(true);
-            }}
+            onClick={() => onEdit(null)}
             className="inline-flex items-center px-4 py-2.5 border border-transparent text-xs font-light tracking-wide rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
           >
             <PlusCircle className="h-4 w-4 mr-2" />
@@ -357,7 +310,7 @@ const ChargingStations = ({ stations, setStations }) => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => handleEdit(station)}
+                          onClick={() => onEdit(station)}
                           className="p-2 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors"
                           aria-label="Edit station"
                         >
@@ -429,53 +382,7 @@ const ChargingStations = ({ stations, setStations }) => {
       )}
 
       {/* Form modal */}
-      {showForm && (
-        <div className="fixed inset-0 overflow-y-auto z-50">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 transition-opacity"
-              aria-hidden="true"
-            >
-              <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm"></div>
-            </div>
-
-            <span
-              className="hidden sm:inline-block sm:align-middle sm:h-screen"
-              aria-hidden="true"
-            >
-              &#8203;
-            </span>
-
-            <div className="inline-block align-bottom bg-gray-900/80 backdrop-blur-lg rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-800/50">
-              <div className="px-4 pt-5 pb-4 sm:p-6">
-                <div className="sm:flex sm:items-start">
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                    <h3 className="text-lg font-light text-white tracking-tight mb-4">
-                      {editingStation ? "Edit Station" : "Add New Station"}
-                    </h3>
-                    <div className="mt-2">
-                      <StationForm
-                        initialData={editingStation}
-                        onSubmit={(data) => {
-                          if (editingStation) {
-                            handleUpdateStation(editingStation._id, data);
-                          } else {
-                            handleAddStation(data);
-                          }
-                        }}
-                        onCancel={() => {
-                          setEditingStation(null);
-                          setShowForm(false);
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Removed as per edit hint */}
     </div>
   );
 };

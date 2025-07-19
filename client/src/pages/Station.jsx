@@ -28,6 +28,9 @@ const statusColors = {
 };
 
 function Station() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { id } = useParams();
   const [station, setStation] = useState(null);
   const [reviews, setReviews] = useState([]);

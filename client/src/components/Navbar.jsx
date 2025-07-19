@@ -86,10 +86,7 @@ const Navbar = () => {
               {!isAuthenticated ? (
                 <Link
                   to="/login"
-                  className={`px-3.5 py-1.5 flex items-center text-[0.78rem] font-light tracking-wide ${isScrolled
-                    ? "bg-white/5 hover:bg-white/10 border border-white/5"
-                    : "bg-indigo-600/90 hover:bg-indigo-500"
-                    } text-white rounded-lg transition-all duration-200 shadow-sm`}
+                  className={`px-3.5 py-1.5 flex items-center text-[0.78rem] font-light tracking-wide bg-white text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 shadow-sm`}
                 >
                   Sign In
                 </Link>
@@ -97,10 +94,7 @@ const Navbar = () => {
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={handleLogout}
-                    className={`px-3.5 py-1.5 flex items-center text-[0.78rem] font-light tracking-wide ${isScrolled
-                      ? "bg-white/5 hover:bg-white/10 border border-white/5"
-                      : "bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700/30"
-                      } text-gray-200 hover:text-white rounded-lg transition-all duration-200 shadow-sm`}
+                    className={`px-3.5 py-1.5 flex items-center text-[0.78rem] font-light tracking-wide bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200 shadow-sm`}
                   >
                     Logout
                   </button>
@@ -165,14 +159,14 @@ const Navbar = () => {
                   <Link
                     to="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-xs font-medium tracking-wide text-center text-white bg-indigo-600/90 hover:bg-indigo-500 rounded-lg transition-colors"
+                    className="block px-3 py-2 text-xs font-medium tracking-wide text-center bg-white text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     Sign In
                   </Link>
                 ) : (
                   <button
                     onClick={handleLogout}
-                    className="block w-full px-3 py-2 text-xs font-medium tracking-wide text-center text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-lg transition-colors"
+                    className="block w-full px-3 py-2 text-xs font-medium tracking-wide text-center bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                   >
                     Logout
                   </button>

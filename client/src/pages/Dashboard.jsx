@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { api } from "../services/api";
-import { 
-  Zap, 
-  AlertTriangle, 
-  CheckCircle, 
+import {
+  Zap,
+  AlertTriangle,
+  CheckCircle,
   TrendingUp,
   MapPin,
   Activity,
@@ -11,6 +11,7 @@ import {
   Sparkles
 } from "lucide-react";
 import ChargingStations from "./ChargingStations";
+import StationForm from "../components/StationForm";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
@@ -19,55 +20,103 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState({});
+  const [showForm, setShowForm] = useState(false);
+  const [editingStation, setEditingStation] = useState(null);
 
-  useEffect(() => {
-    const fetchStations = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get("/station/me");
+  const fetchStations = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get("/station/me");
 
-        if (response.status === 200) {
-          const stationsData = response.data.stations || [];
-          setStations(stationsData);
+      if (response.status === 200) {
+        const stationsData = response.data.stations || [];
+        setStations(stationsData);
 
-          const statsData = {
-            totalStations: stationsData.length,
-            activeStations: stationsData.filter(
-              (station) => station.status === "Active"
-            ).length,
-            inactiveStations: stationsData.filter(
-              (station) => station.status === "Inactive"
-            ).length,
-            avgPowerOutput:
-              stationsData.length > 0
-                ? stationsData.reduce(
-                    (sum, station) => sum + (station.powerOutput || 0),
-                    0
-                  ) / stationsData.length
-                : 0,
-            totalPower: stationsData.reduce(
-              (sum, station) => sum + (station.powerOutput || 0),
-              0
-            ),
-            avgRating: stationsData.length > 0
+        const statsData = {
+          totalStations: stationsData.length,
+          activeStations: stationsData.filter(
+            (station) => station.status === "Active"
+          ).length,
+          inactiveStations: stationsData.filter(
+            (station) => station.status === "Inactive"
+          ).length,
+          avgPowerOutput:
+            stationsData.length > 0
               ? stationsData.reduce(
-                  (sum, station) => sum + (station.averageRating || 0),
-                  0
-                ) / stationsData.length
+                (sum, station) => sum + (station.powerOutput || 0),
+                0
+              ) / stationsData.length
               : 0,
-          };
-          setStats(statsData);
-        }
-      } catch (error) {
-        setError(error);
-        toast.error(error.message || "Error fetching stations");
-      } finally {
-        setLoading(false);
+          totalPower: stationsData.reduce(
+            (sum, station) => sum + (station.powerOutput || 0),
+            0
+          ),
+          avgRating: stationsData.length > 0
+            ? stationsData.reduce(
+              (sum, station) => sum + (station.averageRating || 0),
+              0
+            ) / stationsData.length
+            : 0,
+        };
+        setStats(statsData);
       }
-    };
-
+    } catch (error) {
+      setError(error);
+      toast.error(error.message || "Error fetching stations");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchStations();
   }, []);
+
+  // Add station handler
+  const handleAddStation = async (stationData) => {
+    try {
+      const response = await api.post("/station/create", stationData);
+      if (response.status === 200) {
+        toast.success("Station created successfully");
+        fetchStations();
+        setShowForm(false);
+      } else {
+        toast.error("Error creating station");
+      }
+    } catch (err) {
+      console.error("Error adding station:", err);
+      toast.error("Error adding station");
+    }
+  };
+
+  // Update station handler
+  const handleUpdateStation = async (id, stationData) => {
+    try {
+      const response = await api.put(`/station/update/${id}`, stationData);
+      if (response.status === 200) {
+        toast.success("Station updated successfully");
+        fetchStations();
+        setEditingStation(null);
+        setShowForm(false);
+      } else {
+        toast.error("Error updating station");
+      }
+    } catch (err) {
+      console.error("Error updating station:", err);
+      toast.error("Error updating station");
+    }
+  };
+
+  // Edit station handler
+  const handleEdit = (station) => {
+    setEditingStation(station);
+    setShowForm(true);
+  };
+
+  // Show add station form
+  const handleShowAddForm = () => {
+    setEditingStation(null);
+    setShowForm(true);
+  };
 
   if (loading) {
     return (
@@ -149,6 +198,12 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="mt-4 md:mt-0 flex gap-3">
+              <button
+                onClick={handleShowAddForm}
+                className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm font-light tracking-wide text-white transition-all duration-200"
+              >
+                Add Station
+              </button>
               <Link
                 to="/map"
                 className="inline-flex items-center px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-light tracking-wide text-gray-300 transition-all duration-200"
@@ -268,9 +323,54 @@ const Dashboard = () => {
 
         {/* Charging Stations Management */}
         <div className="bg-gray-900/50 backdrop-blur-lg rounded-xl border border-gray-800/50 overflow-hidden">
-          <ChargingStations stations={stations} setStations={setStations} />
+          <ChargingStations
+            stations={stations}
+            setStations={setStations}
+            onEdit={handleEdit}
+          />
         </div>
       </div>
+
+      {/* Station Form Modal (outside ChargingStations) */}
+      {showForm && (
+        <div className="fixed inset-0 overflow-y-auto z-50">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm"></div>
+            </div>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+              &#8203;
+            </span>
+            <div className="inline-block align-bottom bg-gray-900/80 backdrop-blur-lg rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-800/50">
+              <div className="px-4 pt-5 pb-4 sm:p-6">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                    <h3 className="text-lg font-light text-white tracking-tight mb-4">
+                      {editingStation ? "Edit Station" : "Add New Station"}
+                    </h3>
+                    <div className="mt-2">
+                      <StationForm
+                        initialData={editingStation}
+                        onSubmit={(data) => {
+                          if (editingStation) {
+                            handleUpdateStation(editingStation._id, data);
+                          } else {
+                            handleAddStation(data);
+                          }
+                        }}
+                        onCancel={() => {
+                          setEditingStation(null);
+                          setShowForm(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
