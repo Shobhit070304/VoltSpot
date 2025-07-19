@@ -78,7 +78,7 @@ const createStation = async (req, res, next) => {
 // Update station
 const updateStation = async (req, res, next) => {
   try {
-    console.log("Hello", req.body);
+
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -187,7 +187,7 @@ const getSavedStations = async (req, res, next) => {
         select: 'name location status powerOutput connectorType latitude longitude'
       });
 
-    console.log("Populated saved stations:", populatedUser.savedStations);
+
     
     res.status(200).json({ savedStations: populatedUser.savedStations });
   } catch (error) {

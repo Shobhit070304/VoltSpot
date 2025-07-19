@@ -4,38 +4,52 @@ import toast from "react-hot-toast";
 import { FaChevronLeft } from "react-icons/fa";
 import {
   AlertTriangle,
-  ZoomIn,
-  ZoomOut,
-  // Locate,
   MapPin,
-  Heart,
 } from "react-feather";
-import { Locate } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { Locate, ZoomIn, ZoomOut } from "lucide-react";
 
 const MapView = ({ station }) => {
   const [stations, setStations] = useState([]);
-  const [selectedStation, setSelectedStation] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [map, setMap] = useState(null); // Store Leaflet map instance
-  // Load Leaflet JS and CSS
+
+  // Load Leaflet dynamically from CDN
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js";
-    script.onload = () => setMapLoaded(true);
-    document.body.appendChild(script);
+    const loadLeaflet = () => {
+      // Check if Leaflet is already loaded
+      if (window.L) {
+        setMapLoaded(true);
+        return;
+      }
 
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css";
-    document.head.appendChild(link);
-
-    return () => {
-      document.body.removeChild(script);
-      document.head.removeChild(link);
+      // Load Leaflet JS
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.onload = () => {
+        // Load CSS after JS is loaded
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        link.onload = () => {
+          setMapLoaded(true);
+        };
+        link.onerror = () => {
+          console.error('Failed to load Leaflet CSS');
+          setError('Failed to load map styles');
+        };
+        document.head.appendChild(link);
+      };
+      script.onerror = () => {
+        console.error('Failed to load Leaflet JS');
+        setError('Failed to load map library');
+      };
+      document.head.appendChild(script);
     };
+
+    loadLeaflet();
   }, []);
 
   // Fetch stations
@@ -66,6 +80,7 @@ const MapView = ({ station }) => {
   // Initialize or update map
   useEffect(() => {
     if (!mapLoaded || stations.length === 0) return;
+
 
     const L = window.L;
     const mapContainer = document.getElementById("map");

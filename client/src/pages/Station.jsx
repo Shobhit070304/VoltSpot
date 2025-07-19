@@ -45,7 +45,7 @@ function Station() {
           setStation(response.data.station);
         }
       } catch (error) {
-        toast.error("Error fething station");
+        toast.error("Error fetching station");
       }
     };
 

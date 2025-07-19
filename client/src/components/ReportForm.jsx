@@ -20,7 +20,7 @@ const ReportForm = ({ stationId, showReviewForm, setShowReviewForm }) => {
         comment,
       });
 
-      console.log("Response report", res);
+
 
       if (res.status === 200) {
         setShowReviewForm(!showReviewForm);
