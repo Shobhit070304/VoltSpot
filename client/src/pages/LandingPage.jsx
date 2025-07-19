@@ -39,28 +39,12 @@ import {
 import { useState } from "react";
 import HeroBanner from "../../public/banner.png";
 import DashboardBanner from "../../public/banner2.png";
-import { Helmet } from "react-helmet";
 
 const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <>
-      <Helmet>
-        <title>VoltSpot - Find EV Charging Stations Near You | Best EV Stations Website</title>
-        <meta name="description" content="VoltSpot helps you find, review, and share EV charging stations. The easiest way to discover electric vehicle charging points near you. Join the VoltSpot community and make charging easier for everyone!" />
-        <meta name="keywords" content="EV, charging stations, electric vehicle, EV charging, VoltSpot, find EV stations, best EV station website, EV reviews, charging point locator" />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="VoltSpot - Find EV Charging Stations Near You" />
-        <meta property="og:description" content="Find, review, and share EV charging stations with VoltSpot. The best website for electric vehicle charging points." />
-        <meta property="og:image" content="/banner.png" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://voltspot.com/" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="VoltSpot - Find EV Charging Stations Near You" />
-        <meta name="twitter:description" content="Find, review, and share EV charging stations with VoltSpot. The best website for electric vehicle charging points." />
-        <meta name="twitter:image" content="/banner.png" />
-      </Helmet>
       <div className="min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
         {/* Subtle Animated Background */}
         <div className="fixed inset-0 -z-20 overflow-hidden">
