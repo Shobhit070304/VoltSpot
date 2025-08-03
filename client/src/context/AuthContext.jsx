@@ -18,6 +18,9 @@ export const AuthProvider = ({ children }) => {
     if (token && user) {
       setIsAuthenticated(true);
       setUser(JSON.parse(user));
+    } else {
+      setUser(null);
+      setIsAuthenticated(false);
     }
     setLoading(false);
   }, []);
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   const login = async (userData) => {
+    setLoading(true);
     try {
       localStorage.setItem("token", userData.token);
       setUser(userData.user); // This will trigger the useEffect above
@@ -39,14 +43,18 @@ export const AuthProvider = ({ children }) => {
       toast.success("Welcome back!");
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = () => {
+    setLoading(true);
     localStorage.removeItem("token");
     setUser(null); // This will trigger the useEffect to clear the user
     setIsAuthenticated(false);
     toast.success("Logged out successfully");
+    setLoading(false);
   };
 
   const value = {
@@ -60,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

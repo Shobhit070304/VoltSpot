@@ -8,7 +8,10 @@ import {
   MapPin,
   Activity,
   Star,
-  Sparkles
+  Sparkles,
+  Battery,
+  Users,
+  Clock
 } from "lucide-react";
 import ChargingStations from "./ChargingStations";
 import StationForm from "../components/StationForm";
@@ -56,7 +59,7 @@ const Dashboard = () => {
               (sum, station) => sum + (station.averageRating || 0),
               0
             ) / stationsData.length
-            : 0,
+            : 0
         };
         setStats(statsData);
       }
@@ -67,11 +70,11 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchStations();
   }, []);
 
-  // Add station handler
   const handleAddStation = async (stationData) => {
     try {
       const response = await api.post("/station/create", stationData);
@@ -79,16 +82,12 @@ const Dashboard = () => {
         toast.success("Station created successfully");
         fetchStations();
         setShowForm(false);
-      } else {
-        toast.error("Error creating station");
       }
     } catch (err) {
-      console.error("Error adding station:", err);
-      toast.error("Error adding station");
+      toast.error(err.response?.data?.message || "Error creating station");
     }
   };
 
-  // Update station handler
   const handleUpdateStation = async (id, stationData) => {
     try {
       const response = await api.put(`/station/update/${id}`, stationData);
@@ -97,22 +96,17 @@ const Dashboard = () => {
         fetchStations();
         setEditingStation(null);
         setShowForm(false);
-      } else {
-        toast.error("Error updating station");
       }
     } catch (err) {
-      console.error("Error updating station:", err);
-      toast.error("Error updating station");
+      toast.error(err.response?.data?.message || "Error updating station");
     }
   };
 
-  // Edit station handler
   const handleEdit = (station) => {
     setEditingStation(station);
     setShowForm(true);
   };
 
-  // Show add station form
   const handleShowAddForm = () => {
     setEditingStation(null);
     setShowForm(true);
@@ -120,17 +114,17 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center relative overflow-hidden py-20">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center relative overflow-hidden py-20">
         {/* Animated Background */}
-        <div className="fixed inset-0 -z-10">
-          <div className="absolute top-[15%] left-[20%] w-[50rem] h-[50rem] bg-indigo-900/10 rounded-full blur-[150px] opacity-20 animate-float"></div>
-          <div className="absolute bottom-[20%] right-[25%] w-[45rem] h-[45rem] bg-cyan-900/10 rounded-full blur-[130px] opacity-15 animate-float-delay"></div>
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
+          <div className="absolute bottom-[10%] right-[15%] w-[28rem] h-[28rem] bg-amber-200/30 rounded-full blur-[80px] opacity-40 animate-float-delay"></div>
         </div>
 
         {/* Loading Spinner */}
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-800 border-t-indigo-500 mb-4"></div>
-          <p className="text-sm text-gray-400 font-light tracking-wide">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-orange-200 border-t-amber-500 mb-4"></div>
+          <p className="text-sm text-orange-700 font-medium">
             Loading dashboard...
           </p>
         </div>
@@ -140,28 +134,27 @@ const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center relative overflow-hidden py-20">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center relative overflow-hidden py-20">
         {/* Animated Background */}
-        <div className="fixed inset-0 -z-10">
-          <div className="absolute top-[15%] left-[20%] w-[50rem] h-[50rem] bg-indigo-900/10 rounded-full blur-[150px] opacity-20 animate-float"></div>
-          <div className="absolute bottom-[20%] right-[25%] w-[45rem] h-[45rem] bg-cyan-900/10 rounded-full blur-[130px] opacity-15 animate-float-delay"></div>
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
+          <div className="absolute bottom-[10%] right-[15%] w-[28rem] h-[28rem] bg-amber-200/30 rounded-full blur-[80px] opacity-40 animate-float-delay"></div>
         </div>
 
         {/* Error Card */}
-        <div className="bg-red-900/30 backdrop-blur-xl rounded-xl border border-red-800/50 p-6 max-w-md mx-6 relative z-10">
+        <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-200 p-6 max-w-md mx-6 shadow-lg">
           <div className="flex items-start">
-            <AlertTriangle className="h-5 w-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+            <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" />
             <div>
-              <h3 className="text-sm font-medium text-red-200 mb-1">
+              <h3 className="text-lg font-medium text-gray-900 mb-1">
                 Error Loading Dashboard
               </h3>
-              <p className="text-xs text-red-300 font-light tracking-wide leading-relaxed">
-                {error.message ||
-                  "Failed to fetch dashboard data. Please try again later."}
+              <p className="text-sm text-gray-600 mb-4">
+                {error.message || "Failed to fetch dashboard data. Please try again later."}
               </p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-4 inline-flex items-center px-3 py-1.5 text-xs font-light tracking-wide rounded-lg border border-red-800/50 text-red-300 bg-red-900/20 hover:bg-red-900/30 transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium"
               >
                 Retry
               </button>
@@ -173,47 +166,49 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 relative overflow-hidden py-20">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 relative overflow-hidden py-[8%]">
       {/* Animated Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute top-[15%] left-[20%] w-[50rem] h-[50rem] bg-indigo-900/10 rounded-full blur-[150px] opacity-20 animate-float"></div>
-        <div className="absolute bottom-[20%] right-[25%] w-[45rem] h-[45rem] bg-cyan-900/10 rounded-full blur-[130px] opacity-15 animate-float-delay"></div>
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
+        <div className="absolute bottom-[10%] right-[15%] w-[28rem] h-[28rem] bg-amber-200/30 rounded-full blur-[80px] opacity-40 animate-float-delay"></div>
       </div>
 
       {/* Main Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-900/20 backdrop-blur-sm border border-indigo-800/30 text-[0.6rem] font-light tracking-wider text-indigo-300 mb-4">
-                <Sparkles className="h-2.5 w-2.5 mr-1.5" />
+              <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-orange-100 text-orange-700 text-xs font-medium mb-3">
+                <Sparkles className="h-3.5 w-3.5 mr-1" />
                 NETWORK OVERVIEW
               </div>
-              <h1 className="text-3xl md:text-4xl font-light text-white mb-2 tracking-tight">
-                Network Dashboard
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+                  Network Dashboard
+                </span>
               </h1>
-              <p className="text-sm text-gray-400 font-light tracking-wide">
+              <p className="text-base text-gray-600">
                 Overview and management of your charging infrastructure
               </p>
             </div>
-            <div className="mt-4 md:mt-0 flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={handleShowAddForm}
-                className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm font-light tracking-wide text-white transition-all duration-200"
+                className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg shadow-md hover:shadow-orange-500/20 transition-all text-sm font-medium"
               >
                 Add Station
               </button>
               <Link
                 to="/map"
-                className="inline-flex items-center px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-light tracking-wide text-gray-300 transition-all duration-200"
+                className="inline-flex items-center px-4 py-2.5 bg-white border border-orange-200 hover:border-orange-300 text-orange-700 rounded-lg shadow-sm hover:shadow-md transition-all text-sm font-medium"
               >
                 <MapPin className="h-4 w-4 mr-2" />
                 View Map
               </Link>
               <Link
-                to="/home"
-                className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm font-light tracking-wide text-white transition-all duration-200"
+                to="/stations"
+                className="inline-flex items-center px-4 py-2.5 bg-white border border-orange-200 hover:border-orange-300 text-orange-700 rounded-lg shadow-sm hover:shadow-md transition-all text-sm font-medium"
               >
                 <Activity className="h-4 w-4 mr-2" />
                 All Stations
@@ -225,104 +220,53 @@ const Dashboard = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {/* Total Stations */}
-          <div className="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 backdrop-blur-lg rounded-xl border border-indigo-800/30 p-6 hover:border-indigo-600/50 transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-indigo-900/50 rounded-lg flex items-center justify-center border border-indigo-800/30 group-hover:border-indigo-600/50 transition-colors">
-                <Zap className="h-5 w-5 text-indigo-400" />
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-indigo-300 font-light tracking-wider">+12%</div>
-                <div className="text-xs text-gray-500">vs last month</div>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs text-gray-400 font-light tracking-wider uppercase mb-1">
-                Total Stations
-              </p>
-              <p className="text-3xl font-light text-white mb-1">
-                {stats.totalStations}
-              </p>
-              <p className="text-xs text-gray-500 font-light">
-                Across your network
-              </p>
-            </div>
-          </div>
+          <StatCard
+            icon={<Zap className="h-5 w-5 text-orange-500" />}
+            value={stats.totalStations}
+            label="Total Stations"
+            change="+12%"
+            description="Across your network"
+            bgColor="from-orange-50 to-white"
+          />
 
           {/* Active Stations */}
-          <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 backdrop-blur-lg rounded-xl border border-green-800/30 p-6 hover:border-green-600/50 transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-green-900/50 rounded-lg flex items-center justify-center border border-green-800/30 group-hover:border-green-600/50 transition-colors">
-                <CheckCircle className="h-5 w-5 text-green-400" />
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-green-300 font-light tracking-wider">+5%</div>
-                <div className="text-xs text-gray-500">vs last week</div>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs text-gray-400 font-light tracking-wider uppercase mb-1">
-                Active Stations
-              </p>
-              <p className="text-3xl font-light text-white mb-1">
-                {stats.activeStations}
-              </p>
-              <p className="text-xs text-gray-500 font-light">
-                Ready for charging
-              </p>
-            </div>
-          </div>
+          <StatCard
+            icon={<CheckCircle className="h-5 w-5 text-green-500" />}
+            value={stats.activeStations}
+            label="Active Stations"
+            change="+5%"
+            description="Ready for charging"
+            bgColor="from-green-50 to-white"
+          />
 
           {/* Total Power */}
-          <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 backdrop-blur-lg rounded-xl border border-blue-800/30 p-6 hover:border-blue-600/50 transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-900/50 rounded-lg flex items-center justify-center border border-blue-800/30 group-hover:border-blue-600/50 transition-colors">
-                <TrendingUp className="h-5 w-5 text-blue-400" />
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-blue-300 font-light tracking-wider">+8%</div>
-                <div className="text-xs text-gray-500">vs last month</div>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs text-gray-400 font-light tracking-wider uppercase mb-1">
-                Total Power
-              </p>
-              <p className="text-3xl font-light text-white mb-1">
-                {stats.totalPower.toFixed(0)} kW
-              </p>
-              <p className="text-xs text-gray-500 font-light">
-                Combined capacity
-              </p>
-            </div>
-          </div>
+          <StatCard
+            icon={<Battery className="h-5 w-5 text-blue-500" />}
+            value={`${stats.totalPower.toFixed(0)} kW`}
+            label="Total Power"
+            change="+8%"
+            description="Combined capacity"
+            bgColor="from-blue-50 to-white"
+          />
 
           {/* Average Rating */}
-          <div className="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 backdrop-blur-lg rounded-xl border border-yellow-800/30 p-6 hover:border-yellow-600/50 transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-yellow-900/50 rounded-lg flex items-center justify-center border border-yellow-800/30 group-hover:border-yellow-600/50 transition-colors">
-                <Star className="h-5 w-5 text-yellow-400" />
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-yellow-300 font-light tracking-wider">+0.2</div>
-                <div className="text-xs text-gray-500">vs last week</div>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs text-gray-400 font-light tracking-wider uppercase mb-1">
-                Avg Rating
-              </p>
-              <p className="text-3xl font-light text-white mb-1">
-                {stats.avgRating.toFixed(1)}
-              </p>
-              <p className="text-xs text-gray-500 font-light">
-                Customer satisfaction
-              </p>
-            </div>
-          </div>
+          <StatCard
+            icon={<Star className="h-5 w-5 text-amber-500" />}
+            value={stats.avgRating.toFixed(1)}
+            label="Avg Rating"
+            change="+0.2"
+            description="Customer satisfaction"
+            bgColor="from-amber-50 to-white"
+          />
         </div>
 
         {/* Charging Stations Management */}
-        <div className="bg-gray-900/50 backdrop-blur-lg rounded-xl border border-gray-800/50 overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
+          <div className="px-6 py-5 border-b border-orange-100">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Your Charging Stations
+            </h2>
+          </div>
           <ChargingStations
             stations={stations}
             setStations={setStations}
@@ -331,9 +275,9 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Station Form Modal (outside ChargingStations) */}
+      {/* Station Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 overflow-y-auto z-50">
+        <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 transition-opacity" aria-hidden="true">
               <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm"></div>
@@ -341,31 +285,27 @@ const Dashboard = () => {
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
               &#8203;
             </span>
-            <div className="inline-block align-bottom bg-gray-900/80 backdrop-blur-lg rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-800/50">
-              <div className="px-4 pt-5 pb-4 sm:p-6">
-                <div className="sm:flex sm:items-start">
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                    <h3 className="text-lg font-light text-white tracking-tight mb-4">
-                      {editingStation ? "Edit Station" : "Add New Station"}
-                    </h3>
-                    <div className="mt-2">
-                      <StationForm
-                        initialData={editingStation}
-                        onSubmit={(data) => {
-                          if (editingStation) {
-                            handleUpdateStation(editingStation._id, data);
-                          } else {
-                            handleAddStation(data);
-                          }
-                        }}
-                        onCancel={() => {
-                          setEditingStation(null);
-                          setShowForm(false);
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
+            <div className="inline-block align-bottom bg-white/90 backdrop-blur-lg rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-orange-100">
+              <div className="px-6 py-5 border-b border-orange-100">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {editingStation ? "Edit Station" : "Add New Station"}
+                </h3>
+              </div>
+              <div className="px-6 py-4">
+                <StationForm
+                  initialData={editingStation}
+                  onSubmit={(data) => {
+                    if (editingStation) {
+                      handleUpdateStation(editingStation._id, data);
+                    } else {
+                      handleAddStation(data);
+                    }
+                  }}
+                  onCancel={() => {
+                    setEditingStation(null);
+                    setShowForm(false);
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -374,5 +314,30 @@ const Dashboard = () => {
     </div>
   );
 };
+
+const StatCard = ({ icon, value, label, change, description, bgColor }) => (
+  <div className={`bg-gradient-to-b ${bgColor} rounded-xl border border-orange-100 p-5 hover:shadow-md transition-all`}>
+    <div className="flex items-center justify-between mb-4">
+      <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+        {icon}
+      </div>
+      <div className="text-right">
+        <div className="text-xs font-medium text-green-600">{change}</div>
+        <div className="text-xs text-gray-500">vs last month</div>
+      </div>
+    </div>
+    <div>
+      <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+        {label}
+      </p>
+      <p className="text-2xl font-bold text-gray-900 mb-1">
+        {value}
+      </p>
+      <p className="text-xs text-gray-500">
+        {description}
+      </p>
+    </div>
+  </div>
+);
 
 export default Dashboard;

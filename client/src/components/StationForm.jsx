@@ -106,13 +106,13 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 p-6 rounded-xl bg-gray-900/70 backdrop-blur-lg border border-gray-800/50 shadow-xl"
+      className="space-y-5 p-6 rounded-2xl bg-white/90 backdrop-blur-sm border border-orange-100 shadow-sm"
     >
       {/* Station Name */}
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-light tracking-wide text-gray-300 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Station Name
         </label>
@@ -122,13 +122,12 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           id="name"
           value={formData.name}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-gray-900/50 ${
-            errors.name ? "border-red-500/70" : "border-gray-800/50"
-          } text-white placeholder-gray-500 transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.name ? "border-red-400" : "border-orange-200"
+            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
           placeholder="e.g. Downtown Charging Hub"
         />
         {errors.name && (
-          <p className="mt-2 text-xs font-light tracking-wide text-red-400/90">
+          <p className="mt-2 text-xs font-medium text-red-500">
             {errors.name}
           </p>
         )}
@@ -138,7 +137,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
       <div>
         <label
           htmlFor="location"
-          className="block text-sm font-light tracking-wide text-gray-300 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Address/Location
         </label>
@@ -148,13 +147,12 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           id="location"
           value={formData.location}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-gray-900/50 ${
-            errors.location ? "border-red-500/70" : "border-gray-800/50"
-          } text-white placeholder-gray-500 transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.location ? "border-red-400" : "border-orange-200"
+            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
           placeholder="123 Main Street, City"
         />
         {errors.location && (
-          <p className="mt-2 text-xs font-light tracking-wide text-red-400/90">
+          <p className="mt-2 text-xs font-medium text-red-500">
             {errors.location}
           </p>
         )}
@@ -165,7 +163,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         <div>
           <label
             htmlFor="latitude"
-            className="block text-sm font-light tracking-wide text-gray-300 mb-2"
+            className="block text-sm font-medium text-gray-700 mb-2"
           >
             Latitude
           </label>
@@ -176,13 +174,12 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             id="latitude"
             value={formData.latitude}
             onChange={handleChange}
-            className={`w-full px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-gray-900/50 ${
-              errors.latitude ? "border-red-500/70" : "border-gray-800/50"
-            } text-white placeholder-gray-500 transition-all duration-200`}
+            className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.latitude ? "border-red-400" : "border-orange-200"
+              } text-gray-900 placeholder-orange-300 transition-all duration-200`}
             placeholder="e.g. 40.7128"
           />
           {errors.latitude && (
-            <p className="mt-2 text-xs font-light tracking-wide text-red-400/90">
+            <p className="mt-2 text-xs font-medium text-red-500">
               {errors.latitude}
             </p>
           )}
@@ -191,7 +188,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         <div>
           <label
             htmlFor="longitude"
-            className="block text-sm font-light tracking-wide text-gray-300 mb-2"
+            className="block text-sm font-medium text-gray-700 mb-2"
           >
             Longitude
           </label>
@@ -202,13 +199,12 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             id="longitude"
             value={formData.longitude}
             onChange={handleChange}
-            className={`w-full px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-gray-900/50 ${
-              errors.longitude ? "border-red-500/70" : "border-gray-800/50"
-            } text-white placeholder-gray-500 transition-all duration-200`}
+            className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.longitude ? "border-red-400" : "border-orange-200"
+              } text-gray-900 placeholder-orange-300 transition-all duration-200`}
             placeholder="e.g. -74.0060"
           />
           {errors.longitude && (
-            <p className="mt-2 text-xs font-light tracking-wide text-red-400/90">
+            <p className="mt-2 text-xs font-medium text-red-500">
               {errors.longitude}
             </p>
           )}
@@ -219,7 +215,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
       <div>
         <label
           htmlFor="status"
-          className="block text-sm font-light tracking-wide text-gray-300 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Status
         </label>
@@ -228,14 +224,10 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           name="status"
           value={formData.status}
           onChange={handleChange}
-          className="w-full px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border border-gray-800/50 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-gray-900/50 text-white transition-all duration-200"
+          className="w-full px-4 py-3 text-sm font-medium rounded-xl border border-orange-200 focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white text-gray-900 transition-all duration-200"
         >
-          <option value="Active" className="bg-gray-800">
-            Active
-          </option>
-          <option value="Inactive" className="bg-gray-800">
-            Inactive
-          </option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
         </select>
       </div>
 
@@ -243,7 +235,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
       <div>
         <label
           htmlFor="powerOutput"
-          className="block text-sm font-light tracking-wide text-gray-300 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Power Output (kW)
         </label>
@@ -254,13 +246,12 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           id="powerOutput"
           value={formData.powerOutput}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-gray-900/50 ${
-            errors.powerOutput ? "border-red-500/70" : "border-gray-800/50"
-          } text-white placeholder-gray-500 transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.powerOutput ? "border-red-400" : "border-orange-200"
+            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
           placeholder="e.g. 50.0"
         />
         {errors.powerOutput && (
-          <p className="mt-2 text-xs font-light tracking-wide text-red-400/90">
+          <p className="mt-2 text-xs font-medium text-red-500">
             {errors.powerOutput}
           </p>
         )}
@@ -270,7 +261,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
       <div>
         <label
           htmlFor="connectorType"
-          className="block text-sm font-light tracking-wide text-gray-300 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Connector Type
         </label>
@@ -279,38 +270,35 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           name="connectorType"
           value={formData.connectorType}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-gray-900/50 ${
-            errors.connectorType ? "border-red-500/70" : "border-gray-800/50"
-          } text-white transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.connectorType ? "border-red-400" : "border-orange-200"
+            } text-gray-900 transition-all duration-200`}
         >
-          <option value="" className="bg-gray-800">
-            Select a connector type
-          </option>
+          <option value="">Select a connector type</option>
           {connectorTypes.map((type) => (
-            <option key={type} value={type} className="bg-gray-800">
+            <option key={type} value={type}>
               {type}
             </option>
           ))}
         </select>
         {errors.connectorType && (
-          <p className="mt-2 text-xs font-light tracking-wide text-red-400/90">
+          <p className="mt-2 text-xs font-medium text-red-500">
             {errors.connectorType}
           </p>
         )}
       </div>
 
       {/* Form Actions */}
-      <div className="pt-5 flex justify-end space-x-3 border-t border-gray-800/30">
+      <div className="pt-5 flex justify-end space-x-3 border-t border-orange-100">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2.5 text-sm font-light tracking-wide rounded-lg border border-gray-700/50 text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-300"
+          className="px-4 py-2.5 text-sm font-medium rounded-xl border border-orange-200 text-orange-700 bg-orange-50 hover:bg-orange-100 transition-all duration-300"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2.5 text-sm font-light tracking-wide rounded-lg text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20"
+          className="px-4 py-2.5 text-sm font-medium rounded-xl text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 transition-all duration-300 shadow-sm hover:shadow-orange-200"
         >
           {initialData ? "Update Station" : "Add Station"}
         </button>

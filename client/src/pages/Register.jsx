@@ -4,7 +4,7 @@ import { Zap, Mail, Lock, User, Eye, EyeOff, AlertCircle, X } from "lucide-react
 import toast from "react-hot-toast";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext.jsx";
-import carImage from "../assets/car.png";
+import carImage from "/car.png";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -48,9 +48,7 @@ const Register = () => {
     try {
       const response = await api.post("/auth/register", formData);
       if (response.status === 200) {
-        navigate("/login", {
-          state: { message: "Registration successful! Please login." },
-        });
+        navigate("/login");
       } else {
         toast.error(response.data.message);
         setError(response.data.message);
@@ -64,11 +62,11 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 flex">
       {/* Close button */}
       <Link
         to="/"
-        className="absolute top-6 left-6 z-20 p-2 rounded-lg text-gray-400 hover:text-white transition-colors"
+        className="absolute top-6 left-6 z-20 p-2 rounded-lg text-orange-400 hover:text-orange-600 transition-colors"
       >
         <X className="h-5 w-5" />
       </Link>
@@ -80,31 +78,24 @@ const Register = () => {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg flex items-center justify-center mr-3">
                   <Zap className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-xl font-semibold text-white">VoltSpot</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">VoltSpot</span>
               </div>
-              <select className="text-sm text-gray-400 bg-transparent border-none outline-none">
-                <option>English</option>
-              </select>
-            </div>
-            
-            <h1 className="text-2xl font-light text-white mb-2">Create your account</h1>
-            <p className="text-sm text-gray-400">Join the future of EV charging.</p>
-          </div>
 
+            </div>
+            <h1 className="text-xl font-semibold text-gray-900 mb-2">Create your account</h1>
+            <p className="text-xs text-orange-500">Join the future of EV charging.</p>
+          </div>
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-2">
             {error && (
-              <div className="bg-red-900/20 border border-red-800/30 rounded-lg p-3 flex items-start gap-2">
+              <div className="bg-red-100 border border-red-200 rounded-lg p-3 flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-red-300 font-light leading-snug">
-                  {error}
-                </p>
+                <p className="text-xs text-red-500 font-light leading-snug">{error}</p>
               </div>
             )}
-
             {/* Name Field */}
             <div className="space-y-2">
               <input
@@ -115,11 +106,10 @@ const Register = () => {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="block w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 text-base transition-colors"
+                className="block w-full px-0 py-3 bg-transparent border-0 border-b-2 border-orange-200 text-gray-900 placeholder-orange-300 focus:outline-none focus:border-orange-400 text-sm transition-colors"
                 placeholder="Full Name"
               />
             </div>
-
             {/* Email Field */}
             <div className="space-y-2">
               <input
@@ -130,11 +120,10 @@ const Register = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="block w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 text-base transition-colors"
+                className="block w-full px-0 py-3 bg-transparent border-0 border-b-2 border-orange-200 text-gray-900 placeholder-orange-300 focus:outline-none focus:border-orange-400 text-sm transition-colors"
                 placeholder="Email"
               />
             </div>
-
             {/* Password Field */}
             <div className="space-y-2">
               <div className="relative">
@@ -146,7 +135,7 @@ const Register = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="block w-full px-0 py-4 pr-12 bg-transparent border-0 border-b-2 border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 text-base transition-colors"
+                  className="block w-full px-0 py-3 pr-10 bg-transparent border-0 border-b-2 border-orange-200 text-gray-900 placeholder-orange-300 focus:outline-none focus:border-orange-400 text-sm transition-colors"
                   placeholder="Password"
                 />
                 <button
@@ -155,14 +144,13 @@ const Register = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                    <EyeOff className="h-4 w-4 text-orange-300 hover:text-orange-500 transition-colors" />
                   ) : (
-                    <Eye className="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                    <Eye className="h-4 w-4 text-orange-300 hover:text-orange-500 transition-colors" />
                   )}
                 </button>
               </div>
             </div>
-
             {/* Confirm Password Field */}
             <div className="space-y-2">
               <div className="relative">
@@ -174,7 +162,7 @@ const Register = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="block w-full px-0 py-4 pr-12 bg-transparent border-0 border-b-2 border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 text-base transition-colors"
+                  className="block w-full px-0 py-3 pr-10 bg-transparent border-0 border-b-2 border-orange-200 text-gray-900 placeholder-orange-300 focus:outline-none focus:border-orange-400 text-sm transition-colors"
                   placeholder="Confirm Password"
                 />
                 <button
@@ -183,42 +171,36 @@ const Register = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                    <EyeOff className="h-4 w-4 text-orange-300 hover:text-orange-500 transition-colors" />
                   ) : (
-                    <Eye className="h-4 w-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                    <Eye className="h-4 w-4 text-orange-300 hover:text-orange-500 transition-colors" />
                   )}
                 </button>
               </div>
             </div>
-
             {/* Terms Checkbox */}
-            <div className="flex items-start mt-8">
+            <div className="flex items-start py-2">
               <div className="flex items-center h-5">
                 <input
                   id="terms"
                   name="terms"
                   type="checkbox"
                   required
-                  className="h-4 w-4 rounded border-gray-700 text-purple-500 focus:ring-purple-500 bg-gray-800"
+                  className="h-4 w-4 rounded border-orange-200 text-orange-500 focus:ring-orange-400 bg-orange-50"
                 />
               </div>
-              <label htmlFor="terms" className="ml-2 block text-sm text-gray-400 font-light leading-relaxed">
+              <label htmlFor="terms" className="ml-2 block text-xs text-orange-500 font-light leading-relaxed">
                 I agree to the{" "}
-                <Link className="text-purple-400 hover:text-purple-300 underline">
-                  Terms of Service
-                </Link>{" "}
+                <Link className="text-orange-600 hover:text-orange-800 underline">Terms of Service</Link>{" "}
                 and{" "}
-                <Link className="text-purple-400 hover:text-purple-300 underline">
-                  Privacy Policy
-                </Link>
+                <Link className="text-orange-600 hover:text-orange-800 underline">Privacy Policy</Link>
               </label>
             </div>
-
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border-0 rounded-lg text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-12"
+              className="w-full flex justify-center py-2.5 px-4 border-0 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-8"
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -229,14 +211,13 @@ const Register = () => {
                 "Create account"
               )}
             </button>
-
             {/* Sign In Link */}
-            <div className="text-center mt-12">
-              <p className="text-sm text-gray-400">
+            <div className="text-center py-2">
+              <p className="text-xs text-orange-500">
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-purple-400 hover:text-purple-300 transition-colors"
+                  className="text-orange-600 hover:text-orange-800 transition-colors font-semibold"
                 >
                   Sign in
                 </Link>
@@ -247,26 +228,19 @@ const Register = () => {
       </div>
 
       {/* Right Section - Visual */}
-      <div className="flex-1 bg-gray-900 flex items-center justify-center relative overflow-hidden">
+      <div className="flex-1 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center relative overflow-hidden">
         {/* Car Image Background */}
         <div className="absolute inset-0 opacity-30">
-          <img 
-            src={carImage} 
-            alt="Electric Vehicle" 
-            className="w-full h-full object-cover"
-          />
+          <img src={carImage} alt="Electric Vehicle" className="w-full h-full object-cover" />
         </div>
-        
         {/* Content */}
-        <div className="text-center text-white relative z-10">
-          <div className="text-4xl font-light mb-4">Welcome to VoltSpot</div>
-          <div className="text-lg text-gray-400 mb-8 max-w-sm">Your simple EV charging solution</div>
-          <div className="w-16 h-1 bg-purple-500 mx-auto mb-8"></div>
-          <button className="px-6 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition-colors">
-            Get Started
-          </button>
+        <div className="text-center text-orange-700 relative z-10">
+          <div className="text-2xl font-semibold mb-3">Welcome to VoltSpot</div>
+          <div className="text-sm text-orange-400 mb-6 max-w-sm">Your simple EV charging solution</div>
+          <div className="w-12 h-1 bg-orange-400 mx-auto mb-6"></div>
         </div>
       </div>
+
     </div>
   );
 };

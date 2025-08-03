@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthContext";
@@ -20,7 +20,11 @@ import SavedStations from "./pages/SavedStations";
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -31,6 +35,7 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   const path = useLocation().pathname.split("/")[1];
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {path !== "login" && path !== "register" && <Navbar />}
@@ -39,7 +44,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/stations" element={<Home />} />
           <Route path="/station/:id" element={<Station />} />
           <Route
             path="/dashboard"

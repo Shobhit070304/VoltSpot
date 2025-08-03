@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { BatteryCharging as ChargingPile, LogOut, Menu, User, X, Zap } from "lucide-react";
-import logo from "../assets/charging.png";
+import { LogOut, Menu, User, X } from "lucide-react";
+import logo from "/charging.png";
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
-  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-    setIsMobileMenuOpen(false); // close mobile menu on logout
-  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -31,153 +25,139 @@ const Navbar = () => {
   return (
     <div className="flex w-full justify-center">
       <nav
-        className={`fixed mx-auto w-[92%] max-w-6xl top-4 z-50 transition-all duration-300 ${isScrolled
-          ? "rounded-xl bg-gray-900/95 border border-gray-700/40 shadow-sm backdrop-blur-lg py-1.5"
-          : "rounded-lg bg-gray-900/80 border border-gray-800/20 backdrop-blur-md py-2"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center ${isScrolled
+          ? "backdrop-blur-xl bg-white/90 border-b border-orange-200/60 shadow-md h-16"
+          : "backdrop-blur-lg bg-white/80 border-b border-orange-100/40 shadow-sm h-20"
           }`}
       >
-        <div className="mx-auto px-4">
-          <div className="flex justify-between items-center h-12">
-            {/* Logo - Ultra minimal */}
-            <Link to="/" className="flex items-center group">
+        <div className="flex-1 flex items-center justify-between px-4 sm:px-8 w-full max-w-7xl">
+          {/* Logo */}
+          <Link to="/" className="flex items-center group">
+            <img
+              src={logo}
+              alt="logo"
+              className={`transition-all duration-300 ${isScrolled ? "h-7 w-7" : "h-8 w-8"}`}
+            />
+            <span
+              className={`ml-2 font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-300 ${isScrolled ? "text-xl" : "text-2xl"
+                } montserrat-regular`}
+            >
+              voltspot
+            </span>
+          </Link>
 
-              <img
-                src={logo}
-                alt="logo"
-                className={`${isScrolled ? "h-6 w-6" : "h-7 w-7"
-                  } transition-all duration-300`}
-              />
-
-              <span className={`ml-2 font-medium tracking-tight ${isScrolled ? "text-sm" : "text-base"
-                } bg-clip-text text-transparent bg-gradient-to-r from-blue-100 to-indigo-100 transition-all duration-300`}>
-                Voltspot
-              </span>
-            </Link>
-
-            {/* Desktop Navigation - Compact and elegant */}
-            <div className="hidden md:flex items-center space-x-1">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-1">
+            {[
+              { to: "/stations", label: "Stations" },
+              { to: "/map", label: "Map" },
+              { to: "/dashboard", label: "Dashboard" },
+              { to: "/saved-stations", label: "Saved Stations" },
+            ].map(({ to, label }) => (
               <Link
-                to="/home"
-                className={`px-3 py-1 text-[0.78rem] font-light tracking-wide ${isScrolled ? "text-gray-300" : "text-gray-300"
-                  } hover:text-white rounded-lg transition-all duration-150`}
+                key={label}
+                to={to}
+                className={`px-3 py-2 text-sm font-medium tracking-wide ${isScrolled ? "text-orange-700" : "text-orange-600"
+                  } hover:text-orange-800 rounded-md transition-all duration-200`}
               >
-                Stations
+                {label}
               </Link>
-              {isAuthenticated && (
-                <>
-                  <Link
-                    to="/map"
-                    className="px-3 py-1 text-[0.78rem] font-light tracking-wide text-gray-300 hover:text-white rounded-lg transition-all duration-150"
-                  >
-                    Map
-                  </Link>
-                  <Link
-                    to="/dashboard"
-                    className="px-3 py-1 text-[0.78rem] font-light tracking-wide text-gray-300 hover:text-white rounded-lg transition-all duration-150"
-                  >
-                    Dashboard
-                  </Link>
-                </>
-              )}
-            </div>
+            ))}
 
-            {/* Auth Section - Refined */}
-            <div className="hidden md:flex items-center space-x-2">
+            {!isAuthenticated ? (
+              <Link
+                to="/login"
+                className={`ml-2 px-4 py-2 flex items-center text-sm font-medium tracking-wide bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 rounded-lg transition-all duration-200 shadow ${isScrolled ? "shadow-md" : "shadow-lg"
+                  }`}
+              >
+                Sign In
+              </Link>
+            ) : (
+              <div className="flex items-center space-x-2 ml-2">
+                <button
+                  onClick={logout}
+                  className={`px-4 py-2 flex items-center text-sm font-medium tracking-wide bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md ${isScrolled ? "shadow-md" : "shadow-lg"
+                    }`}
+                >
+                  Logout
+                </button>
+                <Link
+                  to="/dashboard"
+                  className={`flex items-center justify-center rounded-full transition-all duration-200 ${isScrolled
+                    ? "w-8 h-8 bg-orange-100 border border-orange-200 hover:bg-orange-200"
+                    : "w-9 h-9 bg-orange-50 border border-orange-100 hover:bg-orange-100"
+                    }`}
+                >
+                  <User className={`${isScrolled ? "w-3.5 h-3.5" : "w-4 h-4"} text-orange-600`} />
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button
+              onClick={toggleMobileMenu}
+              className={`p-2 rounded-full ${isMobileMenuOpen
+                ? "bg-orange-100 text-orange-700"
+                : "text-orange-600 hover:text-orange-700 hover:bg-orange-100"
+                } transition-all duration-200`}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div
+            className={`absolute md:hidden w-full ${isScrolled ? "top-16" : "top-20"
+              } left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-orange-100/50 shadow-lg rounded-b-xl px-6 pt-2 pb-6 space-y-1 transition-all duration-500`}
+          >
+            {[
+              { to: "/stations", label: "Stations" },
+              { to: "/saved-stations", label: "Saved Stations" },
+              { to: "/map", label: "Map" },
+              { to: "/dashboard", label: "Dashboard" },
+            ].map(({ to, label }) => (
+              <Link
+                key={label}
+                to={to}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-3 text-sm font-medium text-orange-700 hover:text-orange-900 hover:bg-orange-50 rounded-lg transition-colors"
+              >
+                {label}
+              </Link>
+            ))}
+
+            <div className="pt-2 mt-1 border-t border-orange-100">
               {!isAuthenticated ? (
                 <Link
                   to="/login"
-                  className={`px-3.5 py-1.5 flex items-center text-[0.78rem] font-light tracking-wide bg-white text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 shadow-sm`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block px-4 py-3 text-sm font-medium text-center bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 rounded-lg transition-colors"
                 >
                   Sign In
                 </Link>
               ) : (
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={handleLogout}
-                    className={`px-3.5 py-1.5 flex items-center text-[0.78rem] font-light tracking-wide bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200 shadow-sm`}
-                  >
-                    Logout
-                  </button>
-                  <Link
-                    to="/dashboard"
-                    className="w-8 h-8 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
-                  >
-                    <User className="w-3.5 h-3.5 text-gray-300" />
-                  </Link>
-                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full px-4 py-3 text-sm font-medium text-white rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  Logout
+                </button>
               )}
-            </div>
-
-            {/* Mobile Menu Button - Minimal */}
-            <div className="md:hidden">
-              <button
-                onClick={toggleMobileMenu}
-                className={`p-1.5 rounded-lg ${isMobileMenuOpen
-                  ? "bg-white/10 text-white"
-                  : "text-gray-300 hover:text-white hover:bg-white/5"
-                  } transition-all duration-200`}
-              >
-                {isMobileMenuOpen ? (
-                  <X className="w-4 h-4" />
-                ) : (
-                  <Menu className="w-4 h-4" />
-                )}
-              </button>
             </div>
           </div>
-
-          {/* Mobile Menu - Sleek dropdown */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden mt-2 pb-2 space-y-1">
-              <Link
-                to="/home"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-3 py-2 text-xs font-light tracking-wide text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-              >
-                Stations
-              </Link>
-              {isAuthenticated && (
-                <>
-                  <Link
-                    to="/map"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-xs font-light tracking-wide text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                  >
-                    Map
-                  </Link>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-xs font-light tracking-wide text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                </>
-              )}
-              <div className="pt-2 mt-2 border-t border-white/5">
-                {!isAuthenticated ? (
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-xs font-medium tracking-wide text-center bg-white text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                ) : (
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full px-3 py-2 text-xs font-medium tracking-wide text-center bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                  >
-                    Logout
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
+        )}
       </nav>
     </div>
   );
+
 };
 
 export default Navbar;
