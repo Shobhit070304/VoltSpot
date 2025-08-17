@@ -11,12 +11,13 @@ import {
   Sparkles,
   Battery,
   Users,
-  Clock
+  Clock,
 } from "lucide-react";
 import ChargingStations from "./ChargingStations";
 import StationForm from "../components/StationForm";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import RecentlyViewed from "../components/RecentlyViewed";
 
 const Dashboard = () => {
   const [stations, setStations] = useState([]);
@@ -46,20 +47,21 @@ const Dashboard = () => {
           avgPowerOutput:
             stationsData.length > 0
               ? stationsData.reduce(
-                (sum, station) => sum + (station.powerOutput || 0),
-                0
-              ) / stationsData.length
+                  (sum, station) => sum + (station.powerOutput || 0),
+                  0
+                ) / stationsData.length
               : 0,
           totalPower: stationsData.reduce(
             (sum, station) => sum + (station.powerOutput || 0),
             0
           ),
-          avgRating: stationsData.length > 0
-            ? stationsData.reduce(
-              (sum, station) => sum + (station.averageRating || 0),
-              0
-            ) / stationsData.length
-            : 0
+          avgRating:
+            stationsData.length > 0
+              ? stationsData.reduce(
+                  (sum, station) => sum + (station.averageRating || 0),
+                  0
+                ) / stationsData.length
+              : 0,
         };
         setStats(statsData);
       }
@@ -150,7 +152,8 @@ const Dashboard = () => {
                 Error Loading Dashboard
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                {error.message || "Failed to fetch dashboard data. Please try again later."}
+                {error.message ||
+                  "Failed to fetch dashboard data. Please try again later."}
               </p>
               <button
                 onClick={() => window.location.reload()}
@@ -259,19 +262,23 @@ const Dashboard = () => {
             bgColor="from-amber-50 to-white"
           />
         </div>
-
-        {/* Charging Stations Management */}
-        <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
-          <div className="px-6 py-5 border-b border-orange-100">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Your Charging Stations
-            </h2>
+        <div className="w-full flex justify-between gap-5">
+          <div className="w-1/5">
+            <RecentlyViewed />
           </div>
-          <ChargingStations
-            stations={stations}
-            setStations={setStations}
-            onEdit={handleEdit}
-          />
+          {/* Charging Stations Management */}
+          <div className="bg-amber-100 w-4/5 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
+            <div className="px-6 py-5 border-b border-orange-100">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Your Charging Stations
+              </h2>
+            </div>
+            <ChargingStations
+              stations={stations}
+              setStations={setStations}
+              onEdit={handleEdit}
+            />
+          </div>
         </div>
       </div>
 
@@ -279,10 +286,16 @@ const Dashboard = () => {
       {showForm && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+            >
               <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm"></div>
             </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
               &#8203;
             </span>
             <div className="inline-block align-bottom bg-white/90 backdrop-blur-lg rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-orange-100">
@@ -316,7 +329,9 @@ const Dashboard = () => {
 };
 
 const StatCard = ({ icon, value, label, change, description, bgColor }) => (
-  <div className={`bg-gradient-to-b ${bgColor} rounded-xl border border-orange-100 p-5 hover:shadow-md transition-all`}>
+  <div
+    className={`bg-gradient-to-b ${bgColor} rounded-xl border border-orange-100 p-5 hover:shadow-md transition-all`}
+  >
     <div className="flex items-center justify-between mb-4">
       <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
         {icon}
@@ -330,12 +345,8 @@ const StatCard = ({ icon, value, label, change, description, bgColor }) => (
       <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
         {label}
       </p>
-      <p className="text-2xl font-bold text-gray-900 mb-1">
-        {value}
-      </p>
-      <p className="text-xs text-gray-500">
-        {description}
-      </p>
+      <p className="text-2xl font-bold text-gray-900 mb-1">{value}</p>
+      <p className="text-xs text-gray-500">{description}</p>
     </div>
   </div>
 );

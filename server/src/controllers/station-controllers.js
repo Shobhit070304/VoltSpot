@@ -56,6 +56,7 @@ const createStation = async (req, res, next) => {
       status,
       powerOutput,
       connectorType,
+      amenities,
     } = req.body;
 
     const station = await Station.create({
@@ -66,6 +67,7 @@ const createStation = async (req, res, next) => {
       status,
       powerOutput,
       connectorType,
+      amenities,
       createdBy: req.user.userId,
     });
 
@@ -78,7 +80,6 @@ const createStation = async (req, res, next) => {
 // Update station
 const updateStation = async (req, res, next) => {
   try {
-
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -93,6 +94,7 @@ const updateStation = async (req, res, next) => {
       status,
       powerOutput,
       connectorType,
+      amenities,
     } = req.body;
 
     const station = await Station.findOneAndUpdate(
@@ -105,6 +107,7 @@ const updateStation = async (req, res, next) => {
         status,
         powerOutput,
         connectorType,
+        amenities,
         updatedAt: Date.now(),
       },
       { new: true, runValidators: true }
@@ -173,28 +176,25 @@ const saveStation = async (req, res, next) => {
 // Get saved stations
 const getSavedStations = async (req, res, next) => {
   try {
-  
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Fetch the actual stations with population
-    const populatedUser = await User.findById(req.user.userId)
-      .populate({
-        path: 'savedStations',
-        model: 'Station',
-        select: 'name location status powerOutput connectorType latitude longitude'
-      });
+    const populatedUser = await User.findById(req.user.userId).populate({
+      path: "savedStations",
+      model: "Station",
+      select:
+        "name location status powerOutput connectorType latitude longitude",
+    });
 
-
-    
     res.status(200).json({ savedStations: populatedUser.savedStations });
   } catch (error) {
     console.error("Error in getSavedStations:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Error fetching saved stations",
-      error: error.message 
+      error: error.message,
     });
   }
 };
@@ -207,5 +207,5 @@ export {
   updateStation,
   deleteStation,
   saveStation,
-  getSavedStations
+  getSavedStations,
 };

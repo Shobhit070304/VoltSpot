@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "../services/api";
-import { MapPin, Zap, Heart, ChevronRight, Map as MapIcon } from "lucide-react";
+import { MapPin, Zap, Heart, ChevronRight, Map as MapIcon, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 

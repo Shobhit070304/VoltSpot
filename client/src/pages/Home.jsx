@@ -463,7 +463,7 @@ const Home = () => {
                           className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
                         >
                           <Heart
-                            className={`h-4 w-4 transition-colors ${user?.savedStations.includes(station._id) ? "text-red-400 fill-current" : "text-orange-300 hover:text-red-400"}`}
+                            className={`h-4 w-4 transition-colors ${user?.savedStations?.includes(station._id) ? "text-red-400 fill-current" : "text-orange-300 hover:text-red-400"}`}
                           />
                         </button>
                       </div>

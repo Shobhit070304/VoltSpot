@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+const amenitiesOptions = ["WiFi", "Restroom", "Parking", "Cafe", "Shopping"];
+
 const StationForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
@@ -9,6 +11,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
     status: initialData?.status || "Active",
     powerOutput: initialData?.powerOutput || "",
     connectorType: initialData?.connectorType || "",
+    amenities: initialData?.amenities || [],
   });
 
   const [errors, setErrors] = useState({});
@@ -84,6 +87,19 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleAmenityChange = (amenity) => {
+    setFormData((prev) => {
+      if (prev.amenities.includes(amenity)) {
+        return {
+          ...prev,
+          amenities: prev.amenities.filter((a) => a !== amenity),
+        };
+      }
+      return { ...prev, amenities: [...prev.amenities, amenity] };
+    });
+    console.log("Updated Amenities:", formData.amenities);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -97,6 +113,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         status: formData.status,
         powerOutput: parseFloat(formData.powerOutput),
         connectorType: formData.connectorType,
+        amenities: formData.amenities,
       };
 
       onSubmit(submissionData);
@@ -122,14 +139,13 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           id="name"
           value={formData.name}
           onChange={handleChange}
-          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.name ? "border-red-400" : "border-orange-200"
-            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${
+            errors.name ? "border-red-400" : "border-orange-200"
+          } text-gray-900 placeholder-orange-300 transition-all duration-200`}
           placeholder="e.g. Downtown Charging Hub"
         />
         {errors.name && (
-          <p className="mt-2 text-xs font-medium text-red-500">
-            {errors.name}
-          </p>
+          <p className="mt-2 text-xs font-medium text-red-500">{errors.name}</p>
         )}
       </div>
 
@@ -147,8 +163,9 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           id="location"
           value={formData.location}
           onChange={handleChange}
-          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.location ? "border-red-400" : "border-orange-200"
-            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${
+            errors.location ? "border-red-400" : "border-orange-200"
+          } text-gray-900 placeholder-orange-300 transition-all duration-200`}
           placeholder="123 Main Street, City"
         />
         {errors.location && (
@@ -174,8 +191,9 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             id="latitude"
             value={formData.latitude}
             onChange={handleChange}
-            className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.latitude ? "border-red-400" : "border-orange-200"
-              } text-gray-900 placeholder-orange-300 transition-all duration-200`}
+            className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${
+              errors.latitude ? "border-red-400" : "border-orange-200"
+            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
             placeholder="e.g. 40.7128"
           />
           {errors.latitude && (
@@ -199,8 +217,9 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             id="longitude"
             value={formData.longitude}
             onChange={handleChange}
-            className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.longitude ? "border-red-400" : "border-orange-200"
-              } text-gray-900 placeholder-orange-300 transition-all duration-200`}
+            className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${
+              errors.longitude ? "border-red-400" : "border-orange-200"
+            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
             placeholder="e.g. -74.0060"
           />
           {errors.longitude && (
@@ -246,8 +265,9 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           id="powerOutput"
           value={formData.powerOutput}
           onChange={handleChange}
-          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.powerOutput ? "border-red-400" : "border-orange-200"
-            } text-gray-900 placeholder-orange-300 transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${
+            errors.powerOutput ? "border-red-400" : "border-orange-200"
+          } text-gray-900 placeholder-orange-300 transition-all duration-200`}
           placeholder="e.g. 50.0"
         />
         {errors.powerOutput && (
@@ -270,8 +290,9 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
           name="connectorType"
           value={formData.connectorType}
           onChange={handleChange}
-          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${errors.connectorType ? "border-red-400" : "border-orange-200"
-            } text-gray-900 transition-all duration-200`}
+          className={`w-full px-4 py-3 text-sm font-medium rounded-xl border focus:outline-none focus:ring-1 focus:ring-orange-300 bg-white ${
+            errors.connectorType ? "border-red-400" : "border-orange-200"
+          } text-gray-900 transition-all duration-200`}
         >
           <option value="">Select a connector type</option>
           {connectorTypes.map((type) => (
@@ -285,6 +306,23 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             {errors.connectorType}
           </p>
         )}
+      </div>
+
+      {/* Amenities */}
+      <div>
+        <p className="font-semibold mb-2">Amenities</p>
+        <div className="flex flex-wrap gap-3">
+          {amenitiesOptions.map((amenity) => (
+            <label key={amenity} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={formData.amenities.includes(amenity)}
+                onChange={() => handleAmenityChange(amenity)}
+              />
+              {amenity}
+            </label>
+          ))}
+        </div>
       </div>
 
       {/* Form Actions */}

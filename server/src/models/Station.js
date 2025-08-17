@@ -44,6 +44,7 @@ const stationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  amenities: [String],
   averageRating: {
     type: Number,
     default: 0,

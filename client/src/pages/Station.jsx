@@ -5,7 +5,13 @@ import {
   Star,
   Wifi,
   ShoppingBag,
-  AlertCircle, Battery, CheckCircle, ChevronLeft, ChevronRight, Clock, Coffee,
+  AlertCircle,
+  Battery,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Coffee,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -15,6 +21,8 @@ import MapView from "./MapView";
 import ReviewForm from "../components/ReviewForm";
 import { useAuth } from "../context/AuthContext";
 import ReportForm from "../components/ReportForm";
+import useRecentlyViewed from "../hooks/useRecentlyViewed";
+import AmenitiesCard from "../components/AmitiesCard";
 
 const statusColors = {
   Active: "bg-green-100 text-green-800",
@@ -30,11 +38,10 @@ function Station() {
   const [station, setStation] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
 
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showReportForm, setShowReportForm] = useState(false);
-
   const { user } = useAuth();
 
   useEffect(() => {
@@ -42,14 +49,14 @@ function Station() {
       try {
         setLoading(true);
         const response = await api.get(`/station/${id}`);
+        console.log("Data", response.data.station);
         if (response.status === 200) {
           setStation(response.data.station);
         }
       } catch (error) {
         toast.error("Error fetching station");
         setError(true);
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -71,6 +78,13 @@ function Station() {
     fetchStation();
     fetchReviews();
   }, [id]);
+
+  const { addStation } = useRecentlyViewed();
+  useEffect(() => {
+    if (station) {
+      addStation(station);
+    }
+  }, [station]);
 
   if (loading) {
     return (
@@ -110,7 +124,8 @@ function Station() {
                 Error Loading Station
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                {error.message || "Failed to load station data. Please try again later."}
+                {error.message ||
+                  "Failed to load station data. Please try again later."}
               </p>
               <button
                 onClick={() => window.location.reload()}
@@ -138,7 +153,7 @@ function Station() {
         {/* Back Navigation */}
         <div className="mb-6">
           <Link
-            to="/home"
+            to="/stations"
             className="inline-flex items-center text-sm font-medium text-orange-700 hover:text-orange-900 transition-colors"
           >
             <ChevronLeft className="h-5 w-5 mr-2" />
@@ -165,10 +180,11 @@ function Station() {
             </div>
             <div className="mt-4 sm:mt-0">
               <span
-                className={`px-3 py-1 text-sm font-medium rounded-full ${station?.status === "Active"
-                  ? "bg-green-100 text-green-800 border border-green-200"
-                  : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                  }`}
+                className={`px-3 py-1 text-sm font-medium rounded-full ${
+                  station?.status === "Active"
+                    ? "bg-green-100 text-green-800 border border-green-200"
+                    : "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                }`}
               >
                 {station?.status}
               </span>
@@ -273,10 +289,11 @@ function Station() {
                   <button
                     type="button"
                     disabled={station?.status !== "Active"}
-                    className={`w-full inline-flex justify-center items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${station?.status === "Active"
-                      ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md hover:shadow-orange-500/20"
-                      : "bg-gray-100 text-gray-500 cursor-not-allowed"
-                      }`}
+                    className={`w-full inline-flex justify-center items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                      station?.status === "Active"
+                        ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md hover:shadow-orange-500/20"
+                        : "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    }`}
                   >
                     {station?.status === "Active"
                       ? "Start Charging Session"
@@ -307,41 +324,7 @@ function Station() {
             </div>
 
             {/* Amenities */}
-            <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
-              <div className="px-6 py-5 border-b border-orange-100">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Amenities Nearby
-                </h2>
-              </div>
-              <div className="px-6 py-5">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center">
-                    <Coffee className="h-4 w-4 text-orange-500" />
-                    <span className="ml-3 text-sm text-gray-700">
-                      Café (50m)
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <ShoppingBag className="h-4 w-4 text-orange-500" />
-                    <span className="ml-3 text-sm text-gray-700">
-                      Shopping (200m)
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <Wifi className="h-4 w-4 text-orange-500" />
-                    <span className="ml-3 text-sm text-gray-700">
-                      Free WiFi
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 text-orange-500" />
-                    <span className="ml-3 text-sm text-gray-700">
-                      Restrooms
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <AmenitiesCard amenities={station?.amenities || []} />
 
             {/* Reviews */}
             <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
@@ -356,10 +339,11 @@ function Station() {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-4 w-4 ${star <= (station?.averageRating || 0)
-                          ? "text-amber-400 fill-current"
-                          : "text-gray-300"
-                          }`}
+                        className={`h-4 w-4 ${
+                          star <= (station?.averageRating || 0)
+                            ? "text-amber-400 fill-current"
+                            : "text-gray-300"
+                        }`}
                       />
                     ))}
                   </div>
@@ -385,9 +369,7 @@ function Station() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-600">
-                      No reviews yet
-                    </p>
+                    <p className="text-sm text-gray-600">No reviews yet</p>
                   )}
                 </div>
 
