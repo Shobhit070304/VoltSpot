@@ -24,6 +24,7 @@ import { api } from "../services/api";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import GlobalSearch from "../components/GlobalSearch";
 
 const connectorTypes = [
   "Type 1",
@@ -49,6 +50,7 @@ const Home = () => {
   const [viewMode, setViewMode] = useState("grid"); // grid or list
   const [sortBy, setSortBy] = useState("name"); // name, rating, power
   const { user, setUser } = useAuth();
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -69,10 +71,6 @@ const Home = () => {
 
     fetchStations();
   }, []);
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -148,11 +146,14 @@ const Home = () => {
       0,
     averageRating:
       stations.reduce((sum, s) => sum + (s.averageRating || 0), 0) /
-      stations.length || 0,
+        stations.length || 0,
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 overflow-hidden pt-16">
+    <div
+      onClick={() => setShowSuggestions(!showSuggestions)}
+      className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 overflow-hidden pt-16"
+    >
       {/* Subtle Animated Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
@@ -170,10 +171,13 @@ const Home = () => {
             </div>
             <h1 className="text-3xl lg:text-4xl font-bold leading-tight mb-3">
               <span className="text-gray-900">Find Your Perfect</span>{" "}
-              <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">Charging Station</span>
+              <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+                Charging Station
+              </span>
             </h1>
             <p className="text-base text-gray-600 max-w-xl mx-auto mb-6">
-              Discover electric vehicle charging stations, search and explore ev charging stations with real-time info and simple filters.
+              Discover electric vehicle charging stations, search and explore ev
+              charging stations with real-time info and simple filters.
             </p>
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
@@ -206,8 +210,12 @@ const Home = () => {
                   <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mb-1 mx-auto">
                     <div className="text-orange-500">{stat.icon}</div>
                   </div>
-                  <div className="text-lg font-bold text-gray-900">{stat.value}</div>
-                  <div className="text-xs text-gray-500 font-medium">{stat.label}</div>
+                  <div className="text-lg font-bold text-gray-900">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs text-gray-500 font-medium">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -229,8 +237,12 @@ const Home = () => {
                   <div className="w-8 h-8 bg-orange-200 rounded-lg flex items-center justify-center mb-2">
                     <Map className="h-4 w-4 text-orange-500" />
                   </div>
-                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">Map View</h3>
-                  <p className="text-xs text-gray-500">Explore stations on map</p>
+                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
+                    Map View
+                  </h3>
+                  <p className="text-xs text-gray-500">
+                    Explore stations on map
+                  </p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-orange-400 group-hover:text-orange-600 transition-colors" />
               </div>
@@ -244,8 +256,12 @@ const Home = () => {
                   <div className="w-8 h-8 bg-orange-200 rounded-lg flex items-center justify-center mb-2">
                     <Heart className="h-4 w-4 text-orange-500" />
                   </div>
-                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">Saved Stations</h3>
-                  <p className="text-xs text-gray-500">Your favorite locations</p>
+                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
+                    Saved Stations
+                  </h3>
+                  <p className="text-xs text-gray-500">
+                    Your favorite locations
+                  </p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-orange-400 group-hover:text-orange-600 transition-colors" />
               </div>
@@ -259,7 +275,9 @@ const Home = () => {
                   <div className="w-8 h-8 bg-orange-200 rounded-lg flex items-center justify-center mb-2">
                     <TrendingUp className="h-4 w-4 text-orange-500" />
                   </div>
-                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">Dashboard</h3>
+                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
+                    Dashboard
+                  </h3>
                   <p className="text-xs text-gray-500">Manage your stations</p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-orange-400 group-hover:text-orange-600 transition-colors" />
@@ -272,16 +290,11 @@ const Home = () => {
         <div className="bg-white/80 rounded-2xl border border-orange-100 p-5 mb-10 shadow-md">
           {/* Search Bar */}
           <div className="flex flex-col lg:flex-row gap-3">
-            <div className="flex-1 relative group">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-400 group-focus-within:text-orange-500 transition-colors" />
-              <input
-                type="text"
-                placeholder="Search by location or station name..."
-                value={searchTerm}
-                onChange={handleSearch}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-orange-100 rounded-xl text-gray-900 placeholder-orange-300 focus:outline-none focus:ring-1 focus:ring-orange-300 focus:border-transparent text-sm font-light tracking-wide"
-              />
-            </div>
+            <GlobalSearch
+              showSuggestions={showSuggestions}
+              setShowSuggestions={setShowSuggestions}
+            />
+
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="inline-flex items-center justify-center px-4 py-2 border border-orange-100 rounded-xl text-xs font-medium tracking-wide text-orange-700 bg-orange-50 hover:bg-orange-100 transition-all"
@@ -289,7 +302,9 @@ const Home = () => {
               <Filter className="h-4 w-4 mr-2" />
               Filters
               <ChevronDown
-                className={`h-4 w-4 ml-2 transition-transform ${showFilters ? "rotate-180" : ""}`}
+                className={`h-4 w-4 ml-2 transition-transform ${
+                  showFilters ? "rotate-180" : ""
+                }`}
               />
             </button>
           </div>
@@ -379,7 +394,9 @@ const Home = () => {
               {sortedStations.length} stations found
             </h2>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-orange-500 font-medium tracking-wider">Sort by:</span>
+              <span className="text-xs text-orange-500 font-medium tracking-wider">
+                Sort by:
+              </span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -392,11 +409,17 @@ const Home = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-orange-500 font-medium tracking-wider">View:</span>
+            <span className="text-xs text-orange-500 font-medium tracking-wider">
+              View:
+            </span>
             <div className="flex bg-white border border-orange-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`p-2 rounded-md transition-all ${viewMode === "grid" ? "bg-orange-500 text-white" : "text-orange-400 hover:text-orange-600"}`}
+                className={`p-2 rounded-md transition-all ${
+                  viewMode === "grid"
+                    ? "bg-orange-500 text-white"
+                    : "text-orange-400 hover:text-orange-600"
+                }`}
               >
                 <div className="w-4 h-4 grid grid-cols-2 gap-0.5">
                   <div className="w-1.5 h-1.5 bg-current rounded-sm"></div>
@@ -407,7 +430,11 @@ const Home = () => {
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-2 rounded-md transition-all ${viewMode === "list" ? "bg-orange-500 text-white" : "text-orange-400 hover:text-orange-600"}`}
+                className={`p-2 rounded-md transition-all ${
+                  viewMode === "list"
+                    ? "bg-orange-500 text-white"
+                    : "text-orange-400 hover:text-orange-600"
+                }`}
               >
                 <div className="w-4 h-4 space-y-0.5">
                   <div className="w-full h-1.5 bg-current rounded-sm"></div>
@@ -434,7 +461,9 @@ const Home = () => {
             {sortedStations.map((station) => (
               <div
                 key={station._id}
-                className={`bg-white/80 rounded-xl border border-orange-100 hover:bg-orange-50 transition-all group ${viewMode === "list" ? "p-4" : "p-5"}`}
+                className={`bg-white/80 rounded-xl border border-orange-100 hover:bg-orange-50 transition-all group ${
+                  viewMode === "list" ? "p-4" : "p-5"
+                }`}
               >
                 {viewMode === "grid" ? (
                   <div>
@@ -454,7 +483,11 @@ const Home = () => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <span
-                          className={`px-3 py-1 text-xs font-medium rounded-full ${station.status === "Active" ? "bg-green-500/20 text-green-500 border border-green-500/30" : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"}`}
+                          className={`px-3 py-1 text-xs font-medium rounded-full ${
+                            station.status === "Active"
+                              ? "bg-green-500/20 text-green-500 border border-green-500/30"
+                              : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
+                          }`}
                         >
                           {station.status}
                         </span>
@@ -463,7 +496,11 @@ const Home = () => {
                           className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
                         >
                           <Heart
-                            className={`h-4 w-4 transition-colors ${user?.savedStations?.includes(station._id) ? "text-red-400 fill-current" : "text-orange-300 hover:text-red-400"}`}
+                            className={`h-4 w-4 transition-colors ${
+                              user?.savedStations?.includes(station._id)
+                                ? "text-red-400 fill-current"
+                                : "text-orange-300 hover:text-red-400"
+                            }`}
                           />
                         </button>
                       </div>
@@ -474,7 +511,11 @@ const Home = () => {
                           {[1, 2, 3, 4, 5].map((star) => (
                             <Star
                               key={star}
-                              className={`h-3 w-3 ${star <= (station?.averageRating || 0) ? "text-orange-500 fill-current" : "text-orange-200"}`}
+                              className={`h-3 w-3 ${
+                                star <= (station?.averageRating || 0)
+                                  ? "text-orange-500 fill-current"
+                                  : "text-orange-200"
+                              }`}
                             />
                           ))}
                         </div>
@@ -507,7 +548,11 @@ const Home = () => {
                     </div>
                     <div className="flex items-center space-x-3">
                       <span
-                        className={`px-3 py-1 text-xs font-medium rounded-full ${station.status === "Active" ? "bg-green-500/20 text-green-500 border border-green-500/30" : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"}`}
+                        className={`px-3 py-1 text-xs font-medium rounded-full ${
+                          station.status === "Active"
+                            ? "bg-green-500/20 text-green-500 border border-green-500/30"
+                            : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
+                        }`}
                       >
                         {station.status}
                       </span>
@@ -516,7 +561,11 @@ const Home = () => {
                         className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
                       >
                         <Heart
-                          className={`h-4 w-4 transition-colors ${user?.savedStations.includes(station._id) ? "text-red-400 fill-current" : "text-orange-300 hover:text-red-400"}`}
+                          className={`h-4 w-4 transition-colors ${
+                            user?.savedStations.includes(station._id)
+                              ? "text-red-400 fill-current"
+                              : "text-orange-300 hover:text-red-400"
+                          }`}
                         />
                       </button>
                       <div className="flex items-center">
@@ -524,7 +573,11 @@ const Home = () => {
                           {[1, 2, 3, 4, 5].map((star) => (
                             <Star
                               key={star}
-                              className={`h-3 w-3 ${star <= (station?.averageRating || 0) ? "text-orange-500 fill-current" : "text-orange-200"}`}
+                              className={`h-3 w-3 ${
+                                star <= (station?.averageRating || 0)
+                                  ? "text-orange-500 fill-current"
+                                  : "text-orange-200"
+                              }`}
                             />
                           ))}
                         </div>
@@ -578,7 +631,6 @@ const Home = () => {
           </div>
         )}
       </main>
-
     </div>
   );
 };

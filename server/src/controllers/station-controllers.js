@@ -199,6 +199,27 @@ const getSavedStations = async (req, res, next) => {
   }
 };
 
+// Get suggestions
+const getStationSuggestions = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) return res.json([]);
+
+    const stations = await Station.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { location: { $regex: query, $options: "i" } },
+      ],
+    })
+      .limit(5) // return top 5 matches
+      .select("name location"); // only send needed fields
+
+    res.json(stations);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 export {
   getStations,
   getMyStations,
@@ -208,4 +229,5 @@ export {
   deleteStation,
   saveStation,
   getSavedStations,
+  getStationSuggestions,
 };

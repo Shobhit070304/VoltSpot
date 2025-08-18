@@ -9,7 +9,8 @@ import {
   updateStation,
   deleteStation,
   saveStation,
-  getSavedStations
+  getSavedStations,
+  getStationSuggestions,
 } from "../controllers/station-controllers.js";
 const router = express.Router();
 
@@ -21,6 +22,9 @@ router.get("/me", authUser, getMyStations);
 
 // Get saved stations - MUST come before /:id route
 router.get("/saved-stations", authUser, getSavedStations);
+
+// Get suggested stations
+router.get("/suggest", getStationSuggestions);
 
 // Get station by ID
 router.get("/:id", getStationById);

@@ -263,11 +263,11 @@ const Dashboard = () => {
           />
         </div>
         <div className="w-full flex justify-between gap-5">
-          <div className="w-1/5">
+          <div className="w-[30%]">
             <RecentlyViewed />
           </div>
           {/* Charging Stations Management */}
-          <div className="bg-amber-100 w-4/5 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
+          <div className="bg-amber-100 w-[70%] backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
             <div className="px-6 py-5 border-b border-orange-100">
               <h2 className="text-lg font-semibold text-gray-900">
                 Your Charging Stations
