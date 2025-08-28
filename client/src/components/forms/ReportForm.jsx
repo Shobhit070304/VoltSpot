@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "../services/api";
+import { api } from "../../services/api";
 import { toast } from "react-hot-toast";
 import { AlertCircle, Send, X } from "react-feather";
 

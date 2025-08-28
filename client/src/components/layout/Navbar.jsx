@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { Menu, User, X, Sun, Moon } from "lucide-react";
 import logo from "/charging.png";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();

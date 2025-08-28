@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useGlobalAutocomplete from "../hooks/useGlobalAutocomplete";
+import useGlobalAutocomplete from "../../hooks/useGlobalAutocomplete";
 import { Search } from "lucide-react";
 
 function GlobalSearch({ showSuggestions, setShowSuggestions }) {

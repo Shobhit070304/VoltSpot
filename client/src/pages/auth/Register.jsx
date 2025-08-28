@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Zap, Mail, Lock, User, Eye, EyeOff, AlertCircle, X } from "lucide-react";
 import toast from "react-hot-toast";
-import { api } from "../services/api";
-import { useAuth } from "../context/AuthContext.jsx";
+import { api } from "../../services/api.js";
+import { useAuth } from "../../context/AuthContext.jsx";
 import carImage from "/car.png";
 
 const Register = () => {

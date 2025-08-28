@@ -20,11 +20,11 @@ import {
   Award,
   Twitter,
 } from "lucide-react";
-import { api } from "../services/api";
+import { api } from "../../services/api";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import GlobalSearch from "../components/GlobalSearch";
+import { useAuth } from "../../context/AuthContext";
+import GlobalSearch from "../../components/widgets/GlobalSearch";
 
 const connectorTypes = [
   "Type 1",

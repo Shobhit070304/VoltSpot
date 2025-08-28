@@ -4,19 +4,19 @@ import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthContext";
 
 // Pages
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import MapView from "./pages/MapView";
-import NotFound from "./pages/NotFound";
-import Home from "./pages/Home";
-import LandingPage from "./pages/LandingPage";
-import Station from "./pages/Station";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Home from "./pages/general/Home";
+import LandingPage from "./pages/general/LandingPage";
+import Station from "./pages/stations/Station";
+import MapView from "./pages/map/MapView";
+import Dashboard from "./pages/dashboard/Dashboard";
+import NotFound from "./pages/general/NotFound";
 
 // Components
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import SavedStations from "./pages/SavedStations";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import SavedStations from "./pages/stations/SavedStations";
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {

@@ -16,13 +16,13 @@ import {
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { api } from "../services/api";
-import MapView from "./MapView";
-import ReviewForm from "../components/ReviewForm";
-import { useAuth } from "../context/AuthContext";
-import ReportForm from "../components/ReportForm";
-import useRecentlyViewed from "../hooks/useRecentlyViewed";
-import AmenitiesCard from "../components/AmitiesCard";
+import { api } from "../../services/api";
+import MapView from "../map/MapView";
+import ReviewForm from "../../components/forms/ReviewForm";
+import { useAuth } from "../../context/AuthContext";
+import ReportForm from "../../components/forms/ReportForm";
+import useRecentlyViewed from "../../hooks/useRecentlyViewed";
+import AmenitiesCard from "../../components/cards/AmitiesCard";
 
 const statusColors = {
   Active: "bg-green-100 text-green-800",

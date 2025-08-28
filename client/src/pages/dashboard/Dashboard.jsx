@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { api } from "../services/api";
+import { api } from "../../services/api";
 import {
   Zap,
   AlertTriangle,
@@ -13,11 +13,11 @@ import {
   Users,
   Clock,
 } from "lucide-react";
-import ChargingStations from "./ChargingStations";
-import StationForm from "../components/StationForm";
+import ChargingStations from "../stations/ChargingStations";
+import StationForm from "../../components/forms/StationForm";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import RecentlyViewed from "../components/RecentlyViewed";
+import RecentlyViewed from "../../components/widgets/RecentlyViewed";
 
 const Dashboard = () => {
   const [stations, setStations] = useState([]);

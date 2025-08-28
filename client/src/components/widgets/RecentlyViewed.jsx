@@ -1,4 +1,4 @@
-import useRecentlyViewed from "../hooks/useRecentlyViewed";
+import useRecentlyViewed from "../../hooks/useRecentlyViewed";
 import { Link } from "react-router-dom";
 
 function RecentlyViewed() {
