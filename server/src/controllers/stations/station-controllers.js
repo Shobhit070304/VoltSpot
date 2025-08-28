@@ -1,6 +1,6 @@
-import Station from "../models/Station.js";
+import Station from "../../models/stations/Station.js";
 import { validationResult } from "express-validator";
-import User from "../models/User.js";
+import User from "../../models/users/User.js";
 
 // Get all stations
 const getStations = async (req, res, next) => {

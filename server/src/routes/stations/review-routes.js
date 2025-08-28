@@ -1,11 +1,11 @@
 import express from "express";
-import authUser from "../middleware/auth.js";
+import authUser from "../../middleware/auth.js";
 import { body } from "express-validator";
 
 import {
   createReview,
   getReviewsByStation,
-} from "../controllers/review-controllers.js";
+} from "../../controllers/stations/review-controllers.js";
 const router = express.Router();
 
 // Post review for a station

@@ -6,10 +6,10 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 
 // Routes
-import authRoutes from "./routes/auth-routes.js";
-import stationRoutes from "./routes/station-routes.js";
-import reviewRoutes from "./routes/review-routes.js";
-import reportRoutes from "./routes/report-routes.js";
+import authRoutes from "./routes/users/auth-routes.js";
+import stationRoutes from "./routes/stations/station-routes.js";
+import reviewRoutes from "./routes/stations/review-routes.js";
+import reportRoutes from "./routes/stations/report-routes.js";
 
 dotenv.config();
 

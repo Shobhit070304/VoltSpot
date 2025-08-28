@@ -1,5 +1,5 @@
-import Review from "../models/Review.js";
-import Station from "../models/Station.js";
+import Review from "../../models/stations/Review.js";
+import Station from "../../models/stations/Station.js";
 
 export const createReview = async (req, res, next) => {
   const { stationId } = req.params;

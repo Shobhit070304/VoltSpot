@@ -1,6 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
-import authUser from "../middleware/auth.js";
+import authUser from "../../middleware/auth.js";
 import {
   getStations,
   getMyStations,
@@ -11,7 +11,7 @@ import {
   saveStation,
   getSavedStations,
   getStationSuggestions,
-} from "../controllers/station-controllers.js";
+} from "../../controllers/stations/station-controllers.js";
 const router = express.Router();
 
 // Get all stations
