@@ -23,6 +23,7 @@ import { useAuth } from "../../context/AuthContext";
 import ReportForm from "../../components/forms/ReportForm";
 import useRecentlyViewed from "../../hooks/useRecentlyViewed";
 import AmenitiesCard from "../../components/cards/AmitiesCard";
+import CostEstimator from "../../components/cards/CostEstimator";
 
 const statusColors = {
   Active: "bg-green-100 text-green-800",
@@ -243,7 +244,8 @@ function Station() {
                       Coordinates
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {station?.latitude}, {station?.longitude}
+                      {station?.latitude?.toFixed(4)},{" "}
+                      {station?.longitude?.toFixed(4)}
                     </p>
                   </div>
                 </div>
@@ -388,6 +390,9 @@ function Station() {
                 </button>
               </div>
             </div>
+
+            {/* Cost & Time Estimate */}
+            <CostEstimator station={station} />
 
             {user && showReviewForm && (
               <ReviewForm

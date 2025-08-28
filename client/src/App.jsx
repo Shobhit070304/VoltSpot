@@ -17,6 +17,7 @@ import NotFound from "./pages/general/NotFound";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import SavedStations from "./pages/stations/SavedStations";
+import CostEstimator from "./components/cards/CostEstimator";
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -70,7 +71,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+          <Route
+            path="/estimate"
+            element={
+              <ProtectedRoute>
+                <CostEstimator />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
