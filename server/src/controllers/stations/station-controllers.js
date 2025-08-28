@@ -1,6 +1,7 @@
 import Station from "../../models/stations/Station.js";
 import { validationResult } from "express-validator";
 import User from "../../models/users/User.js";
+import EV from "../../models/cars/EV.js";
 
 // Get all stations
 const getStations = async (req, res, next) => {
@@ -220,6 +221,38 @@ const getStationSuggestions = async (req, res) => {
   }
 };
 
+// Get estimate cost & time
+const estimateChargingPrice = async (req, res) => {
+  try {
+    const { stationPower, pricePerKWh, evId, chargeFrom, chargeTo } = req.body;
+
+    const ev = await EV.findById(evId);
+    if (!ev) return res.status(400).json({ error: "Invalid EV model" });
+
+    // Calculate energy needed
+    const batterySize = ev.batterySize; // kWh
+    const energyNeeded = ((chargeTo - chargeFrom) / 100) * batterySize; // kWh
+
+    // Cost & Time
+    const cost = energyNeeded * pricePerKWh;
+    const time = energyNeeded / stationPower; // hours
+    console.log("Result", {
+      ev: ev.name,
+      energyNeeded: energyNeeded.toFixed(2),
+      cost: cost.toFixed(2),
+      time: (time * 60).toFixed(0), // minutes
+    });
+    res.json({
+      ev: ev.name,
+      energyNeeded: energyNeeded.toFixed(2),
+      cost: cost.toFixed(2),
+      time: (time * 60).toFixed(0), // minutes
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 export {
   getStations,
   getMyStations,
@@ -230,4 +263,5 @@ export {
   saveStation,
   getSavedStations,
   getStationSuggestions,
+  estimateChargingPrice,
 };

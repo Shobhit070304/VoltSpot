@@ -11,6 +11,7 @@ import {
   saveStation,
   getSavedStations,
   getStationSuggestions,
+  estimateChargingPrice,
 } from "../../controllers/stations/station-controllers.js";
 const router = express.Router();
 
@@ -82,5 +83,8 @@ router.delete("/delete/:id", authUser, deleteStation);
 
 // Save a station
 router.post("/save/:id", authUser, saveStation);
+
+// Estimate cost & time
+router.post("/estimate", authUser, estimateChargingPrice);
 
 export default router;
