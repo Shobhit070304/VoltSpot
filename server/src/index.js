@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
+import compression from "compression";
 
 // Routes
 import authRoutes from "./routes/users/auth-routes.js";
@@ -30,7 +31,34 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Middleware
+// Compression middleware
+app.use(
+  compression({
+    level: 6, // compression level
+    threshold: 100, // only compress responses larger than 100 bytes 
+    filter: (req, res) => {
+      // don't compress responses with this header
+      if (req.headers["x-no-compression"]) {
+        return false;
+      }
+      // use compression filter function
+      return compression.filter(req, res);
+    },
+  })
+);
+
+// Add middleware to ensure Content-Length is set for all responses
+app.use((req, res, next) => {
+  const originalSend = res.send;
+  res.send = function (body) {
+    // Only set Content-Length if it hasn't been set and isn't a HEAD request
+    if (!res.get("Content-Length") && req.method !== "HEAD") {
+      res.set("Content-Length", Buffer.byteLength(body));
+    }
+    return originalSend.call(this, body);
+  };
+  next();
+});
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
