@@ -100,6 +100,7 @@ const LandingPage = () => {
                   <img
                     src={HeroBanner}
                     alt="EV Charging Dashboard"
+                    loading="lazy"
                     className="w-full h-full object-cover"
                   />
                 </div>

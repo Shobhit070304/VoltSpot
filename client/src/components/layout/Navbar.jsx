@@ -39,6 +39,7 @@ const Navbar = () => {
             <img
               src={logo}
               alt="logo"
+              loading="lazy"
               className={`transition-all duration-300 ${
                 isScrolled ? "h-7 w-7" : "h-8 w-8"
               }`}

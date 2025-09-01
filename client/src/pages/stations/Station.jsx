@@ -17,13 +17,13 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { api } from "../../services/api";
-import MapView from "../map/MapView";
-import ReviewForm from "../../components/forms/ReviewForm";
+import DynamicMapView from "../map/DynamicMapView";
+import DynamicReviewForm from "../../components/forms/DynamicReviewForm";
 import { useAuth } from "../../context/AuthContext";
-import ReportForm from "../../components/forms/ReportForm";
+import DynamicReportForm from "../../components/forms/DynamicReportForm";
 import useRecentlyViewed from "../../hooks/useRecentlyViewed";
 import AmenitiesCard from "../../components/cards/AmitiesCard";
-import CostEstimator from "../../components/cards/CostEstimator";
+import DynamicCostEstimator from "../../components/cards/DynamicCostEstimator";
 
 const statusColors = {
   Active: "bg-green-100 text-green-800",
@@ -254,7 +254,7 @@ function Station() {
 
             {/* Map */}
             <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
-              <MapView station={station} />
+              <DynamicMapView station={station} />
             </div>
           </div>
 
@@ -316,7 +316,7 @@ function Station() {
                   </button>
                 </div>
                 {user && showReportForm && (
-                  <ReportForm
+                  <DynamicReportForm
                     stationId={id}
                     showReportForm={showReportForm}
                     setShowReportForm={setShowReportForm}
@@ -392,10 +392,10 @@ function Station() {
             </div>
 
             {/* Cost & Time Estimate */}
-            <CostEstimator station={station} />
+            <DynamicCostEstimator station={station} />
 
             {user && showReviewForm && (
-              <ReviewForm
+              <DynamicReviewForm
                 stationId={id}
                 showReviewForm={showReviewForm}
                 setShowReviewForm={setShowReviewForm}

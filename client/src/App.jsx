@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthContext";
 
-// Pages
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import Home from "./pages/general/Home";
-import LandingPage from "./pages/general/LandingPage";
-import Station from "./pages/stations/Station";
-import MapView from "./pages/map/MapView";
-import Dashboard from "./pages/dashboard/Dashboard";
-import NotFound from "./pages/general/NotFound";
-
 // Components
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
-import SavedStations from "./pages/stations/SavedStations";
-import CostEstimator from "./components/cards/CostEstimator";
+
+// Lazy loaded pages
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const Home = lazy(() => import("./pages/general/Home"));
+const LandingPage = lazy(() => import("./pages/general/LandingPage"));
+const Station = lazy(() => import("./pages/stations/Station"));
+const MapView = lazy(() => import("./pages/map/DynamicMapView"));
+const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
+const NotFound = lazy(() => import("./pages/general/NotFound"));
+const SavedStations = lazy(() => import("./pages/stations/SavedStations"));
+const CostEstimator = lazy(() => import("./components/cards/CostEstimator"));
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -30,7 +30,7 @@ const ProtectedRoute = ({ children }) => {
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
+  
   return children;
 };
 
@@ -41,12 +41,13 @@ function App() {
     <div className="flex flex-col min-h-screen bg-gray-50">
       {path !== "login" && path !== "register" && <Navbar />}
       <main className="flex-grow">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/stations" element={<Home />} />
-          <Route path="/station/:id" element={<Station />} />
+        <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/stations" element={<Home />} />
+            <Route path="/station/:id" element={<Station />} />
           <Route
             path="/dashboard"
             element={
@@ -81,6 +82,7 @@ function App() {
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </main>
       {path !== "login" && path !== "register" && <Footer />}
       <Toaster position="top-right" />

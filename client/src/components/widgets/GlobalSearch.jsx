@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { Link } from "react-router-dom";
 import useGlobalAutocomplete from "../../hooks/useGlobalAutocomplete";
 import { Search } from "lucide-react";
@@ -16,8 +16,6 @@ function GlobalSearch({ showSuggestions, setShowSuggestions }) {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        // onFocus={() => setShowSuggestions(true)}
-        // onBlur={() => setShowSuggestions(false)}
         placeholder="Search stations..."
         className="w-full pl-10 pr-4 py-2.5 bg-white border border-orange-100 rounded-xl text-gray-900 placeholder-orange-300 focus:outline-none focus:ring-1 focus:ring-orange-300 focus:border-transparent text-sm font-light tracking-wide"
       />
@@ -42,4 +40,5 @@ function GlobalSearch({ showSuggestions, setShowSuggestions }) {
   );
 }
 
-export default GlobalSearch;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(GlobalSearch);

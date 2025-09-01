@@ -186,7 +186,7 @@ const Login = () => {
       <div className="flex-1 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center relative overflow-hidden">
         {/* Car Image Background */}
         <div className="absolute inset-0 opacity-30">
-          <img src={carImage} alt="Electric Vehicle" className="w-full h-full object-cover" />
+          <img src={carImage} alt="Electric Vehicle" loading="lazy" className="w-full h-full object-cover" />
         </div>
         {/* Content */}
         <div className="text-center text-orange-700 relative z-10">

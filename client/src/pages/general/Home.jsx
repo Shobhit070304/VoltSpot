@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import GlobalSearch from "../../components/widgets/GlobalSearch";
+import StationCard from "../../components/cards/StationCard";
 
 const connectorTypes = [
   "Type 1",
@@ -459,174 +460,43 @@ const Home = () => {
             }
           >
             {sortedStations.map((station) => (
-              <div
+              <StationCard
                 key={station._id}
-                className={`bg-white/80 rounded-xl border border-orange-100 hover:bg-orange-50 transition-all group ${
-                  viewMode === "list" ? "p-4" : "p-5"
-                }`}
-              >
-                {viewMode === "grid" ? (
-                  <div>
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">
-                          {station.name}
-                        </h3>
-                        <div className="flex items-center text-xs text-gray-500 mb-1 font-medium">
-                          <MapPin className="h-3 w-3 mr-2 text-orange-400" />
-                          {station.location}
-                        </div>
-                        <div className="flex items-center text-xs text-gray-500 font-medium">
-                          <Zap className="h-3 w-3 mr-2 text-orange-400" />
-                          {station.powerOutput} kW • {station.connectorType}
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span
-                          className={`px-3 py-1 text-xs font-medium rounded-full ${
-                            station.status === "Active"
-                              ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                              : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
-                          }`}
-                        >
-                          {station.status}
-                        </span>
-                        <button
-                          onClick={() => handleSaveStation(station._id)}
-                          className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
-                        >
-                          <Heart
-                            className={`h-4 w-4 transition-colors ${
-                              user?.savedStations?.includes(station._id)
-                                ? "text-red-400 fill-current"
-                                : "text-orange-300 hover:text-red-400"
-                            }`}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between pt-3 border-t border-orange-100">
-                      <div className="flex items-center">
-                        <div className="flex items-center mr-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`h-3 w-3 ${
-                                star <= (station?.averageRating || 0)
-                                  ? "text-orange-500 fill-current"
-                                  : "text-orange-200"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-orange-400 font-medium">
-                          {station.averageRating?.toFixed(1) || "0.0"}
-                        </span>
-                      </div>
-                      <Link
-                        to={`/station/${station._id}`}
-                        className="inline-flex items-center text-xs font-medium tracking-wide text-orange-700 hover:text-orange-900 transition-colors"
-                      >
-                        View details →
-                      </Link>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">
-                        {station.name}
-                      </h3>
-                      <div className="flex items-center text-xs text-gray-500 mb-1 font-medium">
-                        <MapPin className="h-3 w-3 mr-2 text-orange-400" />
-                        {station.location}
-                      </div>
-                      <div className="flex items-center text-xs text-gray-500 font-medium">
-                        <Zap className="h-3 w-3 mr-2 text-orange-400" />
-                        {station.powerOutput} kW • {station.connectorType}
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span
-                        className={`px-3 py-1 text-xs font-medium rounded-full ${
-                          station.status === "Active"
-                            ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                            : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
-                        }`}
-                      >
-                        {station.status}
-                      </span>
-                      <button
-                        onClick={() => handleSaveStation(station._id)}
-                        className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
-                      >
-                        <Heart
-                          className={`h-4 w-4 transition-colors ${
-                            user?.savedStations.includes(station._id)
-                              ? "text-red-400 fill-current"
-                              : "text-orange-300 hover:text-red-400"
-                          }`}
-                        />
-                      </button>
-                      <div className="flex items-center">
-                        <div className="flex items-center mr-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`h-3 w-3 ${
-                                star <= (station?.averageRating || 0)
-                                  ? "text-orange-500 fill-current"
-                                  : "text-orange-200"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-orange-400 font-medium mr-4">
-                          {station.averageRating?.toFixed(1) || "0.0"}
-                        </span>
-                      </div>
-                      <Link
-                        to={`/station/${station._id}`}
-                        className="inline-flex items-center text-xs font-medium tracking-wide text-orange-700 hover:text-orange-900 transition-colors"
-                      >
-                        View details →
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
+                station={station}
+                viewMode={viewMode}
+                handleSaveStation={handleSaveStation}
+                isStationSaved={user?.savedStations?.includes(station._id)}
+              />
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-2xl border border-orange-200 p-10 inline-block max-w-md">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-200 to-amber-200 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Search className="h-7 w-7 text-orange-400" />
+          <div className="bg-white/80 rounded-xl border border-orange-100 p-8 text-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                <X className="h-6 w-6 text-orange-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                No stations found
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                No Stations Found
               </h3>
-              <p className="text-xs text-gray-500 mb-6 font-medium">
-                {searchTerm || Object.values(filters).some((f) => f)
-                  ? "Try adjusting your search or filter criteria to find matching stations"
-                  : "No charging stations are currently available in your area"}
+              <p className="text-gray-600 mb-6 max-w-md">
+                We couldn't find any charging stations matching your search criteria.
+                Try adjusting your filters or search term.
               </p>
-              <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                <button
-                  onClick={clearFilters}
-                  className="inline-flex items-center px-5 py-2 border border-transparent text-xs font-medium tracking-wide rounded-lg text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 transition-all duration-200"
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Clear all filters
-                </button>
-                <Link
-                  to="/map"
-                  className="inline-flex items-center px-5 py-2 border border-orange-200 text-xs font-medium tracking-wide rounded-lg text-orange-700 bg-white hover:bg-orange-50 transition-all duration-200"
-                >
-                  <Map className="mr-2 h-4 w-4" />
-                  View on Map
-                </Link>
-              </div>
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilters({
+                    status: "",
+                    connectorType: "",
+                    minPower: "",
+                    maxPower: "",
+                  });
+                  setShowFilters(false);
+                }}
+                className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium"
+              >
+                Clear All Filters
+              </button>
             </div>
           </div>
         )}
@@ -636,3 +506,4 @@ const Home = () => {
 };
 
 export default Home;
+

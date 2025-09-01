@@ -7,7 +7,6 @@ import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
 createRoot(document.getElementById("root")).render(
-  // <React.StrictMode>
   <AuthProvider>
     <ThemeProvider>
       <BrowserRouter>
@@ -15,5 +14,4 @@ createRoot(document.getElementById("root")).render(
       </BrowserRouter>
     </ThemeProvider>
   </AuthProvider>
-  // </React.StrictMode>
 );

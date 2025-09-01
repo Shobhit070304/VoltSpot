@@ -1,3 +1,4 @@
+import React, { memo } from "react";
 import { Coffee, ShoppingBag, Wifi, MapPin, Clock } from "lucide-react";
 
 const amenityIcons = {
@@ -8,7 +9,7 @@ const amenityIcons = {
   Parking: MapPin,
 };
 
-export default function AmenitiesCard({ amenities }) {
+function AmenitiesCard({ amenities }) {
   return (
     <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
       <div className="px-6 py-5 border-b border-orange-100">
@@ -23,9 +24,9 @@ export default function AmenitiesCard({ amenities }) {
               const Icon = amenityIcons[amenity] || null;
               return (
                 <div key={amenity} className="flex items-center">
-                  {Icon && <Icon className="h-4 w-4 text-orange-500" />}
-                  <span className="ml-3 text-sm text-gray-700">{amenity}</span>
-                </div>
+                    {Icon && <Icon className="h-4 w-4 text-orange-500" />}
+                    <span className="ml-3 text-sm text-gray-700">{amenity}</span>
+                  </div>
               );
             })
           ) : (
@@ -38,3 +39,6 @@ export default function AmenitiesCard({ amenities }) {
     </div>
   );
 }
+
+// Memoize the component to prevent unnecessary re-renders
+export default memo(AmenitiesCard);
