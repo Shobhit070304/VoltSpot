@@ -47,7 +47,7 @@ app.use(
   })
 );
 
-// Add middleware to ensure Content-Length is set for all responses
+// Middleware to ensure Content-Length is set for all responses
 app.use((req, res, next) => {
   const originalSend = res.send;
   res.send = function (body) {
