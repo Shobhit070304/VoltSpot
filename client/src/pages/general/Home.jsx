@@ -17,6 +17,8 @@ import {
   Play,
   Users,
   Activity,
+  ChevronLeft,
+  ChevronRight,
   Award,
   Twitter,
 } from "lucide-react";
@@ -52,6 +54,14 @@ const Home = () => {
   const [sortBy, setSortBy] = useState("name"); // name, rating, power
   const { user, setUser } = useAuth();
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(stations.length / itemsPerPage);
+
+  // Slice items for current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = stations.slice(startIndex, startIndex + itemsPerPage);
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -452,22 +462,51 @@ const Home = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-orange-200 border-t-orange-500"></div>
           </div>
         ) : sortedStations.length > 0 ? (
-          <div
-            className={
-              viewMode === "grid"
-                ? "grid grid-cols-1 lg:grid-cols-2 gap-5"
-                : "space-y-3"
-            }
-          >
-            {sortedStations.map((station) => (
-              <StationCard
-                key={station._id}
-                station={station}
-                viewMode={viewMode}
-                handleSaveStation={handleSaveStation}
-                isStationSaved={user?.savedStations?.includes(station._id)}
-              />
-            ))}
+          <div className="">
+            {/* Pagination Controls */}
+            <div className="mb-4 flex items-center justify-end gap-2">
+              {/* Previous Button */}
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+                className="p-2 rounded-full border bg-white shadow-sm hover:bg-gray-100 disabled:opacity-40"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Page Indicator */}
+              <span className="px-2 text-sm text-gray-600">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              {/* Next Button */}
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+                className="p-2 rounded-full border bg-white shadow-sm hover:bg-gray-100 disabled:opacity-40"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Stations Grid/List */}
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid grid-cols-1 lg:grid-cols-2 gap-5"
+                  : "space-y-3"
+              }
+            >
+              {currentItems.map((station) => (
+                <StationCard
+                  key={station._id}
+                  station={station}
+                  viewMode={viewMode}
+                  handleSaveStation={handleSaveStation}
+                  isStationSaved={user?.savedStations?.includes(station._id)}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="bg-white/80 rounded-xl border border-orange-100 p-8 text-center">
@@ -479,8 +518,8 @@ const Home = () => {
                 No Stations Found
               </h3>
               <p className="text-gray-600 mb-6 max-w-md">
-                We couldn't find any charging stations matching your search criteria.
-                Try adjusting your filters or search term.
+                We couldn't find any charging stations matching your search
+                criteria. Try adjusting your filters or search term.
               </p>
               <button
                 onClick={() => {
@@ -506,4 +545,3 @@ const Home = () => {
 };
 
 export default Home;
-
