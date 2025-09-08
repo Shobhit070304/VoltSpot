@@ -1,33 +1,16 @@
 import { useEffect, useState } from "react";
-import {
-  Search,
-  Filter,
-  ChevronDown,
-  MapPin,
-  Zap,
-  Heart,
-  X,
-  Star,
-  Map,
-  TrendingUp,
-  Clock,
-  Battery,
-  Sparkles,
-  ArrowRight,
-  Play,
-  Users,
-  Activity,
-  ChevronLeft,
-  ChevronRight,
-  Award,
-  Twitter,
-} from "lucide-react";
 import { api } from "../../services/api";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import GlobalSearch from "../../components/widgets/GlobalSearch";
 import StationCard from "../../components/cards/StationCard";
+import Header from "../../components/Home/Header";
+import QuickStats from "../../components/Home/QuickStats";
+import QuickActions from "../../components/Home/QuickActions";
+import SearchFilterCard from "../../components/Home/SearchFilterCard";
+import StationsList from "../../components/Home/StationsList";
+import Pagination from "../../components/Home/Pagination";
+import NoStationsFound from "../../components/Home/NoStationsFound";
 
 const connectorTypes = [
   "Type 1",
@@ -41,7 +24,6 @@ const connectorTypes = [
 const Home = () => {
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     status: "",
@@ -50,18 +32,12 @@ const Home = () => {
     maxPower: "",
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState("grid"); // grid or list
-  const [sortBy, setSortBy] = useState("name"); // name, rating, power
+  const [viewMode, setViewMode] = useState("grid");
+  const [sortBy, setSortBy] = useState("name");
   const { user, setUser } = useAuth();
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
-  const totalPages = Math.ceil(stations.length / itemsPerPage);
-
-  // Slice items for current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = stations.slice(startIndex, startIndex + itemsPerPage);
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -72,14 +48,12 @@ const Home = () => {
           setStations(response.data);
           toast.success("Stations loaded successfully");
         }
-      } catch (error) {
-        setError(error);
+      } catch {
         toast.error("Error fetching stations");
       } finally {
         setLoading(false);
       }
     };
-
     fetchStations();
   }, []);
 
@@ -109,7 +83,7 @@ const Home = () => {
       } else {
         toast.error("Error saving station");
       }
-    } catch (error) {
+    } catch {
       toast.error("Error saving station");
     }
   };
@@ -135,7 +109,6 @@ const Home = () => {
     );
   });
 
-  // Sort stations
   const sortedStations = [...filteredStations].sort((a, b) => {
     switch (sortBy) {
       case "rating":
@@ -148,260 +121,57 @@ const Home = () => {
     }
   });
 
-  // Calculate stats
+  const totalPages = Math.ceil(sortedStations.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = sortedStations.slice(startIndex, startIndex + itemsPerPage);
+
   const stats = {
     total: stations.length,
     active: stations.filter((s) => s.status === "Active").length,
     averagePower:
-      stations.reduce((sum, s) => sum + s.powerOutput, 0) / stations.length ||
-      0,
+      stations.reduce((sum, s) => sum + s.powerOutput, 0) / stations.length || 0,
     averageRating:
       stations.reduce((sum, s) => sum + (s.averageRating || 0), 0) /
-        stations.length || 0,
+      stations.length || 0,
   };
 
   return (
     <div
-      onClick={() => setShowSuggestions(!showSuggestions)}
+      onClick={() => setShowSuggestions(false)}
       className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 overflow-hidden pt-16"
     >
-      {/* Subtle Animated Background */}
+      {/* Animated Gradient BG */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
         <div className="absolute bottom-[10%] right-[15%] w-[28rem] h-[28rem] bg-amber-200/30 rounded-full blur-[80px] opacity-40 animate-float-delay"></div>
         <div className="absolute top-[50%] left-[50%] w-[18rem] h-[18rem] bg-yellow-200/20 rounded-full blur-[60px] opacity-30 animate-pulse"></div>
       </div>
 
-      {/* Header Section */}
       <header className="relative z-10 bg-transparent">
-        <div className="max-w-5xl mx-auto px-4 pt-12">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-orange-100 text-orange-700 text-xs font-medium mb-2">
-              <Sparkles className="h-3.5 w-3.5 mr-1" />
-              EV CHARGING NETWORK
-            </div>
-            <h1 className="text-3xl lg:text-4xl font-bold leading-tight mb-3">
-              <span className="text-gray-900">Find Your Perfect</span>{" "}
-              <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
-                Charging Station
-              </span>
-            </h1>
-            <p className="text-base text-gray-600 max-w-xl mx-auto mb-6">
-              Discover electric vehicle charging stations, search and explore ev
-              charging stations with real-time info and simple filters.
-            </p>
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-              {[
-                {
-                  icon: <MapPin className="h-4 w-4" />,
-                  value: stats.total,
-                  label: "Total Stations",
-                },
-                {
-                  icon: <Activity className="h-4 w-4" />,
-                  value: stats.active,
-                  label: "Active Now",
-                },
-                {
-                  icon: <Battery className="h-4 w-4" />,
-                  value: `${stats.averagePower.toFixed(1)}kW`,
-                  label: "Avg Power",
-                },
-                {
-                  icon: <Star className="h-4 w-4" />,
-                  value: stats.averageRating.toFixed(1),
-                  label: "Avg Rating",
-                },
-              ].map((stat, index) => (
-                <div
-                  key={index}
-                  className="bg-white/80 rounded-xl border border-orange-100 p-3 text-center shadow-sm"
-                >
-                  <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mb-1 mx-auto">
-                    <div className="text-orange-500">{stat.icon}</div>
-                  </div>
-                  <div className="text-lg font-bold text-gray-900">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs text-gray-500 font-medium">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="max-w-5xl mx-auto px-4 pt-10">
+          <Header />
+          <QuickStats stats={stats} />
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 max-w-5xl mx-auto px-4 py-8">
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Link
-              to="/map"
-              className="group bg-gradient-to-r from-orange-100 to-amber-100 rounded-xl border border-orange-200 p-4 hover:border-orange-300 transition-all duration-200 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="w-8 h-8 bg-orange-200 rounded-lg flex items-center justify-center mb-2">
-                    <Map className="h-4 w-4 text-orange-500" />
-                  </div>
-                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
-                    Map View
-                  </h3>
-                  <p className="text-xs text-gray-500">
-                    Explore stations on map
-                  </p>
-                </div>
-                <ArrowRight className="h-4 w-4 text-orange-400 group-hover:text-orange-600 transition-colors" />
-              </div>
-            </Link>
-            <Link
-              to="/saved-stations"
-              className="group bg-gradient-to-r from-orange-100 to-amber-100 rounded-xl border border-orange-200 p-4 hover:border-orange-300 transition-all duration-200 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="w-8 h-8 bg-orange-200 rounded-lg flex items-center justify-center mb-2">
-                    <Heart className="h-4 w-4 text-orange-500" />
-                  </div>
-                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
-                    Saved Stations
-                  </h3>
-                  <p className="text-xs text-gray-500">
-                    Your favorite locations
-                  </p>
-                </div>
-                <ArrowRight className="h-4 w-4 text-orange-400 group-hover:text-orange-600 transition-colors" />
-              </div>
-            </Link>
-            <Link
-              to="/dashboard"
-              className="group bg-gradient-to-r from-orange-100 to-amber-100 rounded-xl border border-orange-200 p-4 hover:border-orange-300 transition-all duration-200 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="w-8 h-8 bg-orange-200 rounded-lg flex items-center justify-center mb-2">
-                    <TrendingUp className="h-4 w-4 text-orange-500" />
-                  </div>
-                  <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
-                    Dashboard
-                  </h3>
-                  <p className="text-xs text-gray-500">Manage your stations</p>
-                </div>
-                <ArrowRight className="h-4 w-4 text-orange-400 group-hover:text-orange-600 transition-colors" />
-              </div>
-            </Link>
-          </div>
-        </div>
+      <main className="relative z-10 max-w-5xl mx-auto px-4 py-6">
+        <QuickActions />
+        <SearchFilterCard
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
+          filters={filters}
+          handleFilterChange={handleFilterChange}
+          clearFilters={clearFilters}
+          connectorTypes={connectorTypes}
+          showSuggestions={showSuggestions}
+          setShowSuggestions={setShowSuggestions}
+        />
 
-        {/* Search & Filter Card */}
-        <div className="bg-white/80 rounded-2xl border border-orange-100 p-5 mb-10 shadow-md">
-          {/* Search Bar */}
-          <div className="flex flex-col lg:flex-row gap-3">
-            <GlobalSearch
-              showSuggestions={showSuggestions}
-              setShowSuggestions={setShowSuggestions}
-            />
-
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="inline-flex items-center justify-center px-4 py-2 border border-orange-100 rounded-xl text-xs font-medium tracking-wide text-orange-700 bg-orange-50 hover:bg-orange-100 transition-all"
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-              <ChevronDown
-                className={`h-4 w-4 ml-2 transition-transform ${
-                  showFilters ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-          </div>
-          {/* Filters Panel */}
-          {showFilters && (
-            <div className="mt-5 pt-5 border-t border-orange-100 grid grid-cols-1 md:grid-cols-4 gap-3">
-              <div className="space-y-1">
-                <label className="block text-xs font-light text-gray-400 uppercase tracking-wider">
-                  Status
-                </label>
-                <select
-                  name="status"
-                  value={filters.status}
-                  onChange={handleFilterChange}
-                  className="w-full px-3 py-2.5 backdrop-blur-sm border border-gray-800/50 rounded-lg text-black text-xs font-light tracking-wide focus:outline-none focus:ring-1 focus:ring-gray-700"
-                >
-                  <option value="">All Statuses</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-xs font-light text-gray-400 uppercase tracking-wider">
-                  Connector Type
-                </label>
-                <select
-                  name="connectorType"
-                  value={filters.connectorType}
-                  onChange={handleFilterChange}
-                  className="w-full px-3 py-2.5 backdrop-blur-sm border border-gray-800/50 rounded-lg text-black text-xs font-light tracking-wide focus:outline-none focus:ring-1 focus:ring-gray-700"
-                >
-                  <option value="">All Types</option>
-                  {connectorTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-xs font-light text-gray-400 uppercase tracking-wider">
-                  Min Power (kW)
-                </label>
-                <input
-                  type="number"
-                  name="minPower"
-                  value={filters.minPower}
-                  onChange={handleFilterChange}
-                  placeholder="Min"
-                  className="w-full px-3 py-2.5 backdrop-blur-sm border border-gray-800/50 rounded-lg text-black placeholder-gray-600 text-xs font-light tracking-wide focus:outline-none focus:ring-1 focus:ring-gray-700"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-xs font-light text-gray-400 uppercase tracking-wider">
-                  Max Power (kW)
-                </label>
-                <input
-                  type="number"
-                  name="maxPower"
-                  value={filters.maxPower}
-                  onChange={handleFilterChange}
-                  placeholder="Max"
-                  className="w-full px-3 py-2.5  backdrop-blur-sm border border-gray-800/50 rounded-lg text-black placeholder-gray-600 text-xs font-light tracking-wide focus:outline-none focus:ring-1 focus:ring-gray-700"
-                />
-              </div>
-
-              <div className="md:col-span-4 flex justify-end">
-                <button
-                  onClick={clearFilters}
-                  className="inline-flex items-center text-xs font-light tracking-wide text-gray-600 hover:text-gray-500 transition-colors"
-                >
-                  <X className="h-3 w-3 mr-1.5" />
-                  Clear filters
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Results Section */}
-        <div className="mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="mb-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold text-gray-900 tracking-tight">
+            <h2 className="text-base font-semibold text-gray-900 tracking-tight">
               {sortedStations.length} stations found
             </h2>
             <div className="flex items-center gap-2">
@@ -411,7 +181,7 @@ const Home = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-white border border-orange-100 rounded-lg text-gray-900 text-xs font-medium tracking-wide px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-orange-300"
+                className="bg-white border border-orange-100 rounded-lg text-gray-900 text-xs font-medium tracking-wide px-2 py-1 focus:outline-none focus:ring-1 focus:ring-orange-300"
               >
                 <option value="name">Name</option>
                 <option value="rating">Rating</option>
@@ -426,11 +196,10 @@ const Home = () => {
             <div className="flex bg-white border border-orange-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`p-2 rounded-md transition-all ${
-                  viewMode === "grid"
-                    ? "bg-orange-500 text-white"
-                    : "text-orange-400 hover:text-orange-600"
-                }`}
+                className={`p-1 rounded-md transition-all ${viewMode === "grid"
+                  ? "bg-orange-500 text-white"
+                  : "text-orange-400 hover:text-orange-600"
+                  }`}
               >
                 <div className="w-4 h-4 grid grid-cols-2 gap-0.5">
                   <div className="w-1.5 h-1.5 bg-current rounded-sm"></div>
@@ -441,11 +210,10 @@ const Home = () => {
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-2 rounded-md transition-all ${
-                  viewMode === "list"
-                    ? "bg-orange-500 text-white"
-                    : "text-orange-400 hover:text-orange-600"
-                }`}
+                className={`p-1 rounded-md transition-all ${viewMode === "list"
+                  ? "bg-orange-500 text-white"
+                  : "text-orange-400 hover:text-orange-600"
+                  }`}
               >
                 <div className="w-4 h-4 space-y-0.5">
                   <div className="w-full h-1.5 bg-current rounded-sm"></div>
@@ -462,82 +230,25 @@ const Home = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-orange-200 border-t-orange-500"></div>
           </div>
         ) : sortedStations.length > 0 ? (
-          <div className="">
-            {/* Pagination Controls */}
-            <div className="mb-4 flex items-center justify-end gap-2">
-              {/* Previous Button */}
-              <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
-                className="p-2 rounded-full border bg-white shadow-sm hover:bg-gray-100 disabled:opacity-40"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              {/* Page Indicator */}
-              <span className="px-2 text-sm text-gray-600">
-                Page {currentPage} of {totalPages}
-              </span>
-
-              {/* Next Button */}
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => p + 1)}
-                className="p-2 rounded-full border bg-white shadow-sm hover:bg-gray-100 disabled:opacity-40"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Stations Grid/List */}
-            <div
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 lg:grid-cols-2 gap-5"
-                  : "space-y-3"
-              }
-            >
-              {currentItems.map((station) => (
-                <StationCard
-                  key={station._id}
-                  station={station}
-                  viewMode={viewMode}
-                  handleSaveStation={handleSaveStation}
-                  isStationSaved={user?.savedStations?.includes(station._id)}
-                />
-              ))}
-            </div>
-          </div>
+          <>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
+            <StationsList
+              stations={currentItems}
+              viewMode={viewMode}
+              handleSaveStation={handleSaveStation}
+              user={user}
+            />
+          </>
         ) : (
-          <div className="bg-white/80 rounded-xl border border-orange-100 p-8 text-center">
-            <div className="flex flex-col items-center justify-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                <X className="h-6 w-6 text-orange-500" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                No Stations Found
-              </h3>
-              <p className="text-gray-600 mb-6 max-w-md">
-                We couldn't find any charging stations matching your search
-                criteria. Try adjusting your filters or search term.
-              </p>
-              <button
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilters({
-                    status: "",
-                    connectorType: "",
-                    minPower: "",
-                    maxPower: "",
-                  });
-                  setShowFilters(false);
-                }}
-                className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium"
-              >
-                Clear All Filters
-              </button>
-            </div>
-          </div>
+          <NoStationsFound
+            setSearchTerm={setSearchTerm}
+            setFilters={setFilters}
+            setShowFilters={setShowFilters}
+          />
         )}
       </main>
     </div>
