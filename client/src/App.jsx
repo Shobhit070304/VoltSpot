@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthContext";
@@ -6,6 +6,7 @@ import { useAuth } from "./context/AuthContext";
 // Components
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 // Lazy loaded pages
 const Login = lazy(() => import("./pages/auth/Login"));
@@ -24,7 +25,7 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <div className="text-center py-10">Loading...</div>;
+    return <LoadingSpinner size="lg" className="min-h-screen" />;
   }
 
   if (!isAuthenticated) {
@@ -41,7 +42,7 @@ function App() {
     <div className="flex flex-col min-h-screen bg-gray-50">
       {path !== "login" && path !== "register" && <Navbar />}
       <main className="flex-grow">
-        <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
+        <Suspense fallback={<LoadingSpinner size="lg" className="h-screen" />}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

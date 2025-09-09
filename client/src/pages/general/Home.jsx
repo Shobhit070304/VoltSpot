@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { api } from "../../services/api";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
-import GlobalSearch from "../../components/widgets/GlobalSearch";
-import StationCard from "../../components/cards/StationCard";
 import Header from "../../components/Home/Header";
 import QuickStats from "../../components/Home/QuickStats";
 import QuickActions from "../../components/Home/QuickActions";
@@ -11,6 +9,7 @@ import SearchFilterCard from "../../components/Home/SearchFilterCard";
 import StationsList from "../../components/Home/StationsList";
 import Pagination from "../../components/Home/Pagination";
 import NoStationsFound from "../../components/Home/NoStationsFound";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const connectorTypes = [
   "Type 1",
@@ -57,21 +56,21 @@ const Home = () => {
     fetchStations();
   }, []);
 
-  const handleFilterChange = (e) => {
+  const handleFilterChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
-  };
+    setFilters(prev => ({ ...prev, [name]: value }));
+  }, []);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setFilters({
       status: "",
       connectorType: "",
       minPower: "",
       maxPower: "",
     });
-  };
+  }, []);
 
-  const handleSaveStation = async (stationId) => {
+  const handleSaveStation = useCallback(async (stationId) => {
     try {
       const response = await api.post(`/station/save/${stationId}`);
       if (response.status === 200) {
@@ -80,52 +79,57 @@ const Home = () => {
           ...prevUser,
           savedStations: response.data.savedStations,
         }));
-      } else {
-        toast.error("Error saving station");
       }
-    } catch {
-      toast.error("Error saving station");
+    } catch (error) {
+      console.error("Error saving station:", error);
     }
-  };
+  }, [setUser]);
 
-  const filteredStations = stations.filter((station) => {
-    const matchesSearch =
-      station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      station.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = !filters.status || station.status === filters.status;
-    const matchesConnector =
-      !filters.connectorType || station.connectorType === filters.connectorType;
-    const matchesMinPower =
-      !filters.minPower || station.powerOutput >= Number(filters.minPower);
-    const matchesMaxPower =
-      !filters.maxPower || station.powerOutput <= Number(filters.maxPower);
+  const filteredStations = useMemo(() => {
+    return stations.filter((station) => {
+      const matchesSearch =
+        station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        station.location.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = !filters.status || station.status === filters.status;
+      const matchesConnector =
+        !filters.connectorType || station.connectorType === filters.connectorType;
+      const matchesMinPower =
+        !filters.minPower || station.powerOutput >= Number(filters.minPower);
+      const matchesMaxPower =
+        !filters.maxPower || station.powerOutput <= Number(filters.maxPower);
 
-    return (
-      matchesSearch &&
-      matchesStatus &&
-      matchesConnector &&
-      matchesMinPower &&
-      matchesMaxPower
-    );
-  });
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesConnector &&
+        matchesMinPower &&
+        matchesMaxPower
+      );
+    });
+  }, [stations, searchTerm, filters]);
 
-  const sortedStations = [...filteredStations].sort((a, b) => {
-    switch (sortBy) {
-      case "rating":
-        return (b.averageRating || 0) - (a.averageRating || 0);
-      case "power":
-        return b.powerOutput - a.powerOutput;
-      case "name":
-      default:
-        return a.name.localeCompare(b.name);
-    }
-  });
+  const sortedStations = useMemo(() => {
+    return [...filteredStations].sort((a, b) => {
+      switch (sortBy) {
+        case "rating":
+          return (b.averageRating || 0) - (a.averageRating || 0);
+        case "power":
+          return b.powerOutput - a.powerOutput;
+        case "name":
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
+  }, [filteredStations, sortBy]);
 
-  const totalPages = Math.ceil(sortedStations.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = sortedStations.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedData = useMemo(() => {
+    const totalPages = Math.ceil(sortedStations.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentItems = sortedStations.slice(startIndex, startIndex + itemsPerPage);
+    return { totalPages, currentItems };
+  }, [sortedStations, currentPage, itemsPerPage]);
 
-  const stats = {
+  const stats = useMemo(() => ({
     total: stations.length,
     active: stations.filter((s) => s.status === "Active").length,
     averagePower:
@@ -133,7 +137,7 @@ const Home = () => {
     averageRating:
       stations.reduce((sum, s) => sum + (s.averageRating || 0), 0) /
       stations.length || 0,
-  };
+  }), [stations]);
 
   return (
     <div
@@ -226,18 +230,16 @@ const Home = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-orange-200 border-t-orange-500"></div>
-          </div>
+          <LoadingSpinner size="lg" className="h-64" />
         ) : sortedStations.length > 0 ? (
           <>
             <Pagination
               currentPage={currentPage}
-              totalPages={totalPages}
+              totalPages={paginatedData.totalPages}
               setCurrentPage={setCurrentPage}
             />
             <StationsList
-              stations={currentItems}
+              stations={paginatedData.currentItems}
               viewMode={viewMode}
               handleSaveStation={handleSaveStation}
               user={user}

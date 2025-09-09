@@ -72,7 +72,7 @@ const createStation = async (req, res, next) => {
       createdBy: req.user.userId,
     });
 
-    res.status(200).json(station);
+    res.status(201).json(station);
   } catch (error) {
     next(error);
   }
@@ -192,16 +192,12 @@ const getSavedStations = async (req, res, next) => {
 
     res.status(200).json({ savedStations: populatedUser.savedStations });
   } catch (error) {
-    console.error("Error in getSavedStations:", error);
-    res.status(500).json({
-      message: "Error fetching saved stations",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // Get suggestions
-const getStationSuggestions = async (req, res) => {
+const getStationSuggestions = async (req, res, next) => {
   try {
     const { query } = req.query;
     if (!query) return res.json([]);
@@ -217,12 +213,12 @@ const getStationSuggestions = async (req, res) => {
 
     res.json(stations);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Get estimate cost & time
-const estimateChargingPrice = async (req, res) => {
+const estimateChargingPrice = async (req, res, next) => {
   try {
     const { stationPower, pricePerKWh, evId, chargeFrom, chargeTo } = req.body;
 
@@ -236,12 +232,6 @@ const estimateChargingPrice = async (req, res) => {
     // Cost & Time
     const cost = energyNeeded * pricePerKWh;
     const time = energyNeeded / stationPower; // hours
-    console.log("Result", {
-      ev: ev.name,
-      energyNeeded: energyNeeded.toFixed(2),
-      cost: cost.toFixed(2),
-      time: (time * 60).toFixed(0), // minutes
-    });
     res.json({
       ev: ev.name,
       energyNeeded: energyNeeded.toFixed(2),
@@ -249,7 +239,7 @@ const estimateChargingPrice = async (req, res) => {
       time: (time * 60).toFixed(0), // minutes
     });
   } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    next(err);
   }
 };
 

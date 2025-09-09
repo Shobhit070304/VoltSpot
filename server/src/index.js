@@ -5,6 +5,8 @@ import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import compression from "compression";
+import helmet from "helmet";
+import morgan from "morgan";
 
 // Routes
 import authRoutes from "./routes/users/auth-routes.js";
@@ -12,9 +14,16 @@ import stationRoutes from "./routes/stations/station-routes.js";
 import reviewRoutes from "./routes/stations/review-routes.js";
 import reportRoutes from "./routes/stations/report-routes.js";
 import carRoutes from "./routes/cars/car-routes.js";
+import { notFound, errorHandler } from "./middleware/error.js";
 
 dotenv.config();
 
+// =============================================================
+// Express App Initialization
+// -------------------------------------------------------------
+// Configures core middlewares, security, rate limiting,
+// compression, routing, and global error handling.
+// =============================================================
 const app = express();
 
 // Connect to MongoDB
@@ -22,6 +31,19 @@ connectDB().catch((error) => {
   console.error("Failed to connect to MongoDB:", error);
   process.exit(1);
 });
+
+// Security headers
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
+// HTTP request logging (dev only)
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // Simple rate limiting
 const limiter = rateLimit({
@@ -47,19 +69,13 @@ app.use(
   })
 );
 
-// Middleware to ensure Content-Length is set for all responses
-app.use((req, res, next) => {
-  const originalSend = res.send;
-  res.send = function (body) {
-    // Only set Content-Length if it hasn't been set and isn't a HEAD request
-    if (!res.get("Content-Length") && req.method !== "HEAD") {
-      res.set("Content-Length", Buffer.byteLength(body));
-    }
-    return originalSend.call(this, body);
-  };
-  next();
-});
-app.use(cors());
+// CORS (restrict origins if needed via CORS_ORIGIN env)
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "*",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -70,9 +86,8 @@ app.use("/api/review", reviewRoutes);
 app.use("/api/report", reportRoutes);
 app.use("/api/car", carRoutes);
 
-// Basic error handling
-app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message || "Internal Server Error" });
-});
+// 404 and Error handlers
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;

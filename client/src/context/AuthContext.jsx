@@ -1,10 +1,16 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from "react";
 import { api } from "../services/api";
 import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -14,13 +20,17 @@ export const AuthProvider = ({ children }) => {
   // Load user from localStorage on initial render
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (token && user) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(user));
-    } else {
-      setUser(null);
-      setIsAuthenticated(false);
+    const userData = localStorage.getItem("user");
+    if (token && userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setIsAuthenticated(true);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
     }
     setLoading(false);
   }, []);
@@ -34,11 +44,11 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  const login = async (userData) => {
+  const login = useCallback(async (userData) => {
     setLoading(true);
     try {
       localStorage.setItem("token", userData.token);
-      setUser(userData.user); // This will trigger the useEffect above
+      setUser(userData.user);
       setIsAuthenticated(true);
       toast.success("Welcome back!");
     } catch (error) {
@@ -46,25 +56,25 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setLoading(true);
     localStorage.removeItem("token");
-    setUser(null); // This will trigger the useEffect to clear the user
+    setUser(null);
     setIsAuthenticated(false);
     toast.success("Logged out successfully");
     setLoading(false);
-  };
+  }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     user,
     setUser,
     isAuthenticated,
     loading,
     login,
     logout,
-  };
+  }), [user, isAuthenticated, loading, login, logout]);
 
   return (
     <AuthContext.Provider value={value}>

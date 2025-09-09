@@ -16,7 +16,7 @@ export const createReport = async (req, res, next) => {
       comment,
     });
 
-    res.status(200).json({ message: "Report submitted successfully", report });
+    res.status(201).json({ message: "Report submitted successfully", report });
   } catch (error) {
     next(error);
   }

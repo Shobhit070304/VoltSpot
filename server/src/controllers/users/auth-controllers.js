@@ -1,3 +1,9 @@
+// =============================================================
+// Auth Controllers
+// -------------------------------------------------------------
+// Handles user registration, authentication, logout, and profile retrieval.
+// Uses secure cookies for JWT and validates inputs via express-validator.
+// =============================================================
 import { validationResult } from 'express-validator';
 import User from '../../models/users/User.js';
 import jwt from 'jsonwebtoken';
@@ -27,7 +33,7 @@ const registerUser = async (req, res, next) => {
 
         user.password = undefined;
 
-        res.status(200).json({ message: 'User registered successfully', user: user });
+        res.status(201).json({ message: 'User registered successfully', user: user });
     } catch (error) {
         next(error);
     }
@@ -55,10 +61,14 @@ const loginUser = async (req, res, next) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
+        if (!process.env.JWT_SECRET) {
+            return res.status(500).json({ message: 'JWT secret not configured' });
+        }
+
         // Generate JWT token
         const token = jwt.sign(
             { userId: user._id },
-            process.env.JWT_SECRET || 'SECRET',
+            process.env.JWT_SECRET,
             { expiresIn: '1d' }
         );
 
@@ -67,7 +77,8 @@ const loginUser = async (req, res, next) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV !== 'development',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
         });
 
@@ -89,6 +100,9 @@ const logoutUser = async (req, res, next) => {
 const getUserProfile = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         user.password = undefined;
         res.status(200).json(user);
     } catch (error) {

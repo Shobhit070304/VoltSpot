@@ -11,6 +11,7 @@ export default defineConfig({
     compression({
       algorithm: 'gzip',
       exclude: [/\.(br)$/, /\.(gz)$/],
+      threshold: 1024,
     }),
   ],
   build: {
@@ -30,8 +31,14 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info'],
+      },
+      mangle: {
+        safari10: true,
       },
     },
+    target: 'es2015',
+    cssCodeSplit: true,
   },
   server: {
     proxy: {
@@ -40,5 +47,8 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'axios'],
   },
 })
