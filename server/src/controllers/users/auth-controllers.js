@@ -1,9 +1,3 @@
-// =============================================================
-// Auth Controllers
-// -------------------------------------------------------------
-// Handles user registration, authentication, logout, and profile retrieval.
-// Uses secure cookies for JWT and validates inputs via express-validator.
-// =============================================================
 import { validationResult } from 'express-validator';
 import User from '../../models/users/User.js';
 import jwt from 'jsonwebtoken';
