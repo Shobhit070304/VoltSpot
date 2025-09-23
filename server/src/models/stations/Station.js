@@ -55,6 +55,13 @@ const stationSchema = new mongoose.Schema({
   },
 });
 
+// ✅ Indexes
+stationSchema.index({ name: 1 }); // fast name searches
+stationSchema.index({ location: 1 }); // filter by location
+stationSchema.index({ status: 1 }); // filter by status
+stationSchema.index({ createdBy: 1 }); // find all stations by a user
+stationSchema.index({ latitude: 1, longitude: 1 }); // geo-related queries
+
 // Update the updatedAt field on save
 stationSchema.pre("save", function (next) {
   this.updatedAt = Date.now();

@@ -191,9 +191,9 @@ const Register = () => {
               </div>
               <label htmlFor="terms" className="ml-2 block text-xs text-orange-500 font-light leading-relaxed">
                 I agree to the{" "}
-                <Link className="text-orange-600 hover:text-orange-800 underline">Terms of Service</Link>{" "}
+                <p className="text-orange-600 hover:text-orange-800">Terms of Service</p>{" "}
                 and{" "}
-                <Link className="text-orange-600 hover:text-orange-800 underline">Privacy Policy</Link>
+                <p className="text-orange-600 hover:text-orange-800">Privacy Policy</p>
               </label>
             </div>
             {/* Submit Button */}

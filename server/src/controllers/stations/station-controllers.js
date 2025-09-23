@@ -3,11 +3,18 @@ import { validationResult } from "express-validator";
 import User from "../../models/users/User.js";
 import EV from "../../models/cars/EV.js";
 
+import { redis } from "../../config/redisConnection.js";
+
 // Get all stations
 const getStations = async (req, res, next) => {
   try {
-    const stations = await Station.find();
-    res.status(200).json(stations);
+    const cachedStations = await redis.get("stations");
+    if (cachedStations) {
+      return res.status(200).json({ stations: cachedStations });
+    }
+    const stations = await Station.find().lean();
+    await redis.set("stations", stations, { ex: 3600 }); // Cache for 1 hour
+    res.status(200).json({ stations });
   } catch (error) {
     next(error);
   }
@@ -26,6 +33,10 @@ const getMyStations = async (req, res, next) => {
 // Get station by ID
 const getStationById = async (req, res, next) => {
   try {
+    const cachedStation = await redis.get(`station:${req.params.id}`);
+    if (cachedStation) {
+      return res.status(200).json({ station: cachedStation });
+    }
     const station = await Station.findOne({
       _id: req.params.id,
     });
@@ -33,6 +44,9 @@ const getStationById = async (req, res, next) => {
     if (!station) {
       return res.status(404).json({ message: "Station not found" });
     }
+    await redis.set(`station:${req.params.id}`, station, {
+      ex: 3600,
+    }); // Cache for 1 hour
 
     res.status(200).json({ station });
   } catch (error) {

@@ -21,5 +21,8 @@ const reportSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Indexing for faster queries
+reportSchema.index({ station: 1, user: 1 });
+
 const Report = mongoose.model("Report", reportSchema);
 export default Report;

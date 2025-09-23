@@ -20,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@upstash/redis": "^1.35.4",
     "bcrypt": "^5.1.1",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
@@ -28,6 +29,7 @@
     "express": "^4.19.2",
     "express-rate-limit": "^7.5.1",
     "express-validator": "^7.0.1",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.3",
     "morgan": "^1.10.0",

@@ -7,6 +7,9 @@ import rateLimit from "express-rate-limit";
 import compression from "compression";
 import helmet from "helmet";
 import morgan from "morgan";
+import {testConnection} from "./config/redisConnection.js";
+
+testConnection();
 
 // Routes
 import authRoutes from "./routes/users/auth-routes.js";

@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+// Indexing for email to optimize queries
+// userSchema.index({ email: 1 }, { unique: true });
+
 // Pre-save hook to hash password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

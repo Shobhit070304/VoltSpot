@@ -26,5 +26,9 @@ const reviewSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+// Indexing for faster queries
+reviewSchema.index({ station: 1, user: 1 }, { unique: true });
+
 const Reviews = mongoose.model("Review", reviewSchema);
 export default Reviews;

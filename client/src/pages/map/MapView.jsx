@@ -59,13 +59,21 @@ const MapView = ({ station }) => {
     const fetchStations = async () => {
       try {
         setLoading(true);
-        const response = station
-          ? { data: [station] }
-          : await api.get("/station");
 
-        if (response.data) {
-          setStations(response.data.filter(s => s.latitude && s.longitude));
+        let stationsData = [];
+
+        if (station) {
+          // single station page
+          stationsData = [station];
+        } else {
+          // map page: fetch all stations
+          const response = await api.get("/station"); // backend returns { stations: [...] }
+          stationsData = response.data.stations;
         }
+
+        // filter only stations with valid coordinates
+        setStations(stationsData.filter(s => s.latitude && s.longitude));
+
       } catch (err) {
         toast.error("Error fetching stations");
         setError(err.message || "Error fetching stations");
@@ -73,6 +81,7 @@ const MapView = ({ station }) => {
         setLoading(false);
       }
     };
+
 
     fetchStations();
   }, [station]);

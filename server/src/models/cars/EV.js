@@ -8,6 +8,9 @@ const EVSchema = new mongoose.Schema({
   chargingPort: { type: String }, // CCS2, CHAdeMO, Type2 etc.
 });
 
+// Index to optimize queries by name and manufacturer
+EVSchema.index({ name: 1, manufacturer: 1 });
+
 const EV = mongoose.model("EV", EVSchema);
 
 export default EV;
