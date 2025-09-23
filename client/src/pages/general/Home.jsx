@@ -44,7 +44,6 @@ const Home = () => {
         setLoading(true);
         const response = await api.get("/station");
         if (response.status === 200) {
-          console.log(response.data.stations);
           setStations(response.data.stations);
           toast.success("Stations loaded successfully");
         }

@@ -51,7 +51,6 @@ function Station() {
         setLoading(true);
         const response = await api.get(`/station/${id}`);
         if (response.status === 200) {
-          console.log(response.data.station);
           setStation(response.data.station);
         }
       } catch (error) {

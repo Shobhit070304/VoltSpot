@@ -217,9 +217,7 @@ const getSavedStations = async (req, res, next) => {
       `savedStations:${req.user.userId}`
     );
     if (cachedSavedStations) {
-      return res
-        .status(200)
-        .json({ savedStations: JSON.parse(cachedSavedStations) });
+      return res.status(200).json({ savedStations: cachedSavedStations });
     }
     const user = await User.findById(req.user.userId);
     if (!user) {
@@ -236,7 +234,7 @@ const getSavedStations = async (req, res, next) => {
 
     await redis.set(
       `savedStations:${req.user.userId}`,
-      JSON.stringify(populatedUser.savedStations),
+      populatedUser.savedStations,
       { ex: 3600 }
     ); // Cache for 1 hour
 
