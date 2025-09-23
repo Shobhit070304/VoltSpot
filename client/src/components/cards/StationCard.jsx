@@ -1,14 +1,48 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { MapPin, Zap, Heart, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { api } from '../../services/api';
 
 const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) => {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchReviews = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/review/${station._id}`);
+        if (response.status === 200 && isMounted) {
+          setReviews(response.data);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setError(true);
+          toast.error("Failed to fetch reviews");
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchReviews();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []); // 👈 empty deps → runs only once on mount
+
+
+
   return (
     <div
       key={station._id}
-      className={`bg-white/80 rounded-xl border border-orange-100 hover:bg-orange-50 transition-all group ${
-        viewMode === "list" ? "p-4" : "p-5"
-      }`}
+      className={`bg-white/80 rounded-xl border border-orange-100 hover:bg-orange-50 transition-all group ${viewMode === "list" ? "p-4" : "p-5"
+        }`}
     >
       {viewMode === "grid" ? (
         <div>
@@ -28,11 +62,10 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
             </div>
             <div className="flex items-center space-x-2">
               <span
-                className={`px-3 py-1 text-xs font-medium rounded-full ${
-                  station.status === "Active"
-                    ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                    : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
-                }`}
+                className={`px-3 py-1 text-xs font-medium rounded-full ${station.status === "Active"
+                  ? "bg-green-500/20 text-green-500 border border-green-500/30"
+                  : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
+                  }`}
               >
                 {station.status}
               </span>
@@ -41,11 +74,10 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
                 className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
               >
                 <Heart
-                  className={`h-4 w-4 transition-colors ${
-                    isStationSaved
-                      ? "text-red-500 fill-red-500"
-                      : "text-gray-400 hover:text-red-500"
-                  }`}
+                  className={`h-4 w-4 transition-colors ${isStationSaved
+                    ? "text-red-500 fill-red-500"
+                    : "text-gray-400 hover:text-red-500"
+                    }`}
                 />
               </button>
             </div>
@@ -56,12 +88,12 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
               <div className="flex items-center">
                 <Star className="h-3.5 w-3.5 text-amber-400 mr-1" />
                 <span className="text-xs font-medium text-gray-700">
-                  {station.rating ? station.rating.toFixed(1) : "New"}
+                  {station.averageRating ? station.averageRating.toFixed(1) : 0}
                 </span>
               </div>
               <span className="mx-2 text-gray-300">•</span>
               <span className="text-xs text-gray-500">
-                {station.reviews?.length || 0} reviews
+                {reviews?.length || 0} reviews
               </span>
             </div>
 
@@ -81,11 +113,10 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
                 {station.name}
               </h3>
               <span
-                className={`px-3 py-1 text-xs font-medium rounded-full ${
-                  station.status === "Active"
-                    ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                    : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
-                }`}
+                className={`px-3 py-1 text-xs font-medium rounded-full ${station.status === "Active"
+                  ? "bg-green-500/20 text-green-500 border border-green-500/30"
+                  : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
+                  }`}
               >
                 {station.status}
               </span>
@@ -106,7 +137,7 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
                 <div className="flex items-center">
                   <Star className="h-3.5 w-3.5 text-amber-400 mr-1" />
                   <span className="text-xs font-medium text-gray-700">
-                    {station.rating ? station.rating.toFixed(1) : "New"}
+                    {station.averageRating ? station.averageRating.toFixed(1) : 0}
                   </span>
                 </div>
               </div>
@@ -117,11 +148,10 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
                   className="p-1.5 hover:bg-orange-100 rounded-lg transition-colors"
                 >
                   <Heart
-                    className={`h-4 w-4 transition-colors ${
-                      isStationSaved
-                        ? "text-red-500 fill-red-500"
-                        : "text-gray-400 hover:text-red-500"
-                    }`}
+                    className={`h-4 w-4 transition-colors ${isStationSaved
+                      ? "text-red-500 fill-red-500"
+                      : "text-gray-400 hover:text-red-500"
+                      }`}
                   />
                 </button>
                 <Link

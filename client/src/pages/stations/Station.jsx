@@ -51,6 +51,7 @@ function Station() {
         setLoading(true);
         const response = await api.get(`/station/${id}`);
         if (response.status === 200) {
+          console.log(response.data.station);
           setStation(response.data.station);
         }
       } catch (error) {
@@ -180,11 +181,10 @@ function Station() {
             </div>
             <div className="mt-4 sm:mt-0">
               <span
-                className={`px-3 py-1 text-sm font-medium rounded-full ${
-                  station?.status === "Active"
-                    ? "bg-green-100 text-green-800 border border-green-200"
-                    : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                }`}
+                className={`px-3 py-1 text-sm font-medium rounded-full ${station?.status === "Active"
+                  ? "bg-green-100 text-green-800 border border-green-200"
+                  : "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                  }`}
               >
                 {station?.status}
               </span>
@@ -290,11 +290,10 @@ function Station() {
                   <button
                     type="button"
                     disabled={station?.status !== "Active"}
-                    className={`w-full inline-flex justify-center items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                      station?.status === "Active"
-                        ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md hover:shadow-orange-500/20"
-                        : "bg-gray-100 text-gray-500 cursor-not-allowed"
-                    }`}
+                    className={`w-full inline-flex justify-center items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${station?.status === "Active"
+                      ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md hover:shadow-orange-500/20"
+                      : "bg-gray-100 text-gray-500 cursor-not-allowed"
+                      }`}
                   >
                     {station?.status === "Active"
                       ? "Start Charging Session"
@@ -340,11 +339,10 @@ function Station() {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-4 w-4 ${
-                          star <= (station?.averageRating || 0)
-                            ? "text-amber-400 fill-current"
-                            : "text-gray-300"
-                        }`}
+                        className={`h-4 w-4 ${star <= (station?.averageRating || 0)
+                          ? "text-amber-400 fill-current"
+                          : "text-gray-300"
+                          }`}
                       />
                     ))}
                   </div>
@@ -389,10 +387,6 @@ function Station() {
                 </button>
               </div>
             </div>
-
-            {/* Cost & Time Estimate */}
-            <DynamicCostEstimator station={station} />
-
             {user && showReviewForm && (
               <DynamicReviewForm
                 stationId={id}
@@ -400,6 +394,10 @@ function Station() {
                 setShowReviewForm={setShowReviewForm}
               />
             )}
+
+            {/* Cost & Time Estimate */}
+            <DynamicCostEstimator station={station} />
+
           </div>
         </div>
       </div>

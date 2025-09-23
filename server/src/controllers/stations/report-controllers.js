@@ -1,3 +1,4 @@
+import { redis } from "../../config/redisConnection.js";
 import Report from "../../models/stations/Report.js";
 
 // Create report
@@ -15,6 +16,8 @@ export const createReport = async (req, res, next) => {
       station: stationId,
       comment,
     });
+
+    await redis.del(`station:${stationId}`); // Invalidate cache
 
     res.status(201).json({ message: "Report submitted successfully", report });
   } catch (error) {

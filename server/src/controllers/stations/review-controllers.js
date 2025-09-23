@@ -1,3 +1,4 @@
+import { redis } from "../../config/redisConnection.js";
 import Review from "../../models/stations/Review.js";
 import Station from "../../models/stations/Station.js";
 
@@ -25,6 +26,7 @@ export const createReview = async (req, res, next) => {
       averageRating: avg.toFixed(1),
     });
 
+    await redis.del(`station:${stationId}`); // Invalidate cache
     res.status(201).json({ message: "Review submitted successfully", review });
   } catch (error) {
     next(error);

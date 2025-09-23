@@ -21,7 +21,7 @@ const ReportForm = ({ stationId, showReportForm, setShowReportForm }) => {
         comment,
       });
 
-      if (res.status === 200) {
+      if (res.status === 201) {
         setShowReportForm(!showReportForm);
         toast.success("Report submitted successfully!");
         setComment("");

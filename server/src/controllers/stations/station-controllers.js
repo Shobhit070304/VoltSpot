@@ -23,7 +23,12 @@ const getStations = async (req, res, next) => {
 // Get my stations
 const getMyStations = async (req, res, next) => {
   try {
-    const stations = await Station.find({ createdBy: req.user.userId });
+    const cachedMyStations = await redis.get(`myStations:${req.user.userId}`);
+    if (cachedMyStations) {
+      return res.status(200).json({ stations: cachedMyStations });
+    }
+    const stations = await Station.find({ createdBy: req.user.userId }).lean();
+    await redis.set(`myStations:${req.user.userId}`, stations, { ex: 3600 }); // Cache for 1 hour
     res.status(200).json({ stations });
   } catch (error) {
     next(error);
@@ -86,6 +91,13 @@ const createStation = async (req, res, next) => {
       createdBy: req.user.userId,
     });
 
+    if (!station) {
+      return res.status(500).json({ message: "Failed to create station" });
+    }
+
+    redis.del("stations");
+    redis.del(`myStations:${req.user.userId}`);
+
     res.status(201).json(station);
   } catch (error) {
     next(error);
@@ -132,6 +144,10 @@ const updateStation = async (req, res, next) => {
       return res.status(404).json({ message: "Station not found" });
     }
 
+    redis.del("stations");
+    redis.del(`myStations:${req.user.userId}`);
+    redis.del(`station:${req.params.id}`);
+
     res.status(200).json(station);
   } catch (error) {
     next(error);
@@ -149,6 +165,10 @@ const deleteStation = async (req, res, next) => {
     if (!station) {
       return res.status(404).json({ message: "Station not found" });
     }
+
+    redis.del("stations");
+    redis.del(`myStations:${req.user.userId}`);
+    redis.del(`station:${req.params.id}`);
 
     res.status(200).json({ message: "Station deleted successfully" });
   } catch (error) {
@@ -176,8 +196,10 @@ const saveStation = async (req, res, next) => {
         savedStations: user.savedStations,
       });
     }
+
     // Add the station to the user's saved stations
     user.savedStations.push(station._id);
+    await redis.del(`savedStations:${req.user.userId}`);
     await user.save();
     res.status(200).json({
       message: "Station saved successfully",
@@ -191,6 +213,14 @@ const saveStation = async (req, res, next) => {
 // Get saved stations
 const getSavedStations = async (req, res, next) => {
   try {
+    const cachedSavedStations = await redis.get(
+      `savedStations:${req.user.userId}`
+    );
+    if (cachedSavedStations) {
+      return res
+        .status(200)
+        .json({ savedStations: JSON.parse(cachedSavedStations) });
+    }
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -203,6 +233,12 @@ const getSavedStations = async (req, res, next) => {
       select:
         "name location status powerOutput connectorType latitude longitude",
     });
+
+    await redis.set(
+      `savedStations:${req.user.userId}`,
+      JSON.stringify(populatedUser.savedStations),
+      { ex: 3600 }
+    ); // Cache for 1 hour
 
     res.status(200).json({ savedStations: populatedUser.savedStations });
   } catch (error) {

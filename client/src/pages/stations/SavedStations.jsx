@@ -17,6 +17,7 @@ function SavedStations() {
       const response = await api.get("/station/saved-stations");
 
       if (response.status === 200) {
+        console.log(response.data);
         setSavedStations(response.data.savedStations);
       } else {
         setError("Failed to fetch saved stations");

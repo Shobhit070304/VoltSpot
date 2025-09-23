@@ -27,7 +27,7 @@ const ReviewForm = ({ stationId, showReviewForm, setShowReviewForm }) => {
         comment,
       });
 
-      if (res.status === 200) {
+      if (res.status === 201) {
         setShowReviewForm(!showReviewForm);
         toast.success("Review submitted successfully!");
         window.location.reload();
