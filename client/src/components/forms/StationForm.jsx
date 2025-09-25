@@ -97,7 +97,6 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
       }
       return { ...prev, amenities: [...prev.amenities, amenity] };
     });
-    console.log("Updated Amenities:", formData.amenities);
   };
 
   const handleSubmit = (e) => {

@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         setUser(parsedUser);
       } catch (error) {
-        console.error("Error parsing user data:", error);
+        // Silent error handling for production
         localStorage.removeItem("user");
         localStorage.removeItem("token");
       }
@@ -47,12 +47,15 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (userData) => {
     setLoading(true);
     try {
+      if (!userData?.token || !userData?.user) {
+        throw new Error("Invalid login data received");
+      }
       localStorage.setItem("token", userData.token);
       setUser(userData.user);
       setIsAuthenticated(true);
       toast.success("Welcome back!");
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message || "Login failed");
     } finally {
       setLoading(false);
     }

@@ -35,9 +35,9 @@ api.interceptors.response.use(
     // Dynamically import toast to avoid circular deps
     const toast = (await import("react-hot-toast")).default;
     
-    if (error.response) {
-      const status = error.response.status;
-      const message = error.response.data?.message || error.message || "An error occurred";
+    if (error?.response) {
+      const status = error.response?.status;
+      const message = error.response?.data?.message || error?.message || "An error occurred";
 
       // Show toast for user-facing errors
       if (status >= 400) {
@@ -50,7 +50,7 @@ api.interceptors.response.use(
         localStorage.removeItem("user");
         window.location.href = "/login";
       }
-    } else if (error.code === 'ECONNABORTED') {
+    } else if (error?.code === 'ECONNABORTED') {
       toast.error("Request timeout. Please try again.");
     } else {
       toast.error("Network error. Please check your connection.");

@@ -13,13 +13,7 @@ export default function CostEstimator({ station }) {
 
   const handleEstimate = async () => {
     try {
-      console.log("Info", {
-        stationPower,
-        pricePerKWh,
-        evId,
-        chargeFrom,
-        chargeTo,
-      });
+      // Info object removed for production
       const res = await api.post("/station/estimate", {
         stationPower,
         pricePerKWh,
@@ -27,10 +21,9 @@ export default function CostEstimator({ station }) {
         chargeFrom,
         chargeTo,
       });
-      console.log("Response", res.data);
       setResult(res.data);
     } catch (err) {
-      toast.error("Error calculating estimate");
+      setError("Failed to calculate estimate. Please try again.");
     }
   };
 
