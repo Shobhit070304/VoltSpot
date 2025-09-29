@@ -50,6 +50,7 @@ function Station() {
       try {
         setLoading(true);
         const response = await api.get(`/station/${id}`);
+        console.log(response.data);
         if (response.status === 200) {
           setStation(response.data.station);
         }
@@ -234,7 +235,7 @@ function Station() {
                       Price
                     </h3>
                     <p className="text-lg font-semibold text-gray-900">
-                      ${station?.pricePerKwh}/kWh
+                      ₹ {station?.price}/kWh
                     </p>
                   </div>
                   <div className="sm:col-span-2">

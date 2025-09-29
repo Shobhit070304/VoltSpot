@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export default function CostEstimator({ station }) {
   const [stationPower, setStationPower] = useState(station?.powerOutput || 0); // kW
-  const [pricePerKWh, setPricePerKWh] = useState(10); // ₹ per kWh
+  const [pricePerKWh, setPricePerKWh] = useState(station?.price || 0); // ₹ per kWh
   const [evId, setEvId] = useState("tesla_model3");
   const [chargeFrom, setChargeFrom] = useState(20);
   const [chargeTo, setChargeTo] = useState(80);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { api } from "../../services/api";
 import {
   Zap,
@@ -18,6 +18,7 @@ import StationForm from "../../components/forms/StationForm";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import RecentlyViewed from "../../components/widgets/RecentlyViewed";
+import Pagination from "../../components/Home/Pagination";
 
 const Dashboard = () => {
   const [stations, setStations] = useState([]);
@@ -26,6 +27,15 @@ const Dashboard = () => {
   const [stats, setStats] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+    const paginatedData = useMemo(() => {
+    const totalPages = Math.ceil(stations.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentItems = stations.slice(startIndex, startIndex + itemsPerPage);
+    return { totalPages, currentItems };
+  }, [stations, currentPage, itemsPerPage]);
 
   const fetchStations = async () => {
     try {
@@ -47,9 +57,9 @@ const Dashboard = () => {
           avgPowerOutput:
             stationsData.length > 0
               ? stationsData.reduce(
-                  (sum, station) => sum + (station.powerOutput || 0),
-                  0
-                ) / stationsData.length
+                (sum, station) => sum + (station.powerOutput || 0),
+                0
+              ) / stationsData.length
               : 0,
           totalPower: stationsData.reduce(
             (sum, station) => sum + (station.powerOutput || 0),
@@ -58,9 +68,9 @@ const Dashboard = () => {
           avgRating:
             stationsData.length > 0
               ? stationsData.reduce(
-                  (sum, station) => sum + (station.averageRating || 0),
-                  0
-                ) / stationsData.length
+                (sum, station) => sum + (station.averageRating || 0),
+                0
+              ) / stationsData.length
               : 0,
         };
         setStats(statsData);
@@ -169,7 +179,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 relative overflow-hidden py-[8%]">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 relative overflow-hidden py-[6%]">
       {/* Animated Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
@@ -262,19 +272,24 @@ const Dashboard = () => {
             bgColor="from-amber-50 to-white"
           />
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={paginatedData.totalPages}
+          setCurrentPage={setCurrentPage}
+        />
         <div className="w-full flex justify-between gap-5">
           <div className="w-[30%]">
             <RecentlyViewed />
           </div>
           {/* Charging Stations Management */}
-          <div className="bg-amber-100 w-[70%] backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden">
-            <div className="px-6 py-5 border-b border-orange-100">
+          <div className="bg-amber-100 w-[70%] backdrop-blur-lg rounded-xl border border-orange-100 shadow-md overflow-hidden py-5 px-2">
+            <div className="px-6 border-b border-orange-100">
               <h2 className="text-lg font-semibold text-gray-900">
                 Your Charging Stations
               </h2>
             </div>
             <ChargingStations
-              stations={stations}
+              stations={paginatedData.currentItems}
               setStations={setStations}
               onEdit={handleEdit}
             />

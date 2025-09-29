@@ -25,7 +25,7 @@ router.get("/me", authUser, getMyStations);
 router.get("/saved-stations", authUser, getSavedStations);
 
 // Get suggested stations
-router.get("/suggest", getStationSuggestions);
+router.get("/search", getStationSuggestions);
 
 // Get station by ID
 router.get("/:id", getStationById);
