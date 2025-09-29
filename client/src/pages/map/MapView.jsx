@@ -15,48 +15,83 @@ const MapView = ({ station }) => {
   const markersRef = useRef([]);
   const path = useLocation().pathname;
 
-  // Load Leaflet dynamically from CDN
+  // Load Leaflet dynamically from CDN with improved error handling
   useEffect(() => {
     const loadLeaflet = () => {
+      // Check if Leaflet is already loaded
       if (window.L) {
         setMapLoaded(true);
         return;
       }
 
+      // Set a timeout to detect slow loading
+      const timeoutId = setTimeout(() => {
+        setError('Map is taking too long to load. Please check your connection.');
+      }, 10000);
+
+      // Load Leaflet script
       const script = document.createElement("script");
       script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
+      script.crossOrigin = "";
+      
       script.onload = () => {
+        // Load Leaflet CSS
         const link = document.createElement("link");
         link.rel = "stylesheet";
         link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-        link.onload = () => setMapLoaded(true);
-        link.onerror = () => {
-          setError('Failed to load map styles');
+        link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+        link.crossOrigin = "";
+        
+        link.onload = () => {
+          clearTimeout(timeoutId);
+          setMapLoaded(true);
         };
+        
+        link.onerror = () => {
+          clearTimeout(timeoutId);
+          setError('Failed to load map styles. Please refresh the page.');
+        };
+        
         document.head.appendChild(link);
       };
+      
       script.onerror = () => {
-        setError('Failed to load map library');
+        clearTimeout(timeoutId);
+        setError('Failed to load map library. Please check your connection and refresh.');
       };
+      
       document.head.appendChild(script);
     };
 
     loadLeaflet();
 
     return () => {
-      // Cleanup map instance when component unmounts
+      // Thorough cleanup when component unmounts
       if (mapRef.current) {
+        // Remove all event listeners
+        mapRef.current.off();
+        // Remove the map instance
         mapRef.current.remove();
         mapRef.current = null;
+      }
+      
+      // Clear markers reference
+      if (markersRef.current.length > 0) {
+        markersRef.current = [];
       }
     };
   }, []);
 
-  // Fetch stations
+  // Fetch stations with improved error handling and loading state management
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    
     const fetchStations = async () => {
       try {
         setLoading(true);
+        setError(null); // Clear any previous errors
 
         let stationsData = [];
 
@@ -64,22 +99,61 @@ const MapView = ({ station }) => {
           // single station page
           stationsData = [station];
         } else {
-          // map page: fetch all stations
-          const response = await api.get("/station"); // backend returns { stations: [...] }
-          stationsData = response.data.stations;
+          // map page: fetch all stations with timeout handling
+          const timeoutId = setTimeout(() => {
+            if (isMounted) {
+              controller.abort();
+              setError("Request timed out. Please try again.");
+              setLoading(false);
+            }
+          }, 15000); // 15 second timeout
+          
+          try {
+            const response = await api.get("/station", { 
+              signal: controller.signal,
+              timeout: 10000 // 10 second timeout
+            });
+            clearTimeout(timeoutId);
+            stationsData = response.data.stations || [];
+          } catch (fetchError) {
+            clearTimeout(timeoutId);
+            throw fetchError;
+          }
         }
 
-        // filter only stations with valid coordinates
-        setStations(stationsData.filter(s => s.latitude && s.longitude));
-
+        // Only update state if component is still mounted
+        if (isMounted) {
+          // Filter only stations with valid coordinates
+          const validStations = stationsData.filter(s => 
+            s && typeof s.latitude === 'number' && typeof s.longitude === 'number'
+          );
+          
+          if (validStations.length === 0 && stationsData.length > 0) {
+            setError("No stations with valid coordinates found");
+          }
+          
+          setStations(validStations);
+          setLoading(false);
+        }
       } catch (err) {
-        setError("Failed to fetch stations");
-        setLoading(false);
+        // Only update state if component is still mounted
+        if (isMounted) {
+          console.error("Error fetching stations:", err);
+          setError(err.message === "canceled" 
+            ? "Request was canceled" 
+            : "Failed to fetch stations. Please try again later.");
+          setLoading(false);
+        }
       }
     };
 
-
     fetchStations();
+
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [station]);
 
   // Initialize or update map

@@ -10,6 +10,7 @@ export default function CostEstimator({ station }) {
   const [chargeTo, setChargeTo] = useState(80);
   const [result, setResult] = useState(null);
   const [evs, setEVs] = useState([]);
+  console.log("Station", station);
 
   const handleEstimate = async () => {
     try {
