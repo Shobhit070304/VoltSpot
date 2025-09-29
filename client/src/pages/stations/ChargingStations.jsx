@@ -51,8 +51,7 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
         toast.error("Error deleting station");
       }
     } catch (err) {
-      console.error("Error deleting station:", err);
-      toast.error("Error deleting station");
+      toast.error("Failed to delete station");
     }
   };
 

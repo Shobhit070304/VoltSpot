@@ -40,13 +40,12 @@ const DynamicMapView = (props) => {
   const [MapView, setMapView] = useState(null);
 
   useEffect(() => {
-    // Dynamically import the MapView component only when needed
     const loadComponent = async () => {
       try {
         const module = await import('./MapView');
         setMapView(() => module.default);
       } catch (error) {
-        console.error('Error loading MapView component:', error);
+        // Silent fail
       }
     };
     

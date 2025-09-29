@@ -26,9 +26,8 @@ const DynamicCostEstimator = (props) => {
         const module = await import('./CostEstimator');
         setCostEstimator(() => module.default);
       } catch (error) {
-        console.error('Error loading CostEstimator component:', error);
-      }
-    };
+        setError(true);
+      }};
     
     loadComponent();
   }, []);

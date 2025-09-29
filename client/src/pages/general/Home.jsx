@@ -81,8 +81,8 @@ const Home = () => {
         }));
       }
     } catch (error) {
-      console.error("Error saving station:", error);
-    }
+        toast.error("Failed to save station");
+      }
   }, [setUser]);
 
   const filteredStations = useMemo(() => {

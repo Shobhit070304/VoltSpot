@@ -1,9 +1,6 @@
 import axios from "axios";
 
-// Validate environment variables
-if (!import.meta.env.VITE_BASE_URL) {
-  console.warn("VITE_BASE_URL is not defined, using default localhost");
-}
+// Use default URL if environment variable is not defined
 
 // Create axios instance with base URL
 export const api = axios.create({

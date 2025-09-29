@@ -12,7 +12,6 @@ dotenv.config();
 
 // Connect to MongoDB
 connectDB().catch((error) => {
-  console.error("Failed to connect to MongoDB:", error);
   process.exit(1);
 });
 
@@ -23,9 +22,8 @@ const indexBuild = async () => {
     await Review.syncIndexes();
     await Report.syncIndexes();
     await Car.syncIndexes();
-    console.log("Indexes built successfully.");
   } catch (error) {
-    console.error("Error during index build:", error);
+    // Silent error handling for production
   }
 };
 

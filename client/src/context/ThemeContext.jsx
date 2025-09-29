@@ -19,10 +19,10 @@ export function ThemeProvider({ children }) {
       root.classList.remove("dark");
     }
     try {
-      localStorage.setItem("theme", theme);
-    } catch (error) {
-      console.warn("Could not save theme to localStorage:", error);
-    }
+        localStorage.setItem("theme", theme);
+      } catch (error) {
+        // Unable to save theme to localStorage
+      }
   }, [theme]);
 
   const toggleTheme = useCallback(() => {

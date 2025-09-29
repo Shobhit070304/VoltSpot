@@ -50,7 +50,6 @@ function Station() {
       try {
         setLoading(true);
         const response = await api.get(`/station/${id}`);
-        console.log(response.data);
         if (response.status === 200) {
           setStation(response.data.station);
         }

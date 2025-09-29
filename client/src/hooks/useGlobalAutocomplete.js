@@ -14,10 +14,10 @@ function useGlobalAutocomplete(query) {
       try {
         const res = await api.get(`/station/search?query=${query}`);
         setSuggestions(res.data);
-      } catch (err) {
+      } catch {
         setSuggestions([]);
       }
-    }, 300); // debounce 300ms
+    }, 300);
 
     return () => clearTimeout(delayDebounce);
   }, [query]);

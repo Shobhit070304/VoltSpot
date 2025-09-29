@@ -42,10 +42,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!rememberMe) {
-      toast.error("Please check the remember me checkbox to continue");
-      return;
-    }
     setError("");
     setIsLoading(true);
 

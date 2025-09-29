@@ -31,13 +31,11 @@ const MapView = ({ station }) => {
         link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
         link.onload = () => setMapLoaded(true);
         link.onerror = () => {
-          console.error('Failed to load Leaflet CSS');
           setError('Failed to load map styles');
         };
         document.head.appendChild(link);
       };
       script.onerror = () => {
-        console.error('Failed to load Leaflet JS');
         setError('Failed to load map library');
       };
       document.head.appendChild(script);
@@ -75,9 +73,7 @@ const MapView = ({ station }) => {
         setStations(stationsData.filter(s => s.latitude && s.longitude));
 
       } catch (err) {
-        toast.error("Error fetching stations");
-        setError(err.message || "Error fetching stations");
-      } finally {
+        setError("Failed to fetch stations");
         setLoading(false);
       }
     };

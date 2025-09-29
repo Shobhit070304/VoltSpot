@@ -35,7 +35,6 @@ const ReviewForm = ({ stationId, showReviewForm, setShowReviewForm }) => {
         toast.error("Failed to submit review");
       }
     } catch (err) {
-      console.error(err);
       setError(err.response?.data || "Something went wrong");
     } finally {
       setRating(5);

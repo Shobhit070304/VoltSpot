@@ -33,7 +33,7 @@ export default function CostEstimator({ station }) {
         const res = await api.get("/car/evs");
         setEVs(res.data);
       } catch (error) {
-        console.error("Error fetching EVs:", error);
+        setError("Failed to load electric vehicles");
       }
     };
     fetchEVs();
