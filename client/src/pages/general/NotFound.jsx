@@ -1,5 +1,6 @@
-import { Zap, Home, ArrowLeft } from "react-feather";
+import { ArrowLeft, Home, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+
 
 const NotFound = () => {
   return (
