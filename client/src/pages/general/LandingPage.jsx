@@ -90,7 +90,7 @@ const LandingPage = () => {
                   <div className="flex items-center space-x-1">
                     <Star className="h-4 w-4 text-yellow-400 fill-current" />
                     <span className="text-xs font-semibold">4.6/5</span>
-                    <span className="text-xs text-gray-600">(50+ reviews)</span>
+                    <span className="text-xs text-gray-600">(300+ reviews)</span>
                   </div>
                 </div>
               </div>
@@ -277,13 +277,13 @@ const LandingPage = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {[
                 {
-                  value: "100+",
+                  value: "200+",
                   label: "Charging Stations Listed",
                   icon: <MapPin className="h-6 w-6 text-orange-600" />,
                   description: "Across different cities"
                 },
                 {
-                  value: "50+",
+                  value: "300+",
                   label: "User Reviews",
                   icon: <Star className="h-6 w-6 text-orange-600" />,
                   description: "Shared by early users"
@@ -295,7 +295,7 @@ const LandingPage = () => {
                   description: "From user feedback"
                 },
                 {
-                  value: "10+",
+                  value: "5+",
                   label: "Accounts Created",
                   icon: <Users className="h-6 w-6 text-orange-600" />,
                   description: "Tested by real users"

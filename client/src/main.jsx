@@ -5,7 +5,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorBoundary from "./components/fallback/ErrorBoundary";
 
 createRoot(document.getElementById("root")).render(
   <ErrorBoundary>

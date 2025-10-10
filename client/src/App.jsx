@@ -6,7 +6,7 @@ import { useAuth } from "./context/AuthContext";
 // Components
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
-import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "./components/fallback/LoadingSpinner";
 
 // Lazy loaded pages
 const Login = lazy(() => import("./pages/auth/Login"));
