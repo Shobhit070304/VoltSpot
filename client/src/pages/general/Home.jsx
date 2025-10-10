@@ -9,7 +9,7 @@ import SearchFilterCard from "../../components/Home/SearchFilterCard";
 import StationsList from "../../components/Home/StationsList";
 import Pagination from "../../components/Home/Pagination";
 import NoStationsFound from "../../components/Home/NoStationsFound";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from "../../components/fallback/LoadingSpinner";
 
 const connectorTypes = [
   "Type 1",
