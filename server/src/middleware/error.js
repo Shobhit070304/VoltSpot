@@ -10,11 +10,6 @@ export const errorHandler = (err, req, res, next) => {
     message: err.message || 'Internal Server Error',
   };
 
-  // Expose stack only in development
-  if (process.env.NODE_ENV === 'development') {
-    responseBody.stack = err.stack;
-  }
-
   res.status(statusCode).json(responseBody);
 };
 
