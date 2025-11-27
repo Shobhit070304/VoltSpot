@@ -3,14 +3,11 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, User, X, Sun, Moon } from "lucide-react";
 import logo from "/charging.png";
-import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  const { theme, toggleTheme } = useTheme();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -28,8 +25,8 @@ const Navbar = () => {
     <div className="flex w-full justify-center">
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center ${isScrolled
-            ? "backdrop-blur-xl bg-white/90 border-b border-orange-200/60 shadow-md h-16"
-            : "backdrop-blur-lg bg-white/80 border-b border-orange-100/40 shadow-sm h-20"
+          ? "backdrop-blur-xl bg-white/90 border-b border-orange-200/60 shadow-md h-16"
+          : "backdrop-blur-lg bg-white/80 border-b border-orange-100/40 shadow-sm h-20"
           }`}
       >
         <div className="flex-1 flex items-center justify-between px-4 sm:px-8 w-full max-w-7xl">
@@ -52,16 +49,6 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:scale-110 transition"
-            >
-              {theme === "light" ? (
-                <Moon className="w-5 h-5" />
-              ) : (
-                <Sun className="w-5 h-5 text-yellow-400" />
-              )}
-            </button>
             {[
               { to: "/stations", label: "Stations" },
               { to: "/map", label: "Map" },
@@ -98,8 +85,8 @@ const Navbar = () => {
                 <Link
                   to="/dashboard"
                   className={`flex items-center justify-center rounded-full transition-all duration-200 ${isScrolled
-                      ? "w-8 h-8 bg-orange-100 border border-orange-200 hover:bg-orange-200"
-                      : "w-9 h-9 bg-orange-50 border border-orange-100 hover:bg-orange-100"
+                    ? "w-8 h-8 bg-orange-100 border border-orange-200 hover:bg-orange-200"
+                    : "w-9 h-9 bg-orange-50 border border-orange-100 hover:bg-orange-100"
                     }`}
                 >
                   <User
@@ -116,8 +103,8 @@ const Navbar = () => {
             <button
               onClick={toggleMobileMenu}
               className={`p-2 rounded-full ${isMobileMenuOpen
-                  ? "bg-orange-100 text-orange-700"
-                  : "text-orange-600 hover:text-orange-700 hover:bg-orange-100"
+                ? "bg-orange-100 text-orange-700"
+                : "text-orange-600 hover:text-orange-700 hover:bg-orange-100"
                 } transition-all duration-200`}
             >
               {isMobileMenuOpen ? (

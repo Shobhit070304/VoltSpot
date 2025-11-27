@@ -27,7 +27,7 @@ router.post(
 );
 
 // Logout user
-router.post('/logout', logoutUser);
+router.post('/logout', authUser, logoutUser);
 
 // Get user profile
 router.get('/profile', authUser, getUserProfile);

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 // Function to connect to MongoDB
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/VoltSpot';
+    const mongoURI = process.env.MONGODB_URI;
 
     await mongoose.connect(mongoURI);
 
