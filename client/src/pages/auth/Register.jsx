@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Zap, Mail, Lock, User, Eye, EyeOff, AlertCircle, X } from "lucide-react";
+import {
+  Zap,
+  Mail,
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  X,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { api } from "../../services/api.js";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -47,7 +56,7 @@ const Register = () => {
 
     try {
       const response = await api.post("/auth/register", formData);
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigate("/login");
       } else {
         toast.error(response.data.message);
@@ -81,19 +90,26 @@ const Register = () => {
                 <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg flex items-center justify-center mr-3">
                   <Zap className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">VoltSpot</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">
+                  VoltSpot
+                </span>
               </div>
-
             </div>
-            <h1 className="text-xl font-semibold text-gray-900 mb-2">Create your account</h1>
-            <p className="text-xs text-orange-500">Join the future of EV charging.</p>
+            <h1 className="text-xl font-semibold text-gray-900 mb-2">
+              Create your account
+            </h1>
+            <p className="text-xs text-orange-500">
+              Join the future of EV charging.
+            </p>
           </div>
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-2">
             {error && (
               <div className="bg-red-100 border border-red-200 rounded-lg p-3 flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-red-500 font-light leading-snug">{error}</p>
+                <p className="text-xs text-red-500 font-light leading-snug">
+                  {error}
+                </p>
               </div>
             )}
             {/* Name Field */}
@@ -189,11 +205,18 @@ const Register = () => {
                   className="h-4 w-4 rounded border-orange-200 text-orange-500 focus:ring-orange-400 bg-orange-50"
                 />
               </div>
-              <label htmlFor="terms" className="ml-2 block text-xs text-orange-500 font-light leading-relaxed">
+              <label
+                htmlFor="terms"
+                className="ml-2 block text-xs text-orange-500 font-light leading-relaxed"
+              >
                 I agree to the{" "}
-                <p className="text-orange-600 hover:text-orange-800">Terms of Service</p>{" "}
+                <p className="text-orange-600 hover:text-orange-800">
+                  Terms of Service
+                </p>{" "}
                 and{" "}
-                <p className="text-orange-600 hover:text-orange-800">Privacy Policy</p>
+                <p className="text-orange-600 hover:text-orange-800">
+                  Privacy Policy
+                </p>
               </label>
             </div>
             {/* Submit Button */}
@@ -231,16 +254,22 @@ const Register = () => {
       <div className="flex-1 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center relative overflow-hidden">
         {/* Car Image Background */}
         <div className="absolute inset-0 opacity-30">
-          <img src={carImage} alt="Electric Vehicle" loading="lazy" className="w-full h-full object-cover" />
+          <img
+            src={carImage}
+            alt="Electric Vehicle"
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
         </div>
         {/* Content */}
         <div className="text-center text-orange-700 relative z-10">
           <div className="text-2xl font-semibold mb-3">Welcome to VoltSpot</div>
-          <div className="text-sm text-orange-400 mb-6 max-w-sm">Your simple EV charging solution</div>
+          <div className="text-sm text-orange-400 mb-6 max-w-sm">
+            Your simple EV charging solution
+          </div>
           <div className="w-12 h-1 bg-orange-400 mx-auto mb-6"></div>
         </div>
       </div>
-
     </div>
   );
 };

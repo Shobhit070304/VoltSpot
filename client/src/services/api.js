@@ -7,7 +7,7 @@ export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:5000/api",
   timeout: 10000, // 10 second timeout
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -22,7 +22,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Global response interceptor
@@ -31,10 +31,11 @@ api.interceptors.response.use(
   async (error) => {
     // Dynamically import toast to avoid circular deps
     const toast = (await import("react-hot-toast")).default;
-    
+
     if (error?.response) {
       const status = error.response?.status;
-      const message = error.response?.data?.message || error?.message || "An error occurred";
+      const message =
+        error.response?.data?.message || error?.message || "An error occurred";
 
       // Show toast for user-facing errors
       if (status >= 400) {
@@ -47,12 +48,12 @@ api.interceptors.response.use(
         localStorage.removeItem("user");
         window.location.href = "/login";
       }
-    } else if (error?.code === 'ECONNABORTED') {
+    } else if (error?.code === "ECONNABORTED") {
       toast.error("Request timeout. Please try again.");
     } else {
       toast.error("Network error. Please check your connection.");
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );

@@ -31,7 +31,7 @@ const ProtectedRoute = ({ children }) => {
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  
+
   return children;
 };
 
@@ -49,40 +49,40 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/stations" element={<Home />} />
             <Route path="/station/:id" element={<Station />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/map"
-            element={
-              <ProtectedRoute>
-                <MapView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/saved-stations"
-            element={
-              <ProtectedRoute>
-                <SavedStations />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/estimate"
-            element={
-              <ProtectedRoute>
-                <CostEstimator />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/map"
+              element={
+                <ProtectedRoute>
+                  <MapView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/saved-stations"
+              element={
+                <ProtectedRoute>
+                  <SavedStations />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/estimate"
+              element={
+                <ProtectedRoute>
+                  <CostEstimator />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </Suspense>
       </main>
       {path !== "login" && path !== "register" && <Footer />}

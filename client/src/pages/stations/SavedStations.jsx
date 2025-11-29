@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "../../services/api";
-import { MapPin, Zap, Heart, ChevronRight, Map as MapIcon, AlertTriangle } from "lucide-react";
+import {
+  MapPin,
+  Zap,
+  Heart,
+  ChevronRight,
+  Map as MapIcon,
+  AlertTriangle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -36,7 +43,7 @@ function SavedStations() {
       if (response.status === 200) {
         toast.success(response.data.message);
         setSavedStations(
-          savedStations.filter((station) => station._id !== stationId)
+          savedStations.filter((station) => station._id !== stationId),
         );
         setUser((prev) => ({
           ...prev,
@@ -155,10 +162,11 @@ function SavedStations() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start space-x-4">
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${station.status === "Active"
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        station.status === "Active"
                           ? "bg-green-500/10 text-green-500 border border-green-500/20"
                           : "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20"
-                        }`}
+                      }`}
                     >
                       <Zap className="h-5 w-5" />
                     </div>
@@ -188,10 +196,11 @@ function SavedStations() {
 
                 <div className="flex items-center justify-between pt-4 border-t border-orange-100">
                   <span
-                    className={`px-3 py-1 text-xs font-medium rounded-full ${station.status === "Active"
+                    className={`px-3 py-1 text-xs font-medium rounded-full ${
+                      station.status === "Active"
                         ? "bg-green-500/20 text-green-500 border border-green-500/30"
                         : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
-                      }`}
+                    }`}
                   >
                     {station.status}
                   </span>

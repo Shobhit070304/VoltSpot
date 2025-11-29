@@ -155,8 +155,9 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
                 <Filter className="h-4 w-4 mr-2 text-orange-500" />
                 Filters
                 <ChevronDown
-                  className={`h-4 w-4 ml-2 text-orange-500 transition-transform ${showFilters ? "rotate-180" : ""
-                    }`}
+                  className={`h-4 w-4 ml-2 text-orange-500 transition-transform ${
+                    showFilters ? "rotate-180" : ""
+                  }`}
                 />
               </button>
             </div>
@@ -273,10 +274,11 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <div
-                        className={`flex-shrink-0 h-10 w-10 rounded-lg flex items-center justify-center border ${station.status === "Active"
-                          ? "bg-green-100 text-green-600 border-green-200"
-                          : "bg-yellow-100 text-yellow-600 border-yellow-200"
-                          }`}
+                        className={`flex-shrink-0 h-10 w-10 rounded-lg flex items-center justify-center border ${
+                          station.status === "Active"
+                            ? "bg-green-100 text-green-600 border-green-200"
+                            : "bg-yellow-100 text-yellow-600 border-yellow-200"
+                        }`}
                       >
                         <Zap className="h-5 w-5" />
                       </div>
@@ -309,10 +311,11 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
                   <div className="mt-3 sm:flex sm:justify-between">
                     <div className="flex items-center space-x-3">
                       <span
-                        className={`px-2.5 py-1 text-xs font-medium rounded-full ${station.status === "Active"
-                          ? "bg-green-100 text-green-800 border border-green-200"
-                          : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                          }`}
+                        className={`px-2.5 py-1 text-xs font-medium rounded-full ${
+                          station.status === "Active"
+                            ? "bg-green-100 text-green-800 border border-green-200"
+                            : "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                        }`}
                       >
                         {station.status}
                       </span>

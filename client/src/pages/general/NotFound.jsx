@@ -1,7 +1,6 @@
 import { ArrowLeft, Home, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 const NotFound = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
@@ -29,7 +28,8 @@ const NotFound = () => {
           </h1>
 
           <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-            The charging station or page you're looking for doesn't exist or may have been moved.
+            The charging station or page you're looking for doesn't exist or may
+            have been moved.
           </p>
 
           <div className="space-y-3">

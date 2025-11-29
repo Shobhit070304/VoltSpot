@@ -58,7 +58,7 @@ const Home = () => {
 
   const handleFilterChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
   }, []);
 
   const clearFilters = useCallback(() => {
@@ -70,29 +70,34 @@ const Home = () => {
     });
   }, []);
 
-  const handleSaveStation = useCallback(async (stationId) => {
-    try {
-      const response = await api.post(`/station/save/${stationId}`);
-      if (response.status === 200) {
-        toast.success(response.data.message);
-        setUser((prevUser) => ({
-          ...prevUser,
-          savedStations: response.data.savedStations,
-        }));
-      }
-    } catch (error) {
+  const handleSaveStation = useCallback(
+    async (stationId) => {
+      try {
+        const response = await api.post(`/station/save/${stationId}`);
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          setUser((prevUser) => ({
+            ...prevUser,
+            savedStations: response.data.savedStations,
+          }));
+        }
+      } catch (error) {
         toast.error("Failed to save station");
       }
-  }, [setUser]);
+    },
+    [setUser],
+  );
 
   const filteredStations = useMemo(() => {
     return stations.filter((station) => {
       const matchesSearch =
         station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         station.location.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = !filters.status || station.status === filters.status;
+      const matchesStatus =
+        !filters.status || station.status === filters.status;
       const matchesConnector =
-        !filters.connectorType || station.connectorType === filters.connectorType;
+        !filters.connectorType ||
+        station.connectorType === filters.connectorType;
       const matchesMinPower =
         !filters.minPower || station.powerOutput >= Number(filters.minPower);
       const matchesMaxPower =
@@ -125,19 +130,26 @@ const Home = () => {
   const paginatedData = useMemo(() => {
     const totalPages = Math.ceil(sortedStations.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentItems = sortedStations.slice(startIndex, startIndex + itemsPerPage);
+    const currentItems = sortedStations.slice(
+      startIndex,
+      startIndex + itemsPerPage,
+    );
     return { totalPages, currentItems };
   }, [sortedStations, currentPage, itemsPerPage]);
 
-  const stats = useMemo(() => ({
-    total: stations.length,
-    active: stations.filter((s) => s.status === "Active").length,
-    averagePower:
-      stations.reduce((sum, s) => sum + s.powerOutput, 0) / stations.length || 0,
-    averageRating:
-      stations.reduce((sum, s) => sum + (s.averageRating || 0), 0) /
-      stations.length || 0,
-  }), [stations]);
+  const stats = useMemo(
+    () => ({
+      total: stations.length,
+      active: stations.filter((s) => s.status === "Active").length,
+      averagePower:
+        stations.reduce((sum, s) => sum + s.powerOutput, 0) / stations.length ||
+        0,
+      averageRating:
+        stations.reduce((sum, s) => sum + (s.averageRating || 0), 0) /
+          stations.length || 0,
+    }),
+    [stations],
+  );
 
   return (
     <div
@@ -200,10 +212,11 @@ const Home = () => {
             <div className="flex bg-white border border-orange-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`p-1 rounded-md transition-all ${viewMode === "grid"
-                  ? "bg-orange-500 text-white"
-                  : "text-orange-400 hover:text-orange-600"
-                  }`}
+                className={`p-1 rounded-md transition-all ${
+                  viewMode === "grid"
+                    ? "bg-orange-500 text-white"
+                    : "text-orange-400 hover:text-orange-600"
+                }`}
               >
                 <div className="w-4 h-4 grid grid-cols-2 gap-0.5">
                   <div className="w-1.5 h-1.5 bg-current rounded-sm"></div>
@@ -214,10 +227,11 @@ const Home = () => {
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-1 rounded-md transition-all ${viewMode === "list"
-                  ? "bg-orange-500 text-white"
-                  : "text-orange-400 hover:text-orange-600"
-                  }`}
+                className={`p-1 rounded-md transition-all ${
+                  viewMode === "list"
+                    ? "bg-orange-500 text-white"
+                    : "text-orange-400 hover:text-orange-600"
+                }`}
               >
                 <div className="w-4 h-4 space-y-0.5">
                   <div className="w-full h-1.5 bg-current rounded-sm"></div>

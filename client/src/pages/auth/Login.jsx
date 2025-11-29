@@ -1,18 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
-import {
-  Zap,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  X,
-} from "lucide-react";
+import { Zap, Mail, Lock, Eye, EyeOff, AlertCircle, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { api } from "../../services/api.js";
-import carImage from "/car.png"
+import carImage from "/car.png";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -80,19 +72,26 @@ const Login = () => {
                 <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg flex items-center justify-center mr-3">
                   <Zap className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">VoltSpot</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">
+                  VoltSpot
+                </span>
               </div>
-
             </div>
-            <h1 className="text-xl font-semibold text-gray-900 mb-2">Welcome!</h1>
-            <p className="text-xs text-orange-500">Login to VoltSpot to continue.</p>
+            <h1 className="text-xl font-semibold text-gray-900 mb-2">
+              Welcome!
+            </h1>
+            <p className="text-xs text-orange-500">
+              Login to VoltSpot to continue.
+            </p>
           </div>
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-2">
             {error && (
               <div className="bg-red-100 border border-red-200 rounded-lg p-3 flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-red-500 font-light leading-snug">{error}</p>
+                <p className="text-xs text-red-500 font-light leading-snug">
+                  {error}
+                </p>
               </div>
             )}
             {/* Email Field */}
@@ -146,7 +145,12 @@ const Login = () => {
                 onChange={() => setRememberMe(!rememberMe)}
                 className="h-4 w-4 rounded border-orange-200 text-orange-500 focus:ring-orange-400 bg-orange-50"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-xs text-orange-500">Remember me</label>
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-xs text-orange-500"
+              >
+                Remember me
+              </label>
             </div>
             {/* Submit Button */}
             <button
@@ -182,12 +186,19 @@ const Login = () => {
       <div className="flex-1 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center relative overflow-hidden">
         {/* Car Image Background */}
         <div className="absolute inset-0 opacity-30">
-          <img src={carImage} alt="Electric Vehicle" loading="lazy" className="w-full h-full object-cover" />
+          <img
+            src={carImage}
+            alt="Electric Vehicle"
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
         </div>
         {/* Content */}
         <div className="text-center text-orange-700 relative z-10">
           <div className="text-2xl font-semibold mb-3">Welcome back</div>
-          <div className="text-sm text-orange-400 mb-6 max-w-sm">Your simple EV charging solution</div>
+          <div className="text-sm text-orange-400 mb-6 max-w-sm">
+            Your simple EV charging solution
+          </div>
           <div className="w-12 h-1 bg-orange-400 mx-auto mb-6"></div>
         </div>
       </div>

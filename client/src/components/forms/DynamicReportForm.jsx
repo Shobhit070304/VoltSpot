@@ -1,7 +1,7 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from "react";
 
 // Dynamically import the ReportForm component
-const ReportForm = lazy(() => import('./ReportForm'));
+const ReportForm = lazy(() => import("./ReportForm"));
 
 // Loading component to show while ReportForm is being loaded
 const ReportFormLoader = () => (

@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { splitVendorChunkPlugin } from 'vite'
-import { compression } from 'vite-plugin-compression2'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { splitVendorChunkPlugin } from "vite";
+import { compression } from "vite-plugin-compression2";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     splitVendorChunkPlugin(),
     compression({
-      algorithm: 'gzip',
+      algorithm: "gzip",
       exclude: [/\.(br)$/, /\.(gz)$/],
       threshold: 1024,
     }),
@@ -18,37 +18,37 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['lucide-react', 'react-feather', 'react-icons'],
-          'utils-vendor': ['axios', 'react-hot-toast'],
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "ui-vendor": ["lucide-react", "react-feather", "react-icons"],
+          "utils-vendor": ["axios", "react-hot-toast"],
         },
       },
     },
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
-    minify: 'terser',
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info'],
+        pure_funcs: ["console.log", "console.info"],
       },
       mangle: {
         safari10: true,
       },
     },
-    target: 'es2015',
+    target: "es2015",
     cssCodeSplit: true,
   },
   server: {
     proxy: {
-      '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:5000',
+      "/api": {
+        target: process.env.VITE_API_URL || "http://localhost:5000",
         changeOrigin: true,
       },
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'axios'],
+    include: ["react", "react-dom", "react-router-dom", "axios"],
   },
-})
+});

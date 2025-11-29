@@ -26,12 +26,11 @@ import {
   Bookmark,
   User,
   Settings,
-  MapIcon
+  MapIcon,
 } from "lucide-react";
 import HeroBanner from "/hero.png";
 
 const LandingPage = () => {
-
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 overflow-x-hidden">
@@ -48,8 +47,7 @@ const LandingPage = () => {
             <div className="grid lg:grid-cols-2 gap-8 items-center">
               <div className="space-y-6">
                 <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-orange-100 text-orange-700 text-xs font-medium">
-                  <Zap className="h-3.5 w-3.5 mr-1" />
-                  # EV Charging Platform
+                  <Zap className="h-3.5 w-3.5 mr-1" /># EV Charging Platform
                 </div>
                 <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
                   <span className="text-gray-900">Find Your Perfect</span>
@@ -59,7 +57,9 @@ const LandingPage = () => {
                   </span>
                 </h1>
                 <p className="text-base text-gray-600 leading-relaxed max-w-md">
-                  Discover, review, and share the best EV charging stations in your area. Join thousands of EV drivers making charging easier and more accessible for everyone.
+                  Discover, review, and share the best EV charging stations in
+                  your area. Join thousands of EV drivers making charging easier
+                  and more accessible for everyone.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Link
@@ -82,7 +82,10 @@ const LandingPage = () => {
                   <div className="flex items-center space-x-1.5">
                     <div className="flex -space-x-1.5">
                       {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 border-2 border-white"></div>
+                        <div
+                          key={i}
+                          className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 border-2 border-white"
+                        ></div>
                       ))}
                     </div>
                     <span className="text-xs text-gray-600">Join now</span>
@@ -90,7 +93,9 @@ const LandingPage = () => {
                   <div className="flex items-center space-x-1">
                     <Star className="h-4 w-4 text-yellow-400 fill-current" />
                     <span className="text-xs font-semibold">4.6/5</span>
-                    <span className="text-xs text-gray-600">(300+ reviews)</span>
+                    <span className="text-xs text-gray-600">
+                      (300+ reviews)
+                    </span>
                   </div>
                 </div>
               </div>
@@ -121,7 +126,8 @@ const LandingPage = () => {
                 Everything You Need for EV Charging
               </h2>
               <p className="text-base text-gray-600 max-w-xl mx-auto">
-                Easily search, manage, and keep track of EV charging stations with VoltSpot.
+                Easily search, manage, and keep track of EV charging stations
+                with VoltSpot.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -129,38 +135,63 @@ const LandingPage = () => {
                 {
                   icon: <Search className="h-6 w-6 text-orange-500" />,
                   title: "Station Search",
-                  description: "Find EV charging stations using location, filters, and keywords.",
-                  features: ["Search by Name/Location", "Filter by Type", "Map View"]
+                  description:
+                    "Find EV charging stations using location, filters, and keywords.",
+                  features: [
+                    "Search by Name/Location",
+                    "Filter by Type",
+                    "Map View",
+                  ],
                 },
                 {
                   icon: <Star className="h-6 w-6 text-orange-500" />,
                   title: "Ratings & Reviews",
-                  description: "View what others say and share your own charging experience.",
-                  features: ["Add Ratings", "Write Reviews", "Read Feedback"]
+                  description:
+                    "View what others say and share your own charging experience.",
+                  features: ["Add Ratings", "Write Reviews", "Read Feedback"],
                 },
                 {
                   icon: <Bookmark className="h-6 w-6 text-orange-500" />,
                   title: "Save Stations",
-                  description: "Bookmark your favorite stations for quick access later.",
-                  features: ["Save Stations", "View Saved List", "Remove if Needed"]
+                  description:
+                    "Bookmark your favorite stations for quick access later.",
+                  features: [
+                    "Save Stations",
+                    "View Saved List",
+                    "Remove if Needed",
+                  ],
                 },
                 {
                   icon: <MapIcon className="h-6 w-6 text-orange-500" />,
                   title: "Map Overview",
                   description: "See all nearby charging stations on one map.",
-                  features: ["Map of Stations", "Click to View", "Location Pins"]
+                  features: [
+                    "Map of Stations",
+                    "Click to View",
+                    "Location Pins",
+                  ],
                 },
                 {
                   icon: <Shield className="h-6 w-6 text-orange-500" />,
                   title: "Report Issues",
-                  description: "Easily report a problem with any station you visit.",
-                  features: ["Quick Report", "View Status", "Keep Users Informed"]
+                  description:
+                    "Easily report a problem with any station you visit.",
+                  features: [
+                    "Quick Report",
+                    "View Status",
+                    "Keep Users Informed",
+                  ],
                 },
                 {
                   icon: <User className="h-6 w-6 text-orange-500" />,
                   title: "User Dashboard",
-                  description: "Users can manage their own stations and account.",
-                  features: ["Add/Edit Stations", "View Stats", "Delete if Needed"]
+                  description:
+                    "Users can manage their own stations and account.",
+                  features: [
+                    "Add/Edit Stations",
+                    "View Stats",
+                    "Delete if Needed",
+                  ],
                 },
               ].map((feature, index) => (
                 <div
@@ -170,13 +201,18 @@ const LandingPage = () => {
                   <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-orange-200 transition-colors">
                     {feature.icon}
                   </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-2">{feature.title}</h3>
+                  <h3 className="text-base font-bold text-gray-900 mb-2">
+                    {feature.title}
+                  </h3>
                   <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                     {feature.description}
                   </p>
                   <ul className="space-y-1">
                     {feature.features.map((item, i) => (
-                      <li key={i} className="flex items-center text-xs text-gray-600">
+                      <li
+                        key={i}
+                        className="flex items-center text-xs text-gray-600"
+                      >
                         <CheckCircle className="h-3.5 w-3.5 text-green-500 mr-2 flex-shrink-0" />
                         {item}
                       </li>
@@ -200,7 +236,8 @@ const LandingPage = () => {
                 Get Started in 3 Simple Steps
               </h2>
               <p className="text-base text-gray-600 max-w-xl mx-auto">
-                Join the VoltSpot community and start finding the best charging stations today.
+                Join the VoltSpot community and start finding the best charging
+                stations today.
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-5">
@@ -209,23 +246,34 @@ const LandingPage = () => {
                   step: "01",
                   icon: <UserPlus className="h-12 w-12 text-orange-600" />,
                   title: "Sign Up",
-                  description: "Create your account and set up your basic profile in a few easy steps.",
-                  details: ["Simple Registration", "Email Login", "User Profile"]
+                  description:
+                    "Create your account and set up your basic profile in a few easy steps.",
+                  details: [
+                    "Simple Registration",
+                    "Email Login",
+                    "User Profile",
+                  ],
                 },
                 {
                   step: "02",
                   icon: <Search className="h-12 w-12 text-orange-600" />,
                   title: "Search Stations",
-                  description: "Look for EV charging stations near you using search and filters.",
-                  details: ["Maps Support", "Search & Filter", "Station Details"]
+                  description:
+                    "Look for EV charging stations near you using search and filters.",
+                  details: [
+                    "Maps Support",
+                    "Search & Filter",
+                    "Station Details",
+                  ],
                 },
                 {
                   step: "03",
                   icon: <MessageCircle className="h-12 w-12 text-orange-600" />,
                   title: "Review & Report",
-                  description: "Rate stations, write reviews, and report any problems you notice.",
-                  details: ["Add Ratings", "Write Reviews", "Report Issues"]
-                }
+                  description:
+                    "Rate stations, write reviews, and report any problems you notice.",
+                  details: ["Add Ratings", "Write Reviews", "Report Issues"],
+                },
               ].map((step, index) => (
                 <div key={index} className="relative">
                   <div className="bg-white rounded-xl p-5 shadow-lg border border-gray-100">
@@ -233,15 +281,22 @@ const LandingPage = () => {
                       <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                         {step.icon}
                       </div>
-                      <span className="text-4xl font-bold text-orange-600 opacity-20">{step.step}</span>
+                      <span className="text-4xl font-bold text-orange-600 opacity-20">
+                        {step.step}
+                      </span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      {step.title}
+                    </h3>
                     <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                       {step.description}
                     </p>
                     <ul className="space-y-1">
                       {step.details.map((detail, i) => (
-                        <li key={i} className="flex items-center text-xs text-gray-600">
+                        <li
+                          key={i}
+                          className="flex items-center text-xs text-gray-600"
+                        >
                           <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
                           {detail}
                         </li>
@@ -271,7 +326,8 @@ const LandingPage = () => {
                 Trusted by EV Drivers
               </h2>
               <p className="text-base text-gray-600 max-w-xl mx-auto">
-                See how VoltSpot is helping the EV community grow with real numbers and success stories.
+                See how VoltSpot is helping the EV community grow with real
+                numbers and success stories.
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
@@ -280,60 +336,88 @@ const LandingPage = () => {
                   value: "200+",
                   label: "Charging Stations Listed",
                   icon: <MapPin className="h-6 w-6 text-orange-600" />,
-                  description: "Across different cities"
+                  description: "Across different cities",
                 },
                 {
                   value: "300+",
                   label: "User Reviews",
                   icon: <Star className="h-6 w-6 text-orange-600" />,
-                  description: "Shared by early users"
+                  description: "Shared by early users",
                 },
                 {
                   value: "4.7/5",
                   label: "Average Rating",
                   icon: <BarChart2 className="h-6 w-6 text-orange-600" />,
-                  description: "From user feedback"
+                  description: "From user feedback",
                 },
                 {
                   value: "5+",
                   label: "Accounts Created",
                   icon: <Users className="h-6 w-6 text-orange-600" />,
-                  description: "Tested by real users"
-                }].map((stat, index) => (
-                  <div key={index} className="text-center group">
-                    <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
-                      {stat.icon}
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                    <div className="text-base font-semibold text-gray-700 mb-1">{stat.label}</div>
-                    <div className="text-xs text-gray-500">{stat.description}</div>
+                  description: "Tested by real users",
+                },
+              ].map((stat, index) => (
+                <div key={index} className="text-center group">
+                  <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
+                    {stat.icon}
                   </div>
-                ))}
+                  <div className="text-3xl font-bold text-gray-900 mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-base font-semibold text-gray-700 mb-1">
+                    {stat.label}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {stat.description}
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Additional Stats */}
             <div className="mt-10 grid md:grid-cols-3 gap-5">
               <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-5 text-center">
-                <div className="text-2xl font-bold text-orange-600 mb-1">95%</div>
-                <div className="text-base font-semibold text-gray-900 mb-1">Uptime</div>
-                <div className="text-sm text-gray-600">Reliable service you can count on</div>
+                <div className="text-2xl font-bold text-orange-600 mb-1">
+                  95%
+                </div>
+                <div className="text-base font-semibold text-gray-900 mb-1">
+                  Uptime
+                </div>
+                <div className="text-sm text-gray-600">
+                  Reliable service you can count on
+                </div>
               </div>
               <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-5 text-center">
-                <div className="text-2xl font-bold text-amber-600 mb-1">24/7</div>
-                <div className="text-base font-semibold text-gray-900 mb-1">Support</div>
-                <div className="text-sm text-gray-600">Always here when you need help</div>
+                <div className="text-2xl font-bold text-amber-600 mb-1">
+                  24/7
+                </div>
+                <div className="text-base font-semibold text-gray-900 mb-1">
+                  Support
+                </div>
+                <div className="text-sm text-gray-600">
+                  Always here when you need help
+                </div>
               </div>
               <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-5 text-center">
-                <div className="text-2xl font-bold text-yellow-600 mb-1">100%</div>
-                <div className="text-base font-semibold text-gray-900 mb-1">Free</div>
-                <div className="text-sm text-gray-600">No hidden fees or subscriptions</div>
+                <div className="text-2xl font-bold text-yellow-600 mb-1">
+                  100%
+                </div>
+                <div className="text-base font-semibold text-gray-900 mb-1">
+                  Free
+                </div>
+                <div className="text-sm text-gray-600">
+                  No hidden fees or subscriptions
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="py-14 bg-gradient-to-br from-orange-50 to-amber-50">
+        <section
+          id="testimonials"
+          className="py-14 bg-gradient-to-br from-orange-50 to-amber-50"
+        >
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-10">
               <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-medium mb-2">
@@ -344,40 +428,50 @@ const LandingPage = () => {
                 What Our Community Says
               </h2>
               <p className="text-base text-gray-600 max-w-xl mx-auto">
-                Join thousands of satisfied EV drivers who trust VoltSpot for their charging needs.
+                Join thousands of satisfied EV drivers who trust VoltSpot for
+                their charging needs.
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-5">
               {[
                 {
-                  quote: "VoltSpot made it so much easier to find charging stations near me. The filters and map view are really helpful.",
+                  quote:
+                    "VoltSpot made it so much easier to find charging stations near me. The filters and map view are really helpful.",
                   author: "Ravi Sharma",
                   role: "Tata Nexon EV Owner",
                   location: "Delhi, India",
                   rating: 5,
-                  avatar: "RS"
+                  avatar: "RS",
                 },
                 {
-                  quote: "I liked how I could save my favourite stations and see reviews from other users. Very useful for regular travel.",
+                  quote:
+                    "I liked how I could save my favourite stations and see reviews from other users. Very useful for regular travel.",
                   author: "Sneha Patil",
                   role: "MG ZS EV Owner",
                   location: "Pune, India",
                   rating: 5,
-                  avatar: "SP"
+                  avatar: "SP",
                 },
                 {
-                  quote: "Clean design and simple to use. Reporting issues and checking station details was quick and smooth.",
+                  quote:
+                    "Clean design and simple to use. Reporting issues and checking station details was quick and smooth.",
                   author: "Arjun Nair",
                   role: "Hyundai Kona Owner",
                   location: "Bangalore, India",
                   rating: 5,
-                  avatar: "AN"
-                }
+                  avatar: "AN",
+                },
               ].map((testimonial, index) => (
-                <div key={index} className="bg-white rounded-xl p-5 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                <div
+                  key={index}
+                  className="bg-white rounded-xl p-5 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
+                >
                   <div className="flex items-center mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                      <Star
+                        key={i}
+                        className="h-4 w-4 text-yellow-400 fill-current"
+                      />
                     ))}
                   </div>
                   <blockquote className="text-gray-700 mb-4 leading-relaxed italic">
@@ -388,9 +482,15 @@ const LandingPage = () => {
                       {testimonial.avatar}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                      <div className="text-xs text-gray-600">{testimonial.role}</div>
-                      <div className="text-xs text-gray-500">{testimonial.location}</div>
+                      <div className="font-semibold text-gray-900">
+                        {testimonial.author}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {testimonial.role}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {testimonial.location}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -406,7 +506,8 @@ const LandingPage = () => {
               Ready to Join the EV Revolution?
             </h2>
             <p className="text-base text-orange-100 mb-5 max-w-xl mx-auto">
-              Start finding the best charging stations today and help build a better future for electric mobility.
+              Start finding the best charging stations today and help build a
+              better future for electric mobility.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
               <Link
@@ -430,6 +531,5 @@ const LandingPage = () => {
     </>
   );
 };
-
 
 export default LandingPage;

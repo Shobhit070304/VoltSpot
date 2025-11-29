@@ -26,7 +26,9 @@ const MapView = ({ station }) => {
 
       // Set a timeout to detect slow loading
       const timeoutId = setTimeout(() => {
-        setError('Map is taking too long to load. Please check your connection.');
+        setError(
+          "Map is taking too long to load. Please check your connection.",
+        );
       }, 10000);
 
       // Load Leaflet script
@@ -34,7 +36,7 @@ const MapView = ({ station }) => {
       script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
       script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
       script.crossOrigin = "";
-      
+
       script.onload = () => {
         // Load Leaflet CSS
         const link = document.createElement("link");
@@ -42,25 +44,27 @@ const MapView = ({ station }) => {
         link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
         link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
         link.crossOrigin = "";
-        
+
         link.onload = () => {
           clearTimeout(timeoutId);
           setMapLoaded(true);
         };
-        
+
         link.onerror = () => {
           clearTimeout(timeoutId);
-          setError('Failed to load map styles. Please refresh the page.');
+          setError("Failed to load map styles. Please refresh the page.");
         };
-        
+
         document.head.appendChild(link);
       };
-      
+
       script.onerror = () => {
         clearTimeout(timeoutId);
-        setError('Failed to load map library. Please check your connection and refresh.');
+        setError(
+          "Failed to load map library. Please check your connection and refresh.",
+        );
       };
-      
+
       document.head.appendChild(script);
     };
 
@@ -75,7 +79,7 @@ const MapView = ({ station }) => {
         mapRef.current.remove();
         mapRef.current = null;
       }
-      
+
       // Clear markers reference
       if (markersRef.current.length > 0) {
         markersRef.current = [];
@@ -87,7 +91,7 @@ const MapView = ({ station }) => {
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
-    
+
     const fetchStations = async () => {
       try {
         setLoading(true);
@@ -107,11 +111,11 @@ const MapView = ({ station }) => {
               setLoading(false);
             }
           }, 15000); // 15 second timeout
-          
+
           try {
-            const response = await api.get("/station", { 
+            const response = await api.get("/station", {
               signal: controller.signal,
-              timeout: 10000 // 10 second timeout
+              timeout: 10000, // 10 second timeout
             });
             clearTimeout(timeoutId);
             stationsData = response.data.stations || [];
@@ -124,14 +128,17 @@ const MapView = ({ station }) => {
         // Only update state if component is still mounted
         if (isMounted) {
           // Filter only stations with valid coordinates
-          const validStations = stationsData.filter(s => 
-            s && typeof s.latitude === 'number' && typeof s.longitude === 'number'
+          const validStations = stationsData.filter(
+            (s) =>
+              s &&
+              typeof s.latitude === "number" &&
+              typeof s.longitude === "number",
           );
-          
+
           if (validStations.length === 0 && stationsData.length > 0) {
             setError("No stations with valid coordinates found");
           }
-          
+
           setStations(validStations);
           setLoading(false);
         }
@@ -139,9 +146,11 @@ const MapView = ({ station }) => {
         // Only update state if component is still mounted
         if (isMounted) {
           console.error("Error fetching stations:", err);
-          setError(err.message === "canceled" 
-            ? "Request was canceled" 
-            : "Failed to fetch stations. Please try again later.");
+          setError(
+            err.message === "canceled"
+              ? "Request was canceled"
+              : "Failed to fetch stations. Please try again later.",
+          );
           setLoading(false);
         }
       }
@@ -164,7 +173,7 @@ const MapView = ({ station }) => {
     const mapContainer = document.getElementById("map");
 
     // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
     // Initialize map if not already exists
@@ -172,18 +181,18 @@ const MapView = ({ station }) => {
       const centerStation = station || stations[0];
       mapRef.current = L.map("map").setView(
         [centerStation.latitude, centerStation.longitude],
-        13
+        13,
       );
-      
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 18,
       }).addTo(mapRef.current);
     }
 
     // Add markers for all stations
-    stations.forEach(st => {
+    stations.forEach((st) => {
       const markerColor = st.status === "Active" ? "#10b981" : "#f59e0b";
       const icon = L.divIcon({
         className: "custom-div-icon",
@@ -192,9 +201,9 @@ const MapView = ({ station }) => {
         iconAnchor: [10, 10],
       });
 
-      const marker = L.marker([st.latitude, st.longitude], { icon })
-        .addTo(mapRef.current)
-        .bindPopup(`
+      const marker = L.marker([st.latitude, st.longitude], { icon }).addTo(
+        mapRef.current,
+      ).bindPopup(`
           <div class="p-2">
             <h3 class="font-semibold text-gray-900">${st.name}</h3>
             <p class="text-sm text-gray-600 mt-1">
@@ -207,8 +216,11 @@ const MapView = ({ station }) => {
               </span>
             </p>
             <div class="mt-2 flex items-center space-x-2">
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${st.status === "Active" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-          }">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                st.status === "Active"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }">
                 ${st.status}
               </span>
               <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
@@ -226,10 +238,11 @@ const MapView = ({ station }) => {
 
     // Fit bounds if showing multiple stations
     if (!station && stations.length > 1) {
-      const bounds = L.latLngBounds(stations.map(s => [s.latitude, s.longitude]));
+      const bounds = L.latLngBounds(
+        stations.map((s) => [s.latitude, s.longitude]),
+      );
       mapRef.current.fitBounds(bounds, { padding: [50, 50] });
     }
-
   }, [mapLoaded, stations, station]);
 
   // Map control functions
@@ -248,21 +261,21 @@ const MapView = ({ station }) => {
           mapRef.current.flyTo([pos.coords.latitude, pos.coords.longitude], 13);
           const marker = L.marker([pos.coords.latitude, pos.coords.longitude], {
             icon: L.icon({
-              iconUrl: "https://cdn-icons-png.flaticon.com/512/5216/5216405.png",
+              iconUrl:
+                "https://cdn-icons-png.flaticon.com/512/5216/5216405.png",
               iconSize: [32, 32],
               iconAnchor: [16, 16],
-            })
+            }),
           }).addTo(mapRef.current);
           markersRef.current.push(marker);
         },
         (err) => {
           toast.error("Could not get your location");
           console.error(err);
-        }
+        },
       );
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 overflow-hidden pt-16">
@@ -282,7 +295,9 @@ const MapView = ({ station }) => {
                 Charging Network Map
               </h1>
               <p className="text-sm text-amber-500">
-                {station ? "Viewing station location" : "Explore all available charging stations"}
+                {station
+                  ? "Viewing station location"
+                  : "Explore all available charging stations"}
               </p>
             </div>
             <Link
@@ -301,9 +316,7 @@ const MapView = ({ station }) => {
             {loading ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-950/80 backdrop-blur-sm">
                 <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-700 border-t-blue-500 mb-4"></div>
-                <p className="text-sm text-gray-300">
-                  Loading map data...
-                </p>
+                <p className="text-sm text-gray-300">Loading map data...</p>
               </div>
             ) : error ? (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-950/80 backdrop-blur-sm">
@@ -314,9 +327,7 @@ const MapView = ({ station }) => {
                       <h3 className="text-sm font-medium text-red-200 mb-1">
                         Map Loading Error
                       </h3>
-                      <p className="text-sm text-red-300">
-                        {error}
-                      </p>
+                      <p className="text-sm text-red-300">{error}</p>
                       <button
                         onClick={() => window.location.reload()}
                         className="mt-4 inline-flex items-center px-4 py-2 text-sm rounded-lg border border-red-800/50 text-red-300 bg-red-900/20 hover:bg-red-900/30 transition-colors"
@@ -337,7 +348,8 @@ const MapView = ({ station }) => {
                     No Stations Available
                   </h3>
                   <p className="text-sm text-gray-400 mb-6">
-                    There are currently no charging stations to display on the map.
+                    There are currently no charging stations to display on the
+                    map.
                   </p>
                   <Link
                     to="/home"
@@ -365,8 +377,6 @@ const MapView = ({ station }) => {
               <LocateFixed className="h-5 w-5" />
               <span>Locate Me</span>
             </button>
-
-
           </div>
 
           {/* Zoom Controls */}
@@ -387,8 +397,6 @@ const MapView = ({ station }) => {
             </button>
           </div>
         </div>
-
-
       </div>
     </div>
   );

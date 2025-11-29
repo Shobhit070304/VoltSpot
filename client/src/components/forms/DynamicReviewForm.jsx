@@ -1,7 +1,7 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from "react";
 
 // Dynamically import the ReviewForm component
-const ReviewForm = lazy(() => import('./ReviewForm'));
+const ReviewForm = lazy(() => import("./ReviewForm"));
 
 // Loading component to show while ReviewForm is being loaded
 const ReviewFormLoader = () => (

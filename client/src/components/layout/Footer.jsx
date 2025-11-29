@@ -8,7 +8,11 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Copyright text with subtle gradient */}
           <p className="text-orange-500 text-xs font-medium tracking-wide">
-            &copy; {new Date().getFullYear()} <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-amber-400 font-bold">VoltSpot</span> | Charging Station Management. All rights reserved.
+            &copy; {new Date().getFullYear()}{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-amber-400 font-bold">
+              VoltSpot
+            </span>{" "}
+            | Charging Station Management. All rights reserved.
           </p>
           {/* Social links with glass effect */}
           <div className="flex space-x-3">

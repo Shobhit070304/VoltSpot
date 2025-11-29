@@ -24,9 +24,9 @@ function AmenitiesCard({ amenities }) {
               const Icon = amenityIcons[amenity] || null;
               return (
                 <div key={amenity} className="flex items-center">
-                    {Icon && <Icon className="h-4 w-4 text-orange-500" />}
-                    <span className="ml-3 text-sm text-gray-700">{amenity}</span>
-                  </div>
+                  {Icon && <Icon className="h-4 w-4 text-orange-500" />}
+                  <span className="ml-3 text-sm text-gray-700">{amenity}</span>
+                </div>
               );
             })
           ) : (

@@ -3,7 +3,6 @@ import { api } from "../../services/api";
 import { toast } from "react-hot-toast";
 import { AlertCircle, Send, X } from "react-feather";
 
-
 const ReportForm = ({ stationId, showReportForm, setShowReportForm }) => {
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");

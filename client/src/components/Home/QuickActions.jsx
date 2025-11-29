@@ -36,7 +36,9 @@ const QuickActions = () => (
               <div className="w-6 h-6 bg-orange-200 rounded-lg flex items-center justify-center mb-1">
                 {a.icon}
               </div>
-              <h3 className="text-xs font-semibold text-gray-900 mb-0.5">{a.title}</h3>
+              <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
+                {a.title}
+              </h3>
               <p className="text-[11px] text-gray-500">{a.desc}</p>
             </div>
             <ArrowRight className="h-3 w-3 text-orange-400 group-hover:text-orange-600 transition-colors" />

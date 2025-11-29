@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from "react";
 
 const CostEstimatorLoader = () => (
   <div className="p-6 bg-white shadow rounded-2xl max-w-md mx-auto mt-[7%]">
@@ -23,12 +23,13 @@ const DynamicCostEstimator = (props) => {
     // Dynamically import the CostEstimator component only when needed
     const loadComponent = async () => {
       try {
-        const module = await import('./CostEstimator');
+        const module = await import("./CostEstimator");
         setCostEstimator(() => module.default);
       } catch (error) {
         setError(true);
-      }};
-    
+      }
+    };
+
     loadComponent();
   }, []);
 

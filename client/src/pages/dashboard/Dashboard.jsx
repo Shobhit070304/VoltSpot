@@ -30,7 +30,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-    const paginatedData = useMemo(() => {
+  const paginatedData = useMemo(() => {
     const totalPages = Math.ceil(stations.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const currentItems = stations.slice(startIndex, startIndex + itemsPerPage);
@@ -49,28 +49,28 @@ const Dashboard = () => {
         const statsData = {
           totalStations: stationsData.length,
           activeStations: stationsData.filter(
-            (station) => station.status === "Active"
+            (station) => station.status === "Active",
           ).length,
           inactiveStations: stationsData.filter(
-            (station) => station.status === "Inactive"
+            (station) => station.status === "Inactive",
           ).length,
           avgPowerOutput:
             stationsData.length > 0
               ? stationsData.reduce(
-                (sum, station) => sum + (station.powerOutput || 0),
-                0
-              ) / stationsData.length
+                  (sum, station) => sum + (station.powerOutput || 0),
+                  0,
+                ) / stationsData.length
               : 0,
           totalPower: stationsData.reduce(
             (sum, station) => sum + (station.powerOutput || 0),
-            0
+            0,
           ),
           avgRating:
             stationsData.length > 0
               ? stationsData.reduce(
-                (sum, station) => sum + (station.averageRating || 0),
-                0
-              ) / stationsData.length
+                  (sum, station) => sum + (station.averageRating || 0),
+                  0,
+                ) / stationsData.length
               : 0,
         };
         setStats(statsData);

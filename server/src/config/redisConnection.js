@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
-import { Redis } from "@upstash/redis";
+import { Redis } from '@upstash/redis';
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
@@ -10,9 +10,9 @@ const redis = new Redis({
 async function testConnection() {
   try {
     await redis.ping();
-    console.log("Redis connection successful.");
+    console.log('Redis connection successful.');
   } catch (error) {
-    console.error("Redis connection error:", error.message);
+    console.error('Redis connection error:', error.message);
   }
 }
 

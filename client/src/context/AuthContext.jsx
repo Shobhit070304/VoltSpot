@@ -1,4 +1,11 @@
-import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import { api } from "../services/api";
 import toast from "react-hot-toast";
 
@@ -7,7 +14,7 @@ const AuthContext = createContext();
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -70,18 +77,17 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const value = useMemo(() => ({
-    user,
-    setUser,
-    isAuthenticated,
-    loading,
-    login,
-    logout,
-  }), [user, isAuthenticated, loading, login, logout]);
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user,
+      setUser,
+      isAuthenticated,
+      loading,
+      login,
+      logout,
+    }),
+    [user, isAuthenticated, loading, login, logout],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
