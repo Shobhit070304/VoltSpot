@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:prod": "NODE_ENV=production vite build",
+    "build:prod": "cross-env NODE_ENV=production vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext js,jsx --fix",
     "preview": "vite preview",
@@ -17,6 +17,7 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-feather": "^2.0.10",
     "react-helmet-async": "^2.0.5",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.5.0",
