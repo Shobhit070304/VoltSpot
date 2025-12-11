@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { api } from "../../services/api.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 import carImage from "/car.png";
+import Auth from "./Auth.jsx";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -194,36 +195,13 @@ const Register = () => {
                 </button>
               </div>
             </div>
-            {/* Terms Checkbox */}
-            <div className="flex items-start py-2">
-              <div className="flex items-center h-5">
-                <input
-                  id="terms"
-                  name="terms"
-                  type="checkbox"
-                  required
-                  className="h-4 w-4 rounded border-orange-200 text-orange-500 focus:ring-orange-400 bg-orange-50"
-                />
-              </div>
-              <label
-                htmlFor="terms"
-                className="ml-2 block text-xs text-orange-500 font-light leading-relaxed"
-              >
-                I agree to the{" "}
-                <p className="text-orange-600 hover:text-orange-800">
-                  Terms of Service
-                </p>{" "}
-                and{" "}
-                <p className="text-orange-600 hover:text-orange-800">
-                  Privacy Policy
-                </p>
-              </label>
-            </div>
+
             {/* Submit Button */}
+
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2.5 px-4 border-0 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-8"
+              className="w-full flex justify-center py-2.5 px-4 border-0 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -234,6 +212,7 @@ const Register = () => {
                 "Create account"
               )}
             </button>
+
             {/* Sign In Link */}
             <div className="text-center py-2">
               <p className="text-xs text-orange-500">
@@ -247,6 +226,18 @@ const Register = () => {
               </p>
             </div>
           </form>
+
+          {/* OAuth Separator */}
+          <div className="my-4 flex items-center">
+            <div className="flex-1 border-t border-orange-200"></div>
+            <span className="px-3 text-xs text-orange-400">or continue with</span>
+            <div className="flex-1 border-t border-orange-200"></div>
+          </div>
+
+          {/* OAuth Buttons */}
+          <div className="mb-4">
+            <Auth />
+          </div>
         </div>
       </div>
 

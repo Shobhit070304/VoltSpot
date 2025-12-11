@@ -10,7 +10,7 @@ export default function CostEstimator({ station }) {
   const [chargeTo, setChargeTo] = useState(80);
   const [result, setResult] = useState(null);
   const [evs, setEVs] = useState([]);
-  console.log("Station", station);
+
 
   const handleEstimate = async () => {
     try {
@@ -61,6 +61,7 @@ export default function CostEstimator({ station }) {
       <input
         type="number"
         value={stationPower}
+        readOnly
         onChange={(e) => setStationPower(e.target.value)}
         className="w-full p-2 border rounded mb-4"
       />
@@ -69,6 +70,7 @@ export default function CostEstimator({ station }) {
       <input
         type="number"
         value={pricePerKWh}
+        readOnly
         onChange={(e) => setPricePerKWh(e.target.value)}
         className="w-full p-2 border rounded mb-4"
       />

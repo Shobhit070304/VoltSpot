@@ -1,6 +1,8 @@
 import { validationResult } from 'express-validator';
 import userService from '../services/user.service.js';
 import ApiError from '../config/ApiError.js';
+import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 
 const registerUser = async (req, res, next) => {
   try {
@@ -70,4 +72,40 @@ const getUserProfile = async (req, res, next) => {
   }
 };
 
-export default { registerUser, loginUser, logoutUser, getUserProfile };
+const authUser = async (req, res) => {
+  const { email, name, displayName } = req.firebaseUser;
+
+  // Firebase tokens may have 'name' or 'displayName'
+  const userName = name || displayName || email.split('@')[0];
+
+  let newUser = await User.findOne({ email });
+
+  if (!newUser) {
+    newUser = await User.create({
+      email,
+      name: userName,
+    });
+  }
+
+  const token = jwt.sign({ userEmail: newUser.email }, process.env.JWT_SECRET, {
+    expiresIn: '1d',
+  });
+
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  // Return token and user in response body (consistent with login endpoint)
+  res.status(200).json({ token, user: { ...newUser.toObject() } });
+};
+
+export default {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getUserProfile,
+  authUser,
+};

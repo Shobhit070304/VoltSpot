@@ -1,7 +1,10 @@
 import express from 'express';
 import { body } from 'express-validator';
 import userController from '../controllers/user.controller.js';
-import authUser from '../middleware/auth.middleware.js';
+import {
+  authUser,
+  verifyFirebaseToken,
+} from '../middleware/auth.middleware.js';
 const router = express.Router();
 
 // Register a new user
@@ -32,5 +35,8 @@ router.post('/logout', userController.logoutUser);
 
 // Get user profile
 router.get('/profile', authUser, userController.getUserProfile);
+
+// Auth with Firebase
+router.post('/firebase', verifyFirebaseToken, userController.authUser);
 
 export default router;

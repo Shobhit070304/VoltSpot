@@ -1,5 +1,5 @@
 import express from 'express';
-import authUser from '../middleware/auth.middleware.js';
+import { authUser } from '../middleware/auth.middleware.js';
 import { body } from 'express-validator';
 
 import reviewRoutes from '../controllers/review.controller.js';

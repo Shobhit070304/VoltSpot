@@ -5,6 +5,7 @@ import { Zap, Mail, Lock, Eye, EyeOff, AlertCircle, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { api } from "../../services/api.js";
 import carImage from "/car.png";
+import Auth from "./Auth.jsx";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { login, isAuthenticated } = useAuth();
-  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -135,38 +135,23 @@ const Login = () => {
                 </button>
               </div>
             </div>
-            {/* Remember Me */}
-            <div className="flex items-center py-2">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
-                className="h-4 w-4 rounded border-orange-200 text-orange-500 focus:ring-orange-400 bg-orange-50"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-xs text-orange-500"
-              >
-                Remember me
-              </label>
-            </div>
+
             {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-2.5 px-4 border-0 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-8"
-            >
-              {isLoading ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                  <span>Signing in...</span>
-                </div>
-              ) : (
-                "Sign in"
-              )}
-            </button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex justify-center py-2.5 px-4 border-0 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-8"
+              >
+                {isLoading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                    <span>Signing in...</span>
+                  </div>
+                ) : (
+                  "Sign in"
+                )}
+              </button>
+
             {/* Sign Up Link */}
             <div className="text-center mt-8">
               <p className="text-xs text-orange-500">
@@ -180,6 +165,18 @@ const Login = () => {
               </p>
             </div>
           </form>
+
+          {/* OAuth Separator */}
+          <div className="my-4 flex items-center">
+            <div className="flex-1 border-t border-orange-200"></div>
+            <span className="px-3 text-xs text-orange-400">or continue with</span>
+            <div className="flex-1 border-t border-orange-200"></div>
+          </div>
+
+          {/* OAuth Buttons */}
+          <div className="mb-2">
+            <Auth />
+          </div>
         </div>
       </div>
       {/* Right Section - Visual */}

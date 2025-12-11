@@ -14,15 +14,19 @@ export const api = axios.create({
 // Add request interceptor to set token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Only add token from localStorage if Authorization header is not already set
+    // This prevents overwriting the Firebase ID token in OAuth flow
+    if (!config.headers.Authorization) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 // Global response interceptor
@@ -55,5 +59,5 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
