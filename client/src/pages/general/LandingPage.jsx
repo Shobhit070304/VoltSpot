@@ -102,10 +102,11 @@ const LandingPage = () => {
       <section className="py-16 px-8 relative border-y border-white/5 bg-white/[0.01] backdrop-blur-sm">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12">
           {[
-            { label: "Active Stations", value: "50k+", color: "text-brand-primary" },
-            { label: "Happy Drivers", value: "120k+", color: "text-brand-secondary" },
-            { label: "Countries", value: "45+", color: "text-brand-accent" },
-            { label: "Monthly Charges", value: "1M+", color: "text-brand-primary" },
+            { label: "Charging Points", value: "200+", color: "text-brand-accent" },
+            { label: "Active Stations", value: "69+", color: "text-brand-primary" },
+            { label: "Cities Covered", value: "20+", color: "text-brand-secondary" },
+            { label: "User Reviews", value: "300+", color: "text-brand-primary" }
+
           ].map((stat, i) => (
             <div key={i} className="text-center group">
               <p className={`text-2xl md:text-3xl font-bold tracking-tighter mb-1 transition-transform group-hover:scale-110 duration-500 ${stat.color}`}>{stat.value}</p>
