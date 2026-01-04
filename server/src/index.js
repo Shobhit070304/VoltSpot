@@ -36,7 +36,7 @@ testConnection();
 // CORS (restrict origins if needed via CORS_ORIGIN env)
 app.use(
   cors({
-    origin: ['https://voltspot.vercel.app', 'http://localhost:5173', 'http://localhost:8080'],
+    origin: ['https://voltspot.vercel.app', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   }),
