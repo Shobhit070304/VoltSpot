@@ -8,26 +8,24 @@ import {
   ChevronRight,
   Map as MapIcon,
   AlertTriangle,
+  Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import LoadingSpinner from "../../components/fallback/LoadingSpinner";
 
 function SavedStations() {
   const [savedStations, setSavedStations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user, setUser } = useAuth();
+  const { setUser } = useAuth();
 
   const fetchSavedStations = async () => {
     try {
       setLoading(true);
       const response = await api.get("/station/saved-stations");
-
       if (response.status === 200) {
         setSavedStations(response.data.savedStations);
-      } else {
-        setError("Failed to fetch saved stations");
-        toast.error("Failed to fetch saved stations");
       }
     } catch (error) {
       setError(error.message);
@@ -51,7 +49,7 @@ function SavedStations() {
         }));
       }
     } catch (error) {
-      toast.error("Error removing station from saved list");
+      toast.error("Error removing station");
     }
   };
 
@@ -61,163 +59,129 @@ function SavedStations() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 flex items-center justify-center pt-20">
-        <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-orange-200 border-t-orange-500 mb-3"></div>
-          <p className="text-xs text-orange-600 font-medium tracking-wide">
-            Loading your stations...
-          </p>
-        </div>
+      <div className="min-h-screen bg-midnight flex items-center justify-center">
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 flex items-center justify-center pt-20">
-        <div className="bg-white/90 rounded-2xl border border-orange-200 p-6 max-w-md mx-4 shadow-md">
-          <div className="flex items-start">
-            <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" />
-            <div>
-              <h3 className="text-sm font-medium text-gray-900 mb-1">
-                Error Loading Stations
-              </h3>
-              <p className="text-xs text-gray-600 mb-4 leading-relaxed">
-                {error.message || "Failed to load your saved stations"}
-              </p>
-              <button
-                onClick={() => window.location.reload()}
-                className="inline-flex items-center px-4 py-2 text-xs font-medium tracking-wide rounded-lg text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 transition-all"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
+      <div className="min-h-screen bg-midnight flex items-center justify-center p-6">
+        <div className="glass-panel p-8 max-w-md w-full text-center">
+          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">Error Loading Stations</h3>
+          <p className="text-reflect-muted mb-6">{error || "Failed to load your saved stations"}</p>
+          <button onClick={() => window.location.reload()} className="btn-primary w-full">
+            Retry
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 pt-20 overflow-hidden">
-      {/* Subtle Background Elements */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
-        <div className="absolute bottom-[10%] right-[15%] w-[28rem] h-[28rem] bg-amber-200/30 rounded-full blur-[80px] opacity-40 animate-float-delay"></div>
-        <div className="absolute top-[50%] left-[50%] w-[18rem] h-[18rem] bg-yellow-200/20 rounded-full blur-[60px] opacity-30 animate-pulse"></div>
-      </div>
+    <div className="min-h-screen bg-midnight text-white pt-40 pb-32 px-8 relative overflow-hidden">
+      {/* Aurora Background Effect */}
+      <div className="fixed inset-0 bg-aurora pointer-events-none opacity-30" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
-                  Saved Stations
-                </span>
-              </h1>
-              <p className="text-sm text-gray-600">
-                Your favorite charging locations
-              </p>
+      <main className="relative z-10 max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
+          <div className="animate-slide-up">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-bold text-reflect-muted mb-6 uppercase tracking-[0.2em]">
+              <Sparkles className="h-3 w-3 mr-2 text-blue-500" />
+              Your Collection
             </div>
-            <Link
-              to="/stations"
-              className="inline-flex items-center px-4 py-2 border border-orange-200 text-xs font-medium tracking-wide rounded-lg text-orange-700 bg-white hover:bg-orange-50 transition-all"
-            >
-              <MapIcon className="mr-2 h-4 w-4" />
-              Explore More
-            </Link>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
+              Saved <span className="text-reflect-muted opacity-40">Stations.</span>
+            </h1>
           </div>
+
+          <Link
+            to="/stations"
+            className="btn-secondary flex items-center gap-3 !rounded-full px-8 py-3.5 text-[13px] font-bold uppercase tracking-widest animate-fade-in"
+          >
+            <MapIcon size={18} />
+            Explore More
+          </Link>
         </div>
 
         {savedStations.length === 0 ? (
-          /* Empty State */
-          <div className="bg-white/90 rounded-2xl border border-orange-100 p-8 text-center shadow-sm">
-            <div className="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Heart className="h-6 w-6 text-orange-500" />
+          <div className="glass-panel p-24 text-center animate-fade-in border-white/5">
+            <div className="w-20 h-20 bg-white/5 rounded-[2rem] flex items-center justify-center mx-auto mb-10 border border-white/10 shadow-2xl">
+              <Heart className="h-10 w-10 text-reflect-muted opacity-20" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No saved stations yet
-            </h3>
-            <p className="text-sm text-gray-600 mb-6 max-w-md mx-auto">
-              You haven't saved any stations. Browse our network and save your
-              favorites for quick access.
+            <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">No saved stations yet</h3>
+            <p className="text-reflect-muted mb-12 max-w-sm mx-auto font-medium leading-relaxed">
+              Browse our global network and save your favorite charging locations for quick access.
             </p>
-            <Link
-              to="/stations"
-              className="inline-flex items-center px-5 py-2.5 text-sm font-medium tracking-wide rounded-lg text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 transition-all shadow-sm"
-            >
-              Explore Stations
+            <Link to="/stations" className="btn-primary inline-flex items-center gap-3 !rounded-full px-10 py-4 text-[15px] font-bold uppercase tracking-widest">
+              Explore network
+              <ChevronRight size={20} />
             </Link>
           </div>
         ) : (
-          /* Stations Grid */
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
             {savedStations.map((station) => (
               <div
                 key={station._id}
-                className="bg-white/90 rounded-xl border border-orange-100 p-5 hover:bg-orange-50 transition-colors shadow-sm group"
+                className="glass-panel p-8 group hover:bg-white/[0.04] transition-all duration-500 border-white/5"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-start space-x-4">
-                    <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        station.status === "Active"
-                          ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                          : "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20"
-                      }`}
-                    >
-                      <Zap className="h-5 w-5" />
+                <div className="flex items-start justify-between mb-8">
+                  <div className="flex items-start gap-6">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-2xl ${station.status === "Active"
+                      ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                      : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                      }`}>
+                      <Zap size={24} />
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-gray-900 mb-1.5 group-hover:text-orange-600 transition-colors">
+                      <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors tracking-tight">
                         {station.name}
                       </h3>
-                      <div className="flex items-center text-xs text-gray-500 mb-1 font-medium">
-                        <MapPin className="h-3.5 w-3.5 mr-2 text-orange-400" />
+                      <div className="flex items-center text-sm text-reflect-muted mt-2 font-medium">
+                        <MapPin size={14} className="mr-2 text-blue-500" />
                         {station.location}
-                      </div>
-                      <div className="flex items-center text-xs text-gray-500 font-medium">
-                        <Zap className="h-3.5 w-3.5 mr-2 text-orange-400" />
-                        {station.powerOutput} kW • {station.connectorType}
                       </div>
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleUnsaveStation(station._id)}
-                    className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
-                    aria-label="Remove from saved stations"
+                    className="p-3 bg-red-500/5 text-red-500/40 rounded-2xl hover:bg-red-500/10 hover:text-red-500 transition-all duration-300"
+                    title="Remove from saved"
                   >
-                    <Heart className="h-5 w-5 text-red-400 fill-current" />
+                    <Heart size={20} fill="currentColor" />
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-orange-100">
-                  <span
-                    className={`px-3 py-1 text-xs font-medium rounded-full ${
-                      station.status === "Active"
-                        ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                        : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
-                    }`}
-                  >
-                    {station.status}
-                  </span>
+                <div className="flex items-center justify-between pt-8 border-t border-white/5">
+                  <div className="flex items-center gap-4">
+                    <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full border ${station.status === "Active"
+                      ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                      : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                      }`}>
+                      {station.status}
+                    </span>
+                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full bg-white/5 text-reflect-muted border border-white/10">
+                      {station.powerOutput} kW
+                    </span>
+                  </div>
 
                   <Link
                     to={`/station/${station._id}`}
-                    className="inline-flex items-center text-xs font-medium tracking-wide text-orange-700 hover:text-orange-900 transition-colors"
+                    className="flex items-center gap-2 text-[13px] font-bold uppercase tracking-widest text-blue-500 hover:text-blue-400 transition-colors group/link"
                   >
-                    View details
-                    <ChevronRight className="ml-1 h-4 w-4" />
+                    Details
+                    <ChevronRight size={18} className="group-hover/link:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

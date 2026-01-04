@@ -1,124 +1,80 @@
-import { useEffect, useState } from "react";
-import { api } from "../../services/api";
-import toast from "react-hot-toast";
+import React, { useState } from "react";
+import { Calculator, Battery, Clock, Zap } from "lucide-react";
 
-export default function CostEstimator({ station }) {
-  const [stationPower, setStationPower] = useState(station?.powerOutput || 0); // kW
-  const [pricePerKWh, setPricePerKWh] = useState(station?.price || 0); // ₹ per kWh
-  const [evId, setEvId] = useState("tesla_model3");
-  const [chargeFrom, setChargeFrom] = useState(20);
-  const [chargeTo, setChargeTo] = useState(80);
-  const [result, setResult] = useState(null);
-  const [evs, setEVs] = useState([]);
+const CostEstimator = ({ station }) => {
+  const [batteryCapacity, setBatteryCapacity] = useState(60);
+  const [currentCharge, setCurrentCharge] = useState(20);
+  const [targetCharge, setTargetCharge] = useState(80);
 
-
-  const handleEstimate = async () => {
-    try {
-      // Info object removed for production
-      const res = await api.post("/station/estimate", {
-        stationPower,
-        pricePerKWh,
-        evId,
-        chargeFrom,
-        chargeTo,
-      });
-      setResult(res.data);
-    } catch (err) {
-      setError("Failed to calculate estimate. Please try again.");
-    }
-  };
-
-  useEffect(() => {
-    const fetchEVs = async () => {
-      try {
-        const res = await api.get("/car/evs");
-        setEVs(res.data);
-      } catch (error) {
-        setError("Failed to load electric vehicles");
-      }
-    };
-    fetchEVs();
-  }, []);
+  const energyNeeded = (batteryCapacity * (targetCharge - currentCharge)) / 100;
+  const estimatedCost = energyNeeded * (station?.price || 15);
+  const estimatedTime = (energyNeeded / (station?.powerOutput || 50)) * 60;
 
   return (
-    <div className="p-6 bg-white shadow rounded-2xl max-w-md mx-auto mt-[7%]">
-      <h2 className="text-xl font-bold mb-4">⚡ EV Charging Cost Estimator</h2>
-
-      <label className="block mb-2 font-medium">Select EV</label>
-      <select
-        className="w-full p-2 border rounded mb-4"
-        value={evId}
-        onChange={(e) => setEvId(e.target.value)}
-      >
-        {evs.map((car) => (
-          <option key={car._id} value={car._id}>
-            {car.name} ({car.batterySize} kWh)
-          </option>
-        ))}
-      </select>
-
-      <label className="block mb-2 font-medium">Station Power (kW)</label>
-      <input
-        type="number"
-        value={stationPower}
-        readOnly
-        onChange={(e) => setStationPower(e.target.value)}
-        className="w-full p-2 border rounded mb-4"
-      />
-
-      <label className="block mb-2 font-medium">Price per kWh (₹)</label>
-      <input
-        type="number"
-        value={pricePerKWh}
-        readOnly
-        onChange={(e) => setPricePerKWh(e.target.value)}
-        className="w-full p-2 border rounded mb-4"
-      />
-
-      <div className="flex gap-2 mb-4">
-        <div className="flex-1">
-          <label className="block mb-2 font-medium">From (%)</label>
+    <div className="space-y-5">
+      <div className="space-y-3">
+        <div className="space-y-1.5">
+          <div className="flex justify-between">
+            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Battery Capacity</label>
+            <span className="text-[10px] font-bold text-white">{batteryCapacity} kWh</span>
+          </div>
           <input
-            type="number"
-            value={chargeFrom}
-            onChange={(e) => setChargeFrom(e.target.value)}
-            className="w-full p-2 border rounded"
+            type="range"
+            min="20"
+            max="120"
+            value={batteryCapacity}
+            onChange={(e) => setBatteryCapacity(parseInt(e.target.value))}
+            className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
-        <div className="flex-1">
-          <label className="block mb-2 font-medium">To (%)</label>
+
+        <div className="space-y-1.5">
+          <div className="flex justify-between">
+            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Current Charge</label>
+            <span className="text-[10px] font-bold text-white">{currentCharge}%</span>
+          </div>
           <input
-            type="number"
-            value={chargeTo}
-            onChange={(e) => setChargeTo(e.target.value)}
-            className="w-full p-2 border rounded"
+            type="range"
+            min="0"
+            max="100"
+            value={currentCharge}
+            onChange={(e) => setCurrentCharge(parseInt(e.target.value))}
+            className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-brand-primary"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <div className="flex justify-between">
+            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Target Charge</label>
+            <span className="text-[10px] font-bold text-white">{targetCharge}%</span>
+          </div>
+          <input
+            type="range"
+            min={currentCharge}
+            max="100"
+            value={targetCharge}
+            onChange={(e) => setTargetCharge(parseInt(e.target.value))}
+            className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-brand-primary"
           />
         </div>
       </div>
 
-      <button
-        onClick={handleEstimate}
-        className="w-full bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600"
-      >
-        Estimate Cost & Time
-      </button>
-
-      {result && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
-          <p>
-            <b>EV:</b> {result.ev}
-          </p>
-          <p>
-            <b>Energy Needed:</b> {result.energyNeeded} kWh
-          </p>
-          <p>
-            <b>Estimated Cost:</b> ₹{result.cost}
-          </p>
-          <p>
-            <b>Charging Time:</b> {result.time} minutes
-          </p>
+      <div className="grid grid-cols-2 gap-3 pt-5 border-t border-white/5">
+        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Est. Cost</p>
+          <p className="text-base font-bold text-white">₹ {estimatedCost.toFixed(0)}</p>
         </div>
-      )}
+        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Est. Time</p>
+          <p className="text-base font-bold text-white">{estimatedTime.toFixed(0)} min</p>
+        </div>
+      </div>
+
+      <p className="text-[9px] text-slate-500 font-medium italic text-center opacity-50">
+        * Estimates based on station power and price.
+      </p>
     </div>
   );
-}
+};
+
+export default CostEstimator;

@@ -1,43 +1,55 @@
-import { MapPin, Activity, Battery, Star } from "lucide-react";
+import React from "react";
+import { Zap, Activity, Cpu, Globe } from "lucide-react";
 
-const QuickStats = ({ stats }) => (
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-w-3xl mx-auto mb-4">
-    {[
-      {
-        icon: <MapPin className="h-3 w-3" />,
-        value: stats.total,
-        label: "Total",
-      },
-      {
-        icon: <Activity className="h-3 w-3" />,
-        value: stats.active,
-        label: "Active",
-      },
-      {
-        icon: <Battery className="h-3 w-3" />,
-        value: `${stats.averagePower.toFixed(1)}kW`,
-        label: "Avg Power",
-      },
-      {
-        icon: <Star className="h-3 w-3" />,
-        value: stats.averageRating.toFixed(1),
-        label: "Avg Rating",
-      },
-    ].map((stat, i) => (
-      <div
-        key={i}
-        className="bg-white/80 rounded-lg border border-orange-100 p-2 text-center shadow-sm"
-      >
-        <div className="flex items-center justify-center w-6 h-6 bg-orange-100 rounded-lg mb-1 mx-auto">
-          <div className="text-orange-500">{stat.icon}</div>
+const QuickStats = ({ stats }) => {
+  const statItems = [
+    {
+      label: "Total Stations",
+      value: stats.total,
+      icon: <Globe size={18} />,
+      color: "text-blue-400",
+      bg: "bg-blue-400/10",
+    },
+    {
+      label: "Active Now",
+      value: stats.active,
+      icon: <Activity size={18} />,
+      color: "text-emerald-400",
+      bg: "bg-emerald-400/10",
+    },
+    {
+      label: "Avg. Power",
+      value: `${stats.avgPower} kW`,
+      icon: <Zap size={18} />,
+      color: "text-cyan-400",
+      bg: "bg-cyan-400/10",
+    },
+    {
+      label: "Connectors",
+      value: stats.connectors,
+      icon: <Cpu size={18} />,
+      color: "text-violet-400",
+      bg: "bg-violet-400/10",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {statItems.map((item, i) => (
+        <div key={i} className="glass-panel p-6 border-white/5 group hover:border-brand-primary/20 transition-all duration-500 relative overflow-hidden">
+          <div className={`absolute top-0 right-0 w-24 h-24 ${item.bg} blur-[40px] -mr-12 -mt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+
+          <div className="flex items-center gap-4 mb-4 relative z-10">
+            <div className={`p-2.5 rounded-xl ${item.bg} ${item.color} transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-${item.color.split('-')[1]}-500/20`}>
+              {item.icon}
+            </div>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">{item.label}</p>
+          </div>
+          <p className="text-3xl font-bold text-white tracking-tighter relative z-10">{item.value}</p>
         </div>
-        <div className="text-base font-bold text-gray-900">{stat.value}</div>
-        <div className="text-[10px] text-gray-500 font-medium">
-          {stat.label}
-        </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};
 
 export default QuickStats;

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { Zap, Mail, Lock, Eye, EyeOff, AlertCircle, X } from "lucide-react";
+import { Zap, Eye, EyeOff, AlertCircle, X, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 import { api } from "../../services/api.js";
-import carImage from "/car.png";
 import Auth from "./Auth.jsx";
 
 const Login = () => {
@@ -54,149 +53,113 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 flex">
+    <div className="min-h-screen bg-midnight text-white flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-grid opacity-[0.05] pointer-events-none" />
+
+      {/* Background Glows */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       {/* Close button */}
       <Link
         to="/"
-        className="absolute top-6 left-6 z-20 p-2 rounded-lg text-orange-400 hover:text-orange-600 transition-colors"
+        className="absolute top-8 left-8 p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
       >
-        <X className="h-5 w-5" />
+        <X size={18} />
       </Link>
-      {/* Left Section - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg flex items-center justify-center mr-3">
-                  <Zap className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">
-                  VoltSpot
-                </span>
-              </div>
+
+      <div className="w-full max-w-md relative z-10 animate-slide-up">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2.5 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-brand-gradient flex items-center justify-center shadow-glow">
+              <Zap size={20} className="text-white" />
             </div>
-            <h1 className="text-xl font-semibold text-gray-900 mb-2">
-              Welcome!
-            </h1>
-            <p className="text-xs text-orange-500">
-              Login to VoltSpot to continue.
-            </p>
+            <span className="text-2xl font-bold tracking-tighter">voltspot</span>
           </div>
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-2">
+          <h1 className="text-3xl font-bold mb-3 tracking-tight">Welcome back</h1>
+          <p className="text-sm text-slate-400 font-medium">Enter your details to access your account.</p>
+        </div>
+
+        <div className="glass-panel p-8 md:p-10 border-white/5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-100 border border-red-200 rounded-lg p-3 flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-red-500 font-light leading-snug">
-                  {error}
-                </p>
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3 animate-fade-in">
+                <AlertCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
+                <p className="text-xs text-red-200 leading-relaxed font-medium">{error}</p>
               </div>
             )}
-            {/* Email Field */}
+
             <div className="space-y-2">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                Email Address
+              </label>
               <input
-                id="email"
                 name="email"
                 type="email"
-                autoComplete="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="block w-full px-0 py-3 bg-transparent border-0 border-b-2 border-orange-200 text-gray-900 placeholder-orange-300 focus:outline-none focus:border-orange-400 text-sm transition-colors"
-                placeholder="Email"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-colors font-medium"
+                placeholder="you@example.com"
               />
             </div>
-            {/* Password Field */}
+
             <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                  Password
+                </label>
+              </div>
               <div className="relative">
                 <input
-                  id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="block w-full px-0 py-3 pr-10 bg-transparent border-0 border-b-2 border-orange-200 text-gray-900 placeholder-orange-300 focus:outline-none focus:border-orange-400 text-sm transition-colors"
-                  placeholder="Password"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 pr-12 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-colors font-medium"
+                  placeholder="••••••••"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-0 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-orange-300 hover:text-orange-500 transition-colors" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-orange-300 hover:text-orange-500 transition-colors" />
-                  )}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center py-2.5 px-4 border-0 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-8"
-              >
-                {isLoading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                    <span>Signing in...</span>
-                  </div>
-                ) : (
-                  "Sign in"
-                )}
-              </button>
-
-            {/* Sign Up Link */}
-            <div className="text-center mt-8">
-              <p className="text-xs text-orange-500">
-                Don't have an account?{" "}
-                <Link
-                  to="/register"
-                  className="text-orange-600 hover:text-orange-800 transition-colors font-semibold"
-                >
-                  Sign up
-                </Link>
-              </p>
-            </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 text-[13px] font-bold uppercase tracking-widest !rounded-xl"
+            >
+              {isLoading ? (
+                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
           </form>
 
-          {/* OAuth Separator */}
-          <div className="my-4 flex items-center">
-            <div className="flex-1 border-t border-orange-200"></div>
-            <span className="px-3 text-xs text-orange-400">or continue with</span>
-            <div className="flex-1 border-t border-orange-200"></div>
+          <div className="my-8 flex items-center gap-4">
+            <div className="h-px flex-1 bg-white/5" />
+            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">or</span>
+            <div className="h-px flex-1 bg-white/5" />
           </div>
 
-          {/* OAuth Buttons */}
-          <div className="mb-2">
-            <Auth />
-          </div>
-        </div>
-      </div>
-      {/* Right Section - Visual */}
-      <div className="flex-1 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center relative overflow-hidden">
-        {/* Car Image Background */}
-        <div className="absolute inset-0 opacity-30">
-          <img
-            src={carImage}
-            alt="Electric Vehicle"
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        {/* Content */}
-        <div className="text-center text-orange-700 relative z-10">
-          <div className="text-2xl font-semibold mb-3">Welcome back</div>
-          <div className="text-sm text-orange-400 mb-6 max-w-sm">
-            Your simple EV charging solution
-          </div>
-          <div className="w-12 h-1 bg-orange-400 mx-auto mb-6"></div>
+          <Auth />
+
+          <p className="mt-8 text-center text-xs text-slate-500 font-medium">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-white font-bold hover:text-brand-primary transition-colors">
+              Sign up for free
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -13,8 +13,8 @@ const SearchFilterCard = ({
   showSuggestions,
   setShowSuggestions,
 }) => (
-  <div className="bg-white/80 rounded-xl border border-orange-100 p-4 mb-6 shadow-md">
-    <div className="flex flex-col lg:flex-row gap-2">
+  <div className="glass-panel p-4 mb-8 border-white/5">
+    <div className="flex flex-col md:flex-row gap-3">
       <GlobalSearch
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -23,82 +23,88 @@ const SearchFilterCard = ({
       />
       <button
         onClick={() => setShowFilters(!showFilters)}
-        className="inline-flex items-center justify-center px-3 py-1.5 border border-orange-100 rounded-lg text-xs font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 transition-all"
+        className="btn-secondary flex items-center justify-center gap-2 !py-2 !px-4 text-[10px] font-bold uppercase tracking-widest"
       >
-        <Filter className="h-3 w-3 mr-1" />
+        <Filter size={14} className="text-brand-primary" />
         Filters
         <ChevronDown
-          className={`h-3 w-3 ml-1 transition-transform ${showFilters ? "rotate-180" : ""}`}
+          size={14}
+          className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
         />
       </button>
     </div>
+
     {showFilters && (
-      <div className="mt-4 pt-4 border-t border-orange-100 grid grid-cols-1 md:grid-cols-4 gap-2">
-        <div>
-          <label className="block text-[10px] font-light text-gray-400 uppercase tracking-wider">
+      <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in">
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
             Status
           </label>
           <select
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
-            className="w-full px-2 py-2 border border-gray-800/30 rounded text-xs"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-primary transition-colors"
           >
-            <option value="">All Statuses</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="" className="bg-midnight">All Statuses</option>
+            <option value="Active" className="bg-midnight">Active</option>
+            <option value="Inactive" className="bg-midnight">Inactive</option>
           </select>
         </div>
-        <div>
-          <label className="block text-[10px] font-light text-gray-400 uppercase tracking-wider">
+
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
             Connector
           </label>
           <select
             name="connectorType"
             value={filters.connectorType}
             onChange={handleFilterChange}
-            className="w-full px-2 py-2 border border-gray-800/30 rounded text-xs"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-primary transition-colors"
           >
-            <option value="">All Types</option>
+            <option value="" className="bg-midnight">All Types</option>
             {connectorTypes.map((type) => (
-              <option key={type} value={type}>
+              <option key={type} value={type} className="bg-midnight">
                 {type}
               </option>
             ))}
           </select>
         </div>
-        <div>
-          <label className="block text-[10px] font-light text-gray-400 uppercase tracking-wider">
-            Min Power (kW)
+
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+            Min Power
           </label>
           <input
             type="number"
             name="minPower"
             value={filters.minPower}
             onChange={handleFilterChange}
-            placeholder="Min"
-            className="w-full px-2 py-2 border border-gray-800/30 rounded text-xs"
+            placeholder="kW"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
-        <div>
-          <label className="block text-[10px] font-light text-gray-400 uppercase tracking-wider">
-            Max Power (kW)
+
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+            Max Power
           </label>
           <input
             type="number"
             name="maxPower"
             value={filters.maxPower}
             onChange={handleFilterChange}
-            placeholder="Max"
-            className="w-full px-2 py-2 border border-gray-800/30 rounded text-xs"
+            placeholder="kW"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
-        <div className="md:col-span-4 flex justify-end">
+
+        <div className="lg:col-span-4 flex justify-end">
           <button
             onClick={clearFilters}
-            className="inline-flex items-center text-xs font-light text-gray-600 hover:text-gray-500"
+            className="text-[9px] font-bold uppercase tracking-widest text-slate-500 hover:text-white flex items-center gap-2 transition-colors"
           >
-            <X className="h-3 w-3 mr-1" />
+            <X size={12} />
             Clear filters
           </button>
         </div>

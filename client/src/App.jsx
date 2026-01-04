@@ -14,7 +14,7 @@ const Register = lazy(() => import("./pages/auth/Register"));
 const Home = lazy(() => import("./pages/general/Home"));
 const LandingPage = lazy(() => import("./pages/general/LandingPage"));
 const Station = lazy(() => import("./pages/stations/Station"));
-const MapView = lazy(() => import("./pages/map/DynamicMapView"));
+const MapView = lazy(() => import("./pages/map/MapView"));
 const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
 const NotFound = lazy(() => import("./pages/general/NotFound"));
 const SavedStations = lazy(() => import("./pages/stations/SavedStations"));
@@ -39,7 +39,7 @@ function App() {
   const path = useLocation().pathname.split("/")[1];
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-midnight">
       {path !== "login" && path !== "register" && <Navbar />}
       <main className="flex-grow">
         <Suspense fallback={<LoadingSpinner size="lg" className="h-screen" />}>

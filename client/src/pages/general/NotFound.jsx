@@ -1,51 +1,50 @@
-import { ArrowLeft, Home, Zap } from "lucide-react";
+import { ArrowLeft, Home, Zap, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-50 text-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Subtle Animated Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[15%] left-[20%] w-[32rem] h-[32rem] bg-orange-200/30 rounded-full blur-[100px] opacity-50 animate-float"></div>
-        <div className="absolute bottom-[10%] right-[15%] w-[28rem] h-[28rem] bg-amber-200/30 rounded-full blur-[80px] opacity-40 animate-float-delay"></div>
-        <div className="absolute top-[50%] left-[50%] w-[18rem] h-[18rem] bg-yellow-200/20 rounded-full blur-[60px] opacity-30 animate-pulse"></div>
-      </div>
+    <div className="min-h-screen bg-midnight text-white flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Aurora Background Effect */}
+      <div className="fixed inset-0 bg-aurora pointer-events-none opacity-30" />
 
-      <div className="text-center max-w-sm mx-auto relative z-10">
-        <div className="bg-white/90 rounded-2xl border border-orange-100 p-8 shadow-lg">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-xl mb-6">
-            <Zap className="h-6 w-6 text-orange-500" />
+      <div className="text-center max-w-md mx-auto relative z-10 animate-slide-up">
+        <div className="glass-panel p-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/5 border border-white/10 rounded-2xl mb-8">
+            <Zap className="h-8 w-8 text-blue-500" />
           </div>
 
-          <div className="text-5xl font-bold text-gray-900 mb-4">
-            <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
-              404
-            </span>
+          <div className="text-7xl font-bold tracking-tighter mb-4">
+            <span className="text-reflect-muted opacity-20">404</span>
           </div>
 
-          <h1 className="text-xl font-semibold text-gray-900 mb-3">
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-reflect-muted mb-6 uppercase tracking-widest">
+            <Sparkles className="h-3 w-3 mr-2 text-blue-500" />
+            Lost in Space
+          </div>
+
+          <h1 className="text-2xl font-bold text-white mb-4">
             Page Not Found
           </h1>
 
-          <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+          <p className="text-sm text-reflect-muted mb-10 leading-relaxed">
             The charging station or page you're looking for doesn't exist or may
-            have been moved.
+            have been moved to a different coordinate.
           </p>
 
-          <div className="space-y-3">
+          <div className="flex flex-col gap-4">
             <Link
               to="/"
-              className="group w-full inline-flex items-center justify-center px-5 py-3 rounded-xl text-sm font-medium tracking-wide text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 transition-all shadow-sm"
+              className="btn-primary w-full flex items-center justify-center gap-2"
             >
-              <Home className="mr-2 h-4 w-4" />
-              Return to Home
+              <Home size={18} />
+              Return Home
             </Link>
 
             <button
               onClick={() => window.history.back()}
-              className="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl border border-orange-200 text-sm font-medium tracking-wide text-orange-700 bg-orange-50 hover:bg-orange-100 transition-colors"
+              className="btn-secondary w-full flex items-center justify-center gap-2"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft size={18} />
               Go Back
             </button>
           </div>

@@ -5,17 +5,17 @@ const Pagination = ({ currentPage, totalPages, setCurrentPage }) => (
     <button
       disabled={currentPage === 1}
       onClick={() => setCurrentPage((p) => p - 1)}
-      className="p-2 rounded-full border bg-white shadow-sm hover:bg-gray-100 disabled:opacity-40"
+      className="p-2 rounded-full border bg-gray-500 text-white shadow-sm hover:bg-gray-300 disabled:opacity-40"
     >
       <ChevronLeft className="w-4 h-4" />
     </button>
-    <span className="px-2 text-sm text-gray-800">
+    <span className="px-2 text-sm text-white">
       Page {currentPage} of {totalPages}
     </span>
     <button
       disabled={currentPage === totalPages}
       onClick={() => setCurrentPage((p) => p + 1)}
-      className="p-2 rounded-full border bg-white shadow-sm hover:bg-gray-100 disabled:opacity-40"
+      className="p-2 rounded-full border bg-gray-500 text-white shadow-sm hover:bg-gray-300 disabled:opacity-40"
     >
       <ChevronRight className="w-4 h-4" />
     </button>

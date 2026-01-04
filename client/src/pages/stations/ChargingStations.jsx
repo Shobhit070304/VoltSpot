@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   PlusCircle,
   Search,
@@ -14,7 +14,6 @@ import { api } from "../../services/api";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
-// Connector types for filter dropdown
 const connectorTypes = [
   "Type 1",
   "Type 2",
@@ -25,18 +24,13 @@ const connectorTypes = [
 ];
 
 const ChargingStations = ({ stations, setStations, onEdit }) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     status: "",
     connectorType: "",
-    minPower: "",
-    maxPower: "",
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  // Handle delete station
   const handleDeleteStation = async (id) => {
     if (!confirm("Are you sure you want to delete this charging station?")) {
       return;
@@ -47,319 +41,160 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
       if (response.status === 200) {
         toast.success("Station deleted successfully");
         setStations(stations.filter((station) => station._id !== id));
-      } else {
-        toast.error("Error deleting station");
       }
     } catch (err) {
       toast.error("Failed to delete station");
     }
   };
 
-  // Handle search
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // Handle filter change
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-
-  // Clear filters
-  const clearFilters = () => {
-    setFilters({
-      status: "",
-      connectorType: "",
-      minPower: "",
-      maxPower: "",
-    });
-  };
-
-  // Filter stations
   const filteredStations = stations.filter((station) => {
-    // Search filter
     const matchesSearch =
       station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       station.location.toLowerCase().includes(searchTerm.toLowerCase());
-
-    // Status filter
     const matchesStatus = !filters.status || station.status === filters.status;
-
-    // Connector type filter
     const matchesConnector =
       !filters.connectorType || station.connectorType === filters.connectorType;
 
-    // Power output range filter
-    const matchesMinPower =
-      !filters.minPower || station.powerOutput >= Number(filters.minPower);
-    const matchesMaxPower =
-      !filters.maxPower || station.powerOutput <= Number(filters.maxPower);
-
-    return (
-      matchesSearch &&
-      matchesStatus &&
-      matchesConnector &&
-      matchesMinPower &&
-      matchesMaxPower
-    );
+    return matchesSearch && matchesStatus && matchesConnector;
   });
 
   return (
-    <div className="relative p-6">
-      {/* Header with Add Station button */}
-      <div className="md:flex md:items-center md:justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Charging Stations
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Manage your network of charging stations
-          </p>
-        </div>
-        <div className="mt-4 md:mt-0">
+    <div className="flex flex-col">
+      {/* Search and filters */}
+      <div className="p-6 border-b border-white/5">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-reflect-muted group-focus-within:text-blue-500 transition-colors" />
+            <input
+              type="text"
+              placeholder="Search your stations..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-reflect-muted/50 focus:outline-none focus:border-blue-500 transition-all"
+            />
+          </div>
           <button
-            onClick={() => onEdit(null)}
-            className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg shadow-md hover:shadow-orange-500/20 transition-all text-sm font-medium"
+            onClick={() => setShowFilters(!showFilters)}
+            className="btn-secondary flex items-center justify-center gap-2 !py-2.5"
           >
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Add Station
+            <Filter size={16} />
+            <span className="text-sm">Filters</span>
+            <ChevronDown
+              size={16}
+              className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
+            />
           </button>
         </div>
-      </div>
 
-      {/* Search and filters */}
-      <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-sm mb-6">
-        <div className="p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
-            <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search stations..."
-                value={searchTerm}
-                onChange={handleSearch}
-                className="block w-full pl-10 pr-3 py-2.5 border border-orange-100 rounded-lg text-sm font-medium bg-white/90 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
-              />
-            </div>
-            <div>
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="w-full sm:w-auto inline-flex items-center px-4 py-2.5 border border-orange-100 rounded-lg text-sm font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 transition-colors"
+        {showFilters && (
+          <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fade-in">
+            <div className="space-y-2">
+              <label className="text-[10px] font-medium text-reflect-muted uppercase tracking-wider">
+                Status
+              </label>
+              <select
+                value={filters.status}
+                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
               >
-                <Filter className="h-4 w-4 mr-2 text-orange-500" />
-                Filters
-                <ChevronDown
-                  className={`h-4 w-4 ml-2 text-orange-500 transition-transform ${
-                    showFilters ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
+                <option value="" className="bg-midnight">All Statuses</option>
+                <option value="Active" className="bg-midnight">Active</option>
+                <option value="Inactive" className="bg-midnight">Inactive</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-medium text-reflect-muted uppercase tracking-wider">
+                Connector
+              </label>
+              <select
+                value={filters.connectorType}
+                onChange={(e) => setFilters({ ...filters, connectorType: e.target.value })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+              >
+                <option value="" className="bg-midnight">All Types</option>
+                {connectorTypes.map((type) => (
+                  <option key={type} value={type} className="bg-midnight">{type}</option>
+                ))}
+              </select>
             </div>
           </div>
-
-          {/* Filter options */}
-          {showFilters && (
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label
-                  htmlFor="status"
-                  className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"
-                >
-                  Status
-                </label>
-                <select
-                  id="status"
-                  name="status"
-                  value={filters.status}
-                  onChange={handleFilterChange}
-                  className="block w-full px-3 py-2.5 border border-orange-100 rounded-lg text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="">All Statuses</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="connectorType"
-                  className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"
-                >
-                  Connector Type
-                </label>
-                <select
-                  id="connectorType"
-                  name="connectorType"
-                  value={filters.connectorType}
-                  onChange={handleFilterChange}
-                  className="block w-full px-3 py-2.5 border border-orange-100 rounded-lg text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="">All Types</option>
-                  {connectorTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="minPower"
-                  className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"
-                >
-                  Min Power (kW)
-                </label>
-                <input
-                  type="number"
-                  id="minPower"
-                  name="minPower"
-                  value={filters.minPower}
-                  onChange={handleFilterChange}
-                  placeholder="Min kW"
-                  min="0"
-                  className="block w-full px-3 py-2.5 border border-orange-100 rounded-lg text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="maxPower"
-                  className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1"
-                >
-                  Max Power (kW)
-                </label>
-                <input
-                  type="number"
-                  id="maxPower"
-                  name="maxPower"
-                  value={filters.maxPower}
-                  onChange={handleFilterChange}
-                  placeholder="Max kW"
-                  min="0"
-                  className="block w-full px-3 py-2.5 border border-orange-100 rounded-lg text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
-                />
-              </div>
-
-              <div className="sm:col-span-2 lg:col-span-4 flex justify-end">
-                <button
-                  onClick={clearFilters}
-                  className="inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-lg border border-orange-200 text-orange-700 bg-orange-50 hover:bg-orange-100 transition-colors"
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Clear Filters
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Station list */}
       {filteredStations.length > 0 ? (
-        <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-sm overflow-hidden">
-          <ul className="divide-y divide-orange-100">
-            {filteredStations.map((station) => (
-              <li
-                key={station._id}
-                className="hover:bg-orange-50/50 transition-colors"
-              >
-                <div className="px-4 py-4 sm:px-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div
-                        className={`flex-shrink-0 h-10 w-10 rounded-lg flex items-center justify-center border ${
-                          station.status === "Active"
-                            ? "bg-green-100 text-green-600 border-green-200"
-                            : "bg-yellow-100 text-yellow-600 border-yellow-200"
-                        }`}
-                      >
-                        <Zap className="h-5 w-5" />
-                      </div>
-                      <div className="ml-4">
-                        <p className="text-base font-medium text-gray-900">
-                          {station.name}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {station.location}
-                        </p>
-                      </div>
+        <ul className="divide-y divide-white/5">
+          {filteredStations.map((station) => (
+            <li key={station._id} className="group hover:bg-white/[0.02] transition-colors">
+              <div className="px-8 py-6">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${station.status === "Active"
+                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                        : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                      }`}>
+                      <Zap size={18} />
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => onEdit(station)}
-                        className="p-2 text-gray-500 hover:text-orange-600 hover:bg-orange-100/50 rounded-lg transition-colors"
-                        aria-label="Edit station"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteStation(station._id)}
-                        className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-100/50 rounded-lg transition-colors"
-                        aria-label="Delete station"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors">
+                        {station.name}
+                      </h3>
+                      <p className="text-xs text-reflect-muted mt-0.5">
+                        {station.location}
+                      </p>
                     </div>
                   </div>
-                  <div className="mt-3 sm:flex sm:justify-between">
-                    <div className="flex items-center space-x-3">
-                      <span
-                        className={`px-2.5 py-1 text-xs font-medium rounded-full ${
-                          station.status === "Active"
-                            ? "bg-green-100 text-green-800 border border-green-200"
-                            : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                        }`}
-                      >
-                        {station.status}
-                      </span>
-                      <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-200">
-                        {station.powerOutput} kW
-                      </span>
-                      <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 border border-blue-200">
-                        {station.connectorType}
-                      </span>
-                    </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => onEdit(station)}
+                      className="p-2 text-reflect-muted hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                      title="Edit station"
+                    >
+                      <Edit size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteStation(station._id)}
+                      className="p-2 text-reflect-muted hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                      title="Delete station"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                    <div className="w-px h-4 bg-white/10 mx-2" />
                     <Link
                       to={`/station/${station._id}`}
-                      className="mt-3 sm:mt-0 inline-flex items-center text-sm font-medium text-orange-600 hover:text-orange-800 transition-colors"
+                      className="p-2 text-reflect-muted hover:text-blue-400 transition-all"
                     >
-                      View details
-                      <ChevronRight className="ml-1 h-4 w-4" />
+                      <ChevronRight size={18} />
                     </Link>
                   </div>
                 </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+
+                <div className="mt-4 flex items-center gap-3">
+                  <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full border ${station.status === "Active"
+                      ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                      : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                    }`}>
+                    {station.status}
+                  </span>
+                  <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-white/5 text-reflect-muted border border-white/10">
+                    {station.powerOutput} kW
+                  </span>
+                  <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-white/5 text-reflect-muted border border-white/10">
+                    {station.connectorType}
+                  </span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       ) : (
-        <div className="bg-white/80 backdrop-blur-lg rounded-xl border border-orange-100 shadow-sm py-12 text-center">
-          <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4 border border-orange-200">
-            <Zap className="h-5 w-5 text-orange-500" />
+        <div className="py-20 text-center">
+          <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+            <Zap size={20} className="text-reflect-muted" />
           </div>
-          <h3 className="text-base font-medium text-gray-900 mb-1">
-            No charging stations found
-          </h3>
-          <p className="text-sm text-gray-600 mb-4">
-            {Object.values(filters).some(Boolean)
-              ? "No stations match your current filters."
-              : "No stations available in your network."}
-          </p>
-          {Object.values(filters).some(Boolean) && (
-            <button
-              onClick={clearFilters}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 transition-all shadow-sm"
-            >
-              Clear Filters
-            </button>
-          )}
+          <h3 className="text-sm font-medium text-white mb-1">No stations found</h3>
+          <p className="text-xs text-reflect-muted">Try adjusting your search or filters.</p>
         </div>
       )}
     </div>

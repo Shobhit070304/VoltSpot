@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Menu, User, X, Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import logo from "/charging.png";
 
 const Navbar = () => {
@@ -9,167 +9,121 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const navLinks = [
+    { to: "/stations", label: "Stations" },
+    { to: "/map", label: "Map" },
+    { to: "/dashboard", label: "Dashboard" },
+    { to: "/saved-stations", label: "Saved" },
+  ];
+
   return (
-    <div className="flex w-full justify-center">
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center ${
-          isScrolled
-            ? "backdrop-blur-xl bg-white/90 border-b border-orange-200/60 shadow-md h-16"
-            : "backdrop-blur-lg bg-white/80 border-b border-orange-100/40 shadow-sm h-20"
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+        ? "py-3 bg-midnight/80 backdrop-blur-xl border-b border-white/5"
+        : "py-6 bg-transparent"
         }`}
-      >
-        <div className="flex-1 flex items-center justify-between px-4 sm:px-8 w-full max-w-7xl">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group">
+    >
+      <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="relative">
+            <div className="absolute inset-0 bg-brand-primary blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
             <img
               src={logo}
-              alt="logo"
-              loading="lazy"
-              className={`transition-all duration-300 ${
-                isScrolled ? "h-7 w-7" : "h-8 w-8"
-              }`}
+              alt="VoltSpot"
+              className="w-7 h-7 relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
             />
-            <span
-              className={`ml-2 font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-300 ${
-                isScrolled ? "text-xl" : "text-2xl"
-              } montserrat-regular`}
-            >
-              voltspot
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {[
-              { to: "/stations", label: "Stations" },
-              { to: "/map", label: "Map" },
-              { to: "/dashboard", label: "Dashboard" },
-              { to: "/saved-stations", label: "Saved Stations" },
-            ].map(({ to, label }) => (
-              <Link
-                key={label}
-                to={to}
-                className={`px-3 py-2 text-sm font-medium tracking-wide ${
-                  isScrolled ? "text-orange-700" : "text-orange-600"
-                } hover:text-orange-800 rounded-md transition-all duration-200`}
-              >
-                {label}
-              </Link>
-            ))}
-
-            {!isAuthenticated ? (
-              <Link
-                to="/login"
-                className={`ml-2 px-4 py-2 flex items-center text-sm font-medium tracking-wide bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 rounded-lg transition-all duration-200 shadow ${
-                  isScrolled ? "shadow-md" : "shadow-lg"
-                }`}
-              >
-                Sign In
-              </Link>
-            ) : (
-              <div className="flex items-center space-x-2 ml-2">
-                <button
-                  onClick={logout}
-                  className={`px-4 py-2 flex items-center text-sm font-medium tracking-wide bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md ${
-                    isScrolled ? "shadow-md" : "shadow-lg"
-                  }`}
-                >
-                  Logout
-                </button>
-                <Link
-                  to="/dashboard"
-                  className={`flex items-center justify-center rounded-full transition-all duration-200 ${
-                    isScrolled
-                      ? "w-8 h-8 bg-orange-100 border border-orange-200 hover:bg-orange-200"
-                      : "w-9 h-9 bg-orange-50 border border-orange-100 hover:bg-orange-100"
-                  }`}
-                >
-                  <User
-                    className={`${
-                      isScrolled ? "w-3.5 h-3.5" : "w-4 h-4"
-                    } text-orange-600`}
-                  />
-                </Link>
-              </div>
-            )}
           </div>
+          <span className="text-lg font-bold tracking-tighter text-white group-hover:text-brand-primary transition-colors duration-500">
+            voltspot
+          </span>
+        </Link>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="relative text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-all duration-300 group/link"
+            >
+              {link.label}
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-brand-primary transition-all duration-300 group-hover/link:w-full" />
+            </Link>
+          ))}
+
+          <div className="h-4 w-px bg-white/10 mx-1" />
+
+          {isAuthenticated ? (
             <button
-              onClick={toggleMobileMenu}
-              className={`p-2 rounded-full ${
-                isMobileMenuOpen
-                  ? "bg-orange-100 text-orange-700"
-                  : "text-orange-600 hover:text-orange-700 hover:bg-orange-100"
-              } transition-all duration-200`}
+              onClick={logout}
+              className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-colors"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              Logout
             </button>
-          </div>
+          ) : (
+            <Link to="/login" className="btn-primary !py-2 !px-5 !rounded-full text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Sign in
+            </Link>
+          )}
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div
-            className={`absolute md:hidden w-full ${
-              isScrolled ? "top-16" : "top-20"
-            } left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-orange-100/50 shadow-lg rounded-b-xl px-6 pt-2 pb-6 space-y-1 transition-all duration-500`}
-          >
-            {[
-              { to: "/stations", label: "Stations" },
-              { to: "/saved-stations", label: "Saved Stations" },
-              { to: "/map", label: "Map" },
-              { to: "/dashboard", label: "Dashboard" },
-            ].map(({ to, label }) => (
-              <Link
-                key={label}
-                to={to}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-3 text-sm font-medium text-orange-700 hover:text-orange-900 hover:bg-orange-50 rounded-lg transition-colors"
-              >
-                {label}
-              </Link>
-            ))}
+        {/* Mobile Menu Toggle */}
+        <button
+          className="md:hidden text-white p-2 hover:bg-white/5 rounded-full transition-colors"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
 
-            <div className="pt-2 mt-1 border-t border-orange-100">
-              {!isAuthenticated ? (
-                <Link
-                  to="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-sm font-medium text-center bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 rounded-lg transition-colors"
-                >
-                  Sign In
-                </Link>
-              ) : (
-                <button
-                  onClick={logout}
-                  className="w-full px-4 py-3 text-sm font-medium text-white rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-sm hover:shadow-md transition-all duration-200"
-                >
-                  Logout
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-      </nav>
-    </div>
+      {/* Mobile Menu */}
+      <div
+        className={`md:hidden absolute top-full left-0 right-0 bg-midnight/95 backdrop-blur-2xl border-b border-white/5 transition-all duration-500 ease-in-out overflow-hidden ${isMobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+      >
+        <div className="p-8 flex flex-col gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-lg font-bold text-slate-400 hover:text-white transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div className="h-px w-full bg-white/5" />
+          {isAuthenticated ? (
+            <button
+              onClick={() => {
+                logout();
+                setIsMobileMenuOpen(false);
+              }}
+              className="text-lg font-bold text-slate-400 text-left"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="btn-primary text-center !py-4 !rounded-2xl font-bold text-lg"
+            >
+              Sign in
+            </Link>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 };
 

@@ -1,124 +1,94 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Star, Send, AlertCircle } from "lucide-react";
 import { api } from "../../services/api";
-import { toast } from "react-hot-toast";
-import { Edit, Send, Star } from "react-feather";
-import { X } from "lucide-react";
+import toast from "react-hot-toast";
 
-const ReviewForm = ({ stationId, showReviewForm, setShowReviewForm }) => {
+const ReviewForm = ({ stationId, onSuccess }) => {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [hover, setHover] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (rating < 1 || rating > 5) {
-      setError("Rating must be between 1 and 5");
-      return;
-    }
     if (!comment.trim()) {
-      setError("Comment cannot be empty");
+      toast.error("Please enter a comment");
       return;
     }
 
     try {
-      const res = await api.post(`/review/${stationId}`, {
+      setLoading(true);
+      const response = await api.post("/review/create", {
+        stationId,
         rating,
         comment,
       });
-
-      if (res.status === 201) {
-        setShowReviewForm(!showReviewForm);
-        toast.success("Review submitted successfully!");
-        window.location.reload();
-      } else {
-        toast.error("Failed to submit review");
+      if (response.status === 201) {
+        toast.success("Review submitted successfully");
+        onSuccess();
       }
-    } catch (err) {
-      setError(err.response?.data || "Something went wrong");
+    } catch (error) {
+      toast.error("Failed to submit review");
     } finally {
-      setRating(5);
-      setComment("");
-      setError("");
+      setLoading(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md p-6 rounded-2xl bg-white/90 backdrop-blur-sm border border-orange-100 shadow-sm"
-    >
-      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-        <Edit className="w-5 h-5 mr-2 text-amber-500" />
-        Leave a Review
-      </h3>
-
-      {error && (
-        <div className="mb-4 p-3 text-xs font-medium tracking-wide rounded-lg bg-red-100 text-red-600 border border-red-200">
-          {error}
-        </div>
-      )}
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Rating:
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-3">
+        <label className="text-xs font-medium text-reflect-muted uppercase tracking-widest">
+          Your Rating
         </label>
-        <div className="flex items-center space-x-1 mb-3">
+        <div className="flex items-center gap-2">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
-              type="button"
               key={star}
+              type="button"
               onClick={() => setRating(star)}
-              className="focus:outline-none"
+              onMouseEnter={() => setHover(star)}
+              onMouseLeave={() => setHover(0)}
+              className="p-1 transition-transform hover:scale-110"
             >
               <Star
-                className={`h-6 w-6 ${star <= rating ? "text-amber-500 fill-current" : "text-orange-200"}`}
+                size={28}
+                className={`${star <= (hover || rating)
+                    ? "text-blue-500 fill-blue-500"
+                    : "text-white/10"
+                  } transition-colors`}
               />
             </button>
           ))}
         </div>
-        <input
-          type="number"
-          min="1"
-          max="5"
-          value={rating}
-          onChange={(e) => setRating(Number(e.target.value))}
-          className="w-full px-4 py-2.5 text-sm font-medium bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-1 focus:ring-orange-300 focus:border-orange-300 text-gray-900 placeholder-orange-300 transition-all duration-200"
-          required
-          hidden
-        />
       </div>
 
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Comment:
+      <div className="space-y-3">
+        <label className="text-xs font-medium text-reflect-muted uppercase tracking-widest">
+          Your Experience
         </label>
         <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="w-full px-4 py-3 text-sm font-medium bg-white rounded-xl border border-orange-200 focus:outline-none focus:ring-1 focus:ring-orange-300 focus:border-orange-300 text-gray-900 placeholder-orange-300 transition-all duration-200"
+          placeholder="Tell us about your charging experience..."
           rows={4}
-          required
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-reflect-muted/30 focus:outline-none focus:border-blue-500 transition-colors resize-none"
         />
       </div>
 
-      <div className="flex justify-start space-x-3">
-        <button
-          type="button"
-          onClick={() => setShowReviewForm(!showReviewForm)}
-          className="px-4 py-2.5 text-sm font-medium rounded-xl border border-orange-200 text-orange-700 bg-orange-50 hover:bg-orange-100 transition-all duration-300 flex items-center"
-        >
-          <X className="w-4 h-4 mr-2" />
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2.5 text-sm font-medium rounded-xl text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 transition-all duration-300 shadow-sm hover:shadow-orange-200 flex items-center"
-        >
-          <Send className="w-4 h-4 mr-2" />
-          Submit Review
-        </button>
-      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="btn-primary w-full flex items-center justify-center gap-2 py-3.5"
+      >
+        {loading ? (
+          <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        ) : (
+          <>
+            Submit Review
+            <Send size={18} />
+          </>
+        )}
+      </button>
     </form>
   );
 };

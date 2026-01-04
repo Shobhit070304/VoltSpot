@@ -1,182 +1,80 @@
-import React, { memo, useEffect, useState } from "react";
-import { MapPin, Zap, Heart, Star } from "lucide-react";
+import React from "react";
+import { MapPin, Zap, Star, Heart, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { api } from "../../services/api";
+import toast from "react-hot-toast";
 
-const StationCard = ({
-  station,
-  viewMode,
-  handleSaveStation,
-  isStationSaved,
-}) => {
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) => {
+  const isGrid = viewMode === "grid";
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(`/review/${station._id}`);
-        if (response.status === 200 && isMounted) {
-          setReviews(response.data);
-        }
-      } catch (error) {
-        if (isMounted) {
-          setError(true);
-          toast.error("Failed to fetch reviews");
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchReviews();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []); // 👈 empty deps → runs only once on mount
+  const reviews = station.reviews || [];
 
   return (
-    <div
-      key={station._id}
-      className={`bg-white/80 rounded-xl border border-orange-100 hover:bg-orange-50 transition-all group ${
-        viewMode === "list" ? "p-4" : "p-5"
-      }`}
-    >
-      {viewMode === "grid" ? (
-        <div>
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex-1">
-              <h3 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">
+    <div className={`glass-panel group hover:bg-white/[0.03] transition-all duration-500 border-white/5 hover:border-brand-primary/20 ${isGrid ? "p-5" : "p-4"}`}>
+      <div className={`${isGrid ? "flex flex-col" : "flex items-center justify-between gap-6"}`}>
+        <div className="flex-1">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h3 className="text-base font-bold text-white mb-1 group-hover:text-brand-primary transition-colors tracking-tight">
                 {station.name}
               </h3>
-              <div className="flex items-center text-xs text-gray-500 mb-1 font-medium">
-                <MapPin className="h-3 w-3 mr-2 text-orange-400" />
+              <div className="flex items-center text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                <MapPin size={12} className="mr-1.5 text-brand-primary" />
                 {station.location}
               </div>
-              <div className="flex items-center text-xs text-gray-500 font-medium">
-                <Zap className="h-3 w-3 mr-2 text-orange-400" />
-                {station.powerOutput} kW • {station.connectorType}
-              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <span
-                className={`px-3 py-1 text-xs font-medium rounded-full ${
-                  station.status === "Active"
-                    ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                    : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
+
+            <button
+              onClick={() => handleSaveStation(station._id)}
+              className={`p-2 rounded-xl transition-all duration-300 ${isStationSaved ? "bg-red-500/10 text-red-500" : "bg-white/5 text-slate-500 hover:text-white"
                 }`}
-              >
-                {station.status}
-              </span>
-              <button
-                onClick={() => handleSaveStation(station._id)}
-                className="p-2 hover:bg-orange-100 rounded-lg transition-colors"
-              >
-                <Heart
-                  className={`h-4 w-4 transition-colors ${
-                    isStationSaved
-                      ? "text-red-500 fill-red-500"
-                      : "text-gray-400 hover:text-red-500"
-                  }`}
-                />
-              </button>
+            >
+              <Heart size={14} fill={isStationSaved ? "currentColor" : "none"} />
+            </button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-widest text-slate-300">
+              <Zap size={10} className="text-brand-primary" />
+              {station.powerOutput} kW
+            </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-widest text-slate-300">
+              <span className="text-slate-500">{station.connectorType}</span>
+            </div>
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest border ${station.status === "Active"
+              ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+              : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+              }`}>
+              <span className={`w-1 h-1 rounded-full ${station.status === "Active" ? "bg-emerald-500" : "bg-amber-500"}`} />
+              {station.status}
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="flex items-center">
-                <Star className="h-3.5 w-3.5 text-amber-400 mr-1" />
-                <span className="text-xs font-medium text-gray-700">
-                  {station.averageRating ? station.averageRating.toFixed(1) : 0}
+          <div className="flex items-center justify-between pt-4 border-t border-white/5">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1.5">
+                <Star size={12} className="text-brand-primary fill-brand-primary" />
+                <span className="text-xs font-bold text-white">
+                  {station.averageRating ? station.averageRating.toFixed(1) : "0.0"}
                 </span>
               </div>
-              <span className="mx-2 text-gray-300">•</span>
-              <span className="text-xs text-gray-500">
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
                 {reviews?.length || 0} reviews
               </span>
             </div>
 
             <Link
               to={`/station/${station._id}`}
-              className="text-xs font-medium text-orange-600 hover:text-orange-700 transition-colors"
+              className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-brand-primary hover:text-brand-secondary transition-colors group/link"
             >
-              View Details
+              Details
+              <ArrowUpRight size={12} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
             </Link>
           </div>
         </div>
-      ) : (
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-base font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
-                {station.name}
-              </h3>
-              <span
-                className={`px-3 py-1 text-xs font-medium rounded-full ${
-                  station.status === "Active"
-                    ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                    : "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
-                }`}
-              >
-                {station.status}
-              </span>
-            </div>
-
-            <div className="flex items-center text-xs text-gray-500 mb-1 font-medium">
-              <MapPin className="h-3 w-3 mr-2 text-orange-400" />
-              {station.location}
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Zap className="h-3 w-3 mr-2 text-orange-400" />
-                <span className="text-xs text-gray-700 font-medium">
-                  {station.powerOutput} kW • {station.connectorType}
-                </span>
-                <span className="mx-2 text-gray-300">•</span>
-                <div className="flex items-center">
-                  <Star className="h-3.5 w-3.5 text-amber-400 mr-1" />
-                  <span className="text-xs font-medium text-gray-700">
-                    {station.averageRating
-                      ? station.averageRating.toFixed(1)
-                      : 0}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => handleSaveStation(station._id)}
-                  className="p-1.5 hover:bg-orange-100 rounded-lg transition-colors"
-                >
-                  <Heart
-                    className={`h-4 w-4 transition-colors ${
-                      isStationSaved
-                        ? "text-red-500 fill-red-500"
-                        : "text-gray-400 hover:text-red-500"
-                    }`}
-                  />
-                </button>
-                <Link
-                  to={`/station/${station._id}`}
-                  className="text-xs font-medium text-orange-600 hover:text-orange-700 transition-colors"
-                >
-                  View Details
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
-export default memo(StationCard);
+export default StationCard;
