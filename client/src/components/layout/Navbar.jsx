@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, X, Zap } from "lucide-react";
+import logo from "/electric-station.png";
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -28,17 +29,17 @@ const Navbar = () => {
     <div className="fixed top-0 left-0 right-0 z-50 px-6 py-6 pointer-events-none">
       <nav
         className={`max-w-5xl mx-auto pointer-events-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isScrolled
-            ? "bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-full px-6 py-2 shadow-2xl shadow-black/50"
-            : "bg-transparent px-4 py-2"
+          ? "bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-full px-6 py-2 shadow-2xl shadow-black/50"
+          : "bg-transparent px-4 py-2"
           }`}
       >
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="relative">
-              <div className="absolute inset-0 bg-blue-500 blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-110">
-                <Zap size={16} className="text-white fill-white" />
+              <div className="absolute inset-0 blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-110">
+                <img src={logo} alt="Logo" className="w-full h-full object-contain" />
               </div>
             </div>
             <span className="text-lg font-bold tracking-tighter text-white">

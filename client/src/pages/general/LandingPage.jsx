@@ -11,7 +11,8 @@ import {
   Shield,
   User,
 } from "lucide-react";
-import heroCover from "/C:/Users/Shobhit sharma/.gemini/antigravity/brain/afba9dfa-0750-4882-b6fe-14012d81c85a/voltspot_hero_cover_1767700389842.png";
+// import heroCover from "/C:/Users/Shobhit sharma/.gemini/antigravity/brain/afba9dfa-0750-4882-b6fe-14012d81c85a/voltspot_hero_cover_1767700389842.png";
+import heroCover from "/hero-banner.png";
 
 const LandingPage = () => {
   return (
@@ -19,8 +20,8 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
         {/* Animated Grid Background */}
-        <div className="absolute inset-0 bg-grid opacity-80 animate-move-grid" />
-        <div className="absolute inset-0 grid-dots opacity-80 animate-move-grid [animation-duration:10s]" />
+        <div className="absolute inset-0 bg-grid opacity-90 animate-move-grid" />
+        <div className="absolute inset-0 grid-dots opacity-90 animate-move-grid [animation-duration:10s]" />
 
         {/* Background Glows */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-brand-primary/10 blur-[120px] pointer-events-none" />
@@ -76,6 +77,23 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Stats Section - Simplified */}
+      <section className="py-16 px-6 relative border-y border-white/[0.03]">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { label: "Charging Points", value: "200+" },
+            { label: "Active Stations", value: "69+" },
+            { label: "Cities Covered", value: "20+" },
+            { label: "User Reviews", value: "300+" }
+          ].map((stat, i) => (
+            <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
+              <div className="text-[10px] uppercase tracking-widest text-muted font-bold">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Modern Driver Section - NEW */}
       <section className="py-24 px-6 relative overflow-hidden bg-white/[0.01]">
         <div className="max-w-5xl mx-auto relative z-10">
@@ -107,29 +125,16 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Stats Section - Simplified */}
-      <section className="py-16 px-6 relative border-y border-white/[0.03]">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { label: "Stations", value: "2,400+" },
-            { label: "Users", value: "15k+" },
-            { label: "Cities", value: "42+" },
-            { label: "Uptime", value: "99.9%" }
-          ].map((stat, i) => (
-            <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
-              <div className="text-[10px] uppercase tracking-widest text-muted font-bold">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Features Section - Bento Grid Scaled Down */}
       <section className="py-20 px-6 relative">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Everything you need.</h2>
-            <p className="text-muted text-sm max-w-lg mx-auto">Simple tools to keep you moving without the clutter.</p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Built for real-world EV needs.
+            </h2>
+            <p className="text-muted text-sm max-w-lg mx-auto">
+              A complete EV charging platform designed with usability, performance, and community in mind.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -141,9 +146,9 @@ const LandingPage = () => {
                 <div className="w-8 h-8 rounded-lg bg-brand-primary/10 flex items-center justify-center mb-4">
                   <Zap className="w-4 h-4 text-brand-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-2">Precision Mapping</h3>
+                <h3 className="text-lg font-bold mb-2">Smart Station Finder</h3>
                 <p className="text-muted text-sm leading-relaxed max-w-sm">
-                  Find the exact location of any charging point with real-time status updates.
+                  Discover nearby EV charging stations with accurate location data and live availability status.
                 </p>
               </div>
             </div>
@@ -152,9 +157,9 @@ const LandingPage = () => {
               <div className="w-8 h-8 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
                 <BarChart3 className="w-4 h-4 text-brand-accent" />
               </div>
-              <h3 className="text-lg font-bold mb-2">Smart Analytics</h3>
+              <h3 className="text-lg font-bold mb-2">Cost & Time Estimation</h3>
               <p className="text-muted text-sm leading-relaxed">
-                Track your usage and optimize your charging schedule effortlessly.
+                Estimate charging cost and time based on your EV model, battery level, and station power.
               </p>
             </div>
 
@@ -162,22 +167,27 @@ const LandingPage = () => {
               <div className="w-8 h-8 rounded-lg bg-brand-secondary/10 flex items-center justify-center mb-4">
                 <Layers className="w-4 h-4 text-brand-secondary" />
               </div>
-              <h3 className="text-lg font-bold mb-2">Verified Data</h3>
+              <h3 className="text-lg font-bold mb-2">Community-Powered Data</h3>
               <p className="text-muted text-sm leading-relaxed">
-                Community-driven insights ensure you always have accurate info.
+                Ratings, reviews, and issue reports help keep station information reliable and up to date.
               </p>
             </div>
 
             <div className="md:col-span-2 bento-card group flex items-center justify-between">
               <div className="relative z-10">
-                <h3 className="text-lg font-bold mb-2">Ready to start?</h3>
-                <p className="text-muted text-sm">Join thousands of drivers today.</p>
+                <h3 className="text-lg font-bold mb-2">Explore Voltspot</h3>
+                <p className="text-muted text-sm">
+                  Built as a full-stack project to solve real EV charging challenges.
+                </p>
               </div>
-              <Link to="/register" className="btn-primary">Sign Up Now</Link>
+              <Link to="/register" className="btn-primary">
+                Get Started
+              </Link>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* CTA Section - Scaled Down */}
       <section className="py-20 px-6 relative">
