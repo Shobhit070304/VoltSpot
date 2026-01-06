@@ -55,13 +55,13 @@ const Auth = () => {
 
 
     return (
-        <div className="flex gap-2 text-sm">
+        <div className="flex gap-3 text-[11px]">
             <button
                 onClick={loginWithGoogle}
-                className="w-1/2 flex items-center justify-center gap-3 cursor-pointer bg-gray-700 hover:bg-gray-600 transition-colors duration-200 text-white font-medium py-3 px-4 rounded-lg border border-gray-600"
+                className="w-1/2 flex items-center justify-center gap-2.5 cursor-pointer bg-white/[0.03] hover:bg-white/[0.08] transition-all duration-300 text-white font-bold py-2.5 px-4 rounded-xl border border-white/10"
             >
                 <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4"
                     viewBox="0 0 533.5 544.3"
                     xmlns="http://www.w3.org/2000/svg"
                 >
@@ -87,12 +87,12 @@ const Auth = () => {
 
             <button
                 onClick={loginWithGithub}
-                className="w-1/2 flex items-center justify-center cursor-pointer gap-3 bg-gray-900 hover:bg-gray-800 transition-colors duration-200 text-white font-medium py-3 px-4 rounded-lg border border-gray-700"
+                className="w-1/2 flex items-center justify-center cursor-pointer gap-2.5 bg-white/[0.03] hover:bg-white/[0.08] transition-all duration-300 text-white font-bold py-2.5 px-4 rounded-xl border border-white/10"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
-                    className="w-5 h-5"
+                    className="w-4 h-4"
                     viewBox="0 0 24 24"
                 >
                     <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2.3c-3.2.7-3.9-1.5-3.9-1.5-.5-1.1-1.2-1.4-1.2-1.4-1-.7.1-.7.1-.7 1.1.1 1.6 1.1 1.6 1.1 1 .1 1.7-.9 2.3-1.3.1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.9 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.9.1 3.2.8.9 1.2 2 1.2 3.2 0 4.6-2.7 5.6-5.3 5.9.4.3.8 1 .8 2v3c0 .3.2.7.8.6a10.6 10.6 0 0 0 7.9-10.8C23.5 5.65 18.35.5 12 .5z" />

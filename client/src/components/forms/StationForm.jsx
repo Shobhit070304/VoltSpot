@@ -67,11 +67,11 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Station Name */}
-        <div className="space-y-3">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
             Station Name
           </label>
           <input
@@ -79,15 +79,15 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className={`w-full bg-white/5 border ${errors.name ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-4 text-sm text-white placeholder:text-reflect-muted/20 focus:outline-none focus:border-blue-500 transition-all duration-300`}
+            className={`w-full bg-white/[0.03] border ${errors.name ? 'border-red-500/30' : 'border-white/10'} rounded-xl px-4 py-2.5 text-[13px] text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-all duration-300 font-medium`}
             placeholder="e.g. Downtown Charging Hub"
           />
-          {errors.name && <p className="text-[10px] text-red-400 flex items-center gap-1.5 font-bold uppercase tracking-widest"><AlertCircle size={12} /> {errors.name}</p>}
+          {errors.name && <p className="text-[9px] text-red-400 flex items-center gap-1.5 font-bold uppercase tracking-widest ml-1"><AlertCircle size={10} /> {errors.name}</p>}
         </div>
 
         {/* Location */}
-        <div className="space-y-3">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
             Address/Location
           </label>
           <input
@@ -95,53 +95,55 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             name="location"
             value={formData.location}
             onChange={handleChange}
-            className={`w-full bg-white/5 border ${errors.location ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-4 text-sm text-white placeholder:text-reflect-muted/20 focus:outline-none focus:border-blue-500 transition-all duration-300`}
+            className={`w-full bg-white/[0.03] border ${errors.location ? 'border-red-500/30' : 'border-white/10'} rounded-xl px-4 py-2.5 text-[13px] text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-all duration-300 font-medium`}
             placeholder="123 Main Street, City"
           />
-          {errors.location && <p className="text-[10px] text-red-400 flex items-center gap-1.5 font-bold uppercase tracking-widest"><AlertCircle size={12} /> {errors.location}</p>}
+          {errors.location && <p className="text-[9px] text-red-400 flex items-center gap-1.5 font-bold uppercase tracking-widest ml-1"><AlertCircle size={10} /> {errors.location}</p>}
         </div>
 
-        {/* Coordinates */}
-        <div className="space-y-3">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
-            Latitude
-          </label>
-          <input
-            type="number"
-            step="any"
-            name="latitude"
-            value={formData.latitude}
-            onChange={handleChange}
-            className={`w-full bg-white/5 border ${errors.latitude ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-4 text-sm text-white placeholder:text-reflect-muted/20 focus:outline-none focus:border-blue-500 transition-all duration-300`}
-            placeholder="e.g. 40.7128"
-          />
-        </div>
+        {/* Coordinates Group */}
+        <div className="md:col-span-2 grid grid-cols-2 gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+          <div className="space-y-1.5">
+            <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+              Latitude
+            </label>
+            <input
+              type="number"
+              step="any"
+              name="latitude"
+              value={formData.latitude}
+              onChange={handleChange}
+              className={`w-full bg-white/[0.03] border ${errors.latitude ? 'border-red-500/30' : 'border-white/10'} rounded-xl px-4 py-2 text-[13px] text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-all duration-300 font-medium`}
+              placeholder="e.g. 40.7128"
+            />
+          </div>
 
-        <div className="space-y-3">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
-            Longitude
-          </label>
-          <input
-            type="number"
-            step="any"
-            name="longitude"
-            value={formData.longitude}
-            onChange={handleChange}
-            className={`w-full bg-white/5 border ${errors.longitude ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-4 text-sm text-white placeholder:text-reflect-muted/20 focus:outline-none focus:border-blue-500 transition-all duration-300`}
-            placeholder="e.g. -74.0060"
-          />
+          <div className="space-y-1.5">
+            <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+              Longitude
+            </label>
+            <input
+              type="number"
+              step="any"
+              name="longitude"
+              value={formData.longitude}
+              onChange={handleChange}
+              className={`w-full bg-white/[0.03] border ${errors.longitude ? 'border-red-500/30' : 'border-white/10'} rounded-xl px-4 py-2 text-[13px] text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-all duration-300 font-medium`}
+              placeholder="e.g. -74.0060"
+            />
+          </div>
         </div>
 
         {/* Status */}
-        <div className="space-y-3">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
             Status
           </label>
           <select
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-all duration-300 cursor-pointer"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2.5 text-[13px] text-white focus:outline-none focus:border-brand-primary transition-all duration-300 cursor-pointer font-medium"
           >
             <option value="Active" className="bg-midnight">Active</option>
             <option value="Inactive" className="bg-midnight">Inactive</option>
@@ -149,8 +151,8 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
         </div>
 
         {/* Power Output */}
-        <div className="space-y-3">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
             Power Output (kW)
           </label>
           <input
@@ -159,21 +161,21 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
             name="powerOutput"
             value={formData.powerOutput}
             onChange={handleChange}
-            className={`w-full bg-white/5 border ${errors.powerOutput ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-4 text-sm text-white placeholder:text-reflect-muted/20 focus:outline-none focus:border-blue-500 transition-all duration-300`}
+            className={`w-full bg-white/[0.03] border ${errors.powerOutput ? 'border-red-500/30' : 'border-white/10'} rounded-xl px-4 py-2.5 text-[13px] text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-all duration-300 font-medium`}
             placeholder="e.g. 50.0"
           />
         </div>
 
         {/* Connector Type */}
-        <div className="space-y-3 md:col-span-2">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
+        <div className="space-y-1.5 md:col-span-2">
+          <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
             Connector Type
           </label>
           <select
             name="connectorType"
             value={formData.connectorType}
             onChange={handleChange}
-            className={`w-full bg-white/5 border ${errors.connectorType ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-all duration-300 cursor-pointer`}
+            className={`w-full bg-white/[0.03] border ${errors.connectorType ? 'border-red-500/30' : 'border-white/10'} rounded-xl px-4 py-2.5 text-[13px] text-white focus:outline-none focus:border-brand-primary transition-all duration-300 cursor-pointer font-medium`}
           >
             <option value="" className="bg-midnight">Select a connector type</option>
             {connectorTypes.map((type) => (
@@ -184,22 +186,22 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
       </div>
 
       {/* Amenities */}
-      <div className="space-y-4">
-        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-reflect-muted">
+      <div className="space-y-3">
+        <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
           Amenities
         </label>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           {amenitiesOptions.map((amenity) => (
             <button
               key={amenity}
               type="button"
               onClick={() => handleAmenityChange(amenity)}
-              className={`px-5 py-2.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest border transition-all duration-300 flex items-center gap-2.5 ${formData.amenities.includes(amenity)
-                ? "bg-blue-500/10 border-blue-500/30 text-blue-400 shadow-lg shadow-blue-500/10"
-                : "bg-white/5 border-white/10 text-reflect-muted hover:bg-white/10 hover:border-white/20"
+              className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 flex items-center gap-2 ${formData.amenities.includes(amenity)
+                ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-lg shadow-brand-primary/5"
+                : "bg-white/5 border-white/10 text-slate-500 hover:bg-white/10 hover:border-white/20"
                 }`}
             >
-              {formData.amenities.includes(amenity) && <Check size={14} />}
+              {formData.amenities.includes(amenity) && <Check size={12} />}
               {amenity}
             </button>
           ))}
@@ -207,17 +209,17 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
       </div>
 
       {/* Form Actions */}
-      <div className="pt-10 flex justify-end gap-4 border-t border-white/5">
+      <div className="pt-6 flex justify-end gap-3 border-t border-white/5">
         <button
           type="button"
           onClick={onCancel}
-          className="btn-secondary !rounded-full px-8 py-3.5 text-[13px] font-bold uppercase tracking-widest"
+          className="btn-secondary !rounded-full px-6 py-2.5 text-[11px] font-bold uppercase tracking-widest"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="btn-primary !rounded-full px-10 py-3.5 text-[15px] font-bold uppercase tracking-widest shadow-2xl shadow-blue-500/20"
+          className="btn-primary !rounded-full px-8 py-2.5 text-[11px] font-bold uppercase tracking-widest shadow-2xl shadow-brand-primary/20"
         >
           {initialData ? "Update Station" : "Add Station"}
         </button>

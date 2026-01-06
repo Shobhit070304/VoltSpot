@@ -114,24 +114,22 @@ const Home = () => {
     const connectorTypes = [...new Set(stations.map((s) => s.connectorType))];
 
     return (
-        <div className="min-h-screen bg-midnight text-white pt-32 pb-32 px-8 relative overflow-hidden">
-            {/* Hero Section with Grid Background */}
-            <div className="absolute top-0 left-0 w-full h-[600px] bg-grid opacity-[0.07] [mask-image:linear-gradient(to_bottom,black,transparent)] pointer-events-none" />
+        <div className="min-h-screen bg-midnight text-white pt-32 pb-24 px-6 relative overflow-hidden">
+            {/* Background Grid */}
+            <div className="absolute inset-0 bg-grid opacity-20 animate-move-grid" />
+            <div className="absolute inset-0 grid-dots opacity-40 animate-move-grid [animation-duration:10s]" />
 
-            {/* Background Glows */}
-            <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-brand-primary/5 blur-[160px] pointer-events-none" />
-            <div className="fixed bottom-0 right-0 w-[600px] h-[600px] bg-brand-secondary/5 blur-[140px] pointer-events-none" />
+            {/* Aurora Background Effect */}
+            <div className="fixed inset-0 bg-aurora pointer-events-none opacity-20" />
 
             <main className="relative z-10 max-w-6xl mx-auto">
-
                 <Header />
 
-                <div className="mb-8">
+                <div className="mb-12">
                     <QuickStats stats={stats} />
                 </div>
 
-
-                <div className="space-y-12">
+                <div className="space-y-10">
                     <SearchFilterCard
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -147,23 +145,23 @@ const Home = () => {
 
                     <div className="flex items-center justify-between mb-8">
                         <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
-                            <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">
+                            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
                                 {stations.length} Stations Found
                             </h2>
                         </div>
-                        <div className="flex items-center gap-2 p-1 bg-white/5 rounded-xl border border-white/10">
+                        <div className="flex items-center gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10">
                             <button
                                 onClick={() => setViewMode("grid")}
-                                className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" : "text-slate-500 hover:text-white"}`}
+                                className={`p-1.5 rounded-lg transition-all ${viewMode === "grid" ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" : "text-slate-500 hover:text-white"}`}
                             >
-                                <LayoutGrid size={16} />
+                                <LayoutGrid size={14} />
                             </button>
                             <button
                                 onClick={() => setViewMode("list")}
-                                className={`p-2 rounded-lg transition-all ${viewMode === "list" ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" : "text-slate-500 hover:text-white"}`}
+                                className={`p-1.5 rounded-lg transition-all ${viewMode === "list" ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" : "text-slate-500 hover:text-white"}`}
                             >
-                                <List size={16} />
+                                <List size={14} />
                             </button>
                         </div>
                     </div>
@@ -171,24 +169,25 @@ const Home = () => {
                     {loading ? (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                             {[1, 2, 3, 4].map((i) => (
-                                <div key={i} className="glass-panel h-40 animate-pulse bg-white/[0.02]" />
+                                <div key={i} className="glass-panel h-40 animate-pulse bg-white/[0.02] border-white/5" />
                             ))}
                         </div>
                     ) : (
-                        <div className="glass-panel overflow-hidden border-white/5">
-                            <div className="p-8 border-t border-white/5">
-                                <Pagination
-                                    currentPage={currentPage}
-                                    totalPages={paginatedData.totalPages}
-                                    setCurrentPage={setCurrentPage}
-                                />
-                            </div>
+                        <div className="space-y-8">
                             <StationsList
                                 stations={paginatedData.currentItems}
                                 viewMode={viewMode}
                                 handleSaveStation={handleSaveStation}
                                 user={user}
                             />
+
+                            <div className="flex justify-center pt-8">
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={paginatedData.totalPages}
+                                    setCurrentPage={setCurrentPage}
+                                />
+                            </div>
                         </div>
                     )}
                 </div>

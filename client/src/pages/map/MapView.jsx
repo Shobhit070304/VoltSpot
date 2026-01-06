@@ -92,8 +92,8 @@ const MapView = ({ station }) => {
         13,
       );
 
-      // Dark Matter tiles for Reflect aesthetic
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      // Voyager tiles for a more "natural" theme as requested
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 20
@@ -104,7 +104,7 @@ const MapView = ({ station }) => {
       const markerColor = st.status === "Active" ? "#10b981" : "#f59e0b";
       const icon = L.divIcon({
         className: "custom-div-icon",
-        html: `<div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #030014; box-shadow: 0 0 15px ${markerColor}66;"></div>`,
+        html: `<div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 15px ${markerColor}66;"></div>`,
         iconSize: [14, 14],
         iconAnchor: [7, 7],
       });
@@ -112,17 +112,17 @@ const MapView = ({ station }) => {
       const marker = L.marker([st.latitude, st.longitude], { icon }).addTo(
         mapRef.current,
       ).bindPopup(`
-          <div class="p-3 bg-midnight text-white rounded-xl border border-white/10 min-w-[200px]">
-            <h3 class="font-bold text-sm mb-1">${st.name}</h3>
-            <p class="text-[10px] text-reflect-muted mb-3 flex items-center gap-1">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <div class="p-3 bg-white text-slate-900 rounded-xl border border-slate-200 shadow-2xl min-w-[200px]">
+            <h3 class="font-bold text-[13px] mb-1 text-slate-900 tracking-tight">${st.name}</h3>
+            <p class="text-[10px] text-slate-500 mb-3 flex items-center gap-1 font-medium">
+              <svg class="w-3 h-3 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
               ${st.location}
             </p>
             <div class="flex items-center gap-2 mb-3">
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${st.status === "Active" ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500"}">${st.status}</span>
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-500/10 text-blue-500">${st.powerOutput} kW</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${st.status === "Active" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"}">${st.status}</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-blue-500/10 text-blue-600 border border-blue-500/20">${st.powerOutput} kW</span>
             </div>
-            <a href="/station/${st._id}" class="text-[10px] font-bold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+            <a href="/station/${st._id}" class="text-[10px] font-bold uppercase tracking-widest text-brand-primary hover:text-brand-secondary transition-colors flex items-center gap-1.5">
               View details <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
           </div>
@@ -163,55 +163,59 @@ const MapView = ({ station }) => {
 
   return (
     <div className="min-h-screen bg-midnight text-white pt-32 pb-24 px-6 relative overflow-hidden">
-      {/* Aurora Background Effect */}
-      <div className="fixed inset-0 bg-aurora pointer-events-none opacity-30" />
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-grid opacity-20 animate-move-grid" />
+      <div className="absolute inset-0 grid-dots opacity-40 animate-move-grid [animation-duration:10s]" />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+      {/* Aurora Background Effect */}
+      <div className="fixed inset-0 bg-aurora pointer-events-none opacity-20" />
+
+      <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header Section */}
-        <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 animate-slide-up">
+        <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-8 animate-slide-up">
           <div>
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-reflect-muted mb-4 uppercase tracking-widest">
-              <Sparkles className="h-3 w-3 mr-2 text-blue-500" />
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold text-slate-500 mb-4 uppercase tracking-widest">
+              <Sparkles className="h-3 w-3 mr-2 text-brand-primary" />
               Interactive Map
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-              Explore the <span className="text-reflect-muted">Network.</span>
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
+              Explore the <span className="text-slate-500">Network.</span>
             </h1>
           </div>
           <Link
             to="/stations"
-            className="btn-secondary flex items-center gap-2"
+            className="btn-secondary flex items-center gap-2 !rounded-full px-6 py-2.5 text-[11px] font-bold uppercase tracking-widest"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={16} />
             Back to stations
           </Link>
         </header>
 
         {/* Map Container */}
-        <div className="relative glass-panel overflow-hidden h-[calc(100vh-350px)] min-h-[500px] animate-fade-in">
+        <div className="relative glass-panel overflow-hidden h-[calc(100vh-350px)] min-h-[500px] animate-fade-in border-white/5">
           {loading ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
-              <div className="animate-spin rounded-full h-10 w-10 border-2 border-white/10 border-t-blue-500 mb-4"></div>
-              <p className="text-xs text-reflect-muted font-medium tracking-widest uppercase">Loading map data</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/10 border-t-brand-primary mb-4"></div>
+              <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">Loading map data</p>
             </div>
           ) : error ? (
             <div className="absolute inset-0 flex items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
-              <div className="glass-panel p-8 max-w-md text-center">
+              <div className="glass-panel p-8 max-w-md text-center border-white/10">
                 <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-4" />
                 <h3 className="text-lg font-bold text-white mb-2">Map Error</h3>
-                <p className="text-sm text-reflect-muted mb-6">{error}</p>
-                <button onClick={() => window.location.reload()} className="btn-primary w-full">Retry</button>
+                <p className="text-[13px] text-slate-500 mb-6">{error}</p>
+                <button onClick={() => window.location.reload()} className="btn-primary w-full py-3 text-[11px] font-bold uppercase tracking-widest">Retry</button>
               </div>
             </div>
           ) : stations.length === 0 ? (
             <div className="absolute inset-0 flex items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
               <div className="text-center">
-                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/10">
-                  <MapPin className="h-8 w-8 text-reflect-muted" />
+                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/10">
+                  <MapPin className="h-7 w-7 text-slate-500" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">No Stations Found</h3>
-                <p className="text-reflect-muted mb-8">There are no charging stations to display right now.</p>
-                <Link to="/stations" className="btn-primary">Browse List</Link>
+                <h3 className="text-xl font-bold text-white mb-2 tracking-tight">No Stations Found</h3>
+                <p className="text-[13px] text-slate-500 mb-8">There are no charging stations to display right now.</p>
+                <Link to="/stations" className="btn-primary px-8 py-3 text-[13px] font-bold uppercase tracking-widest">Browse List</Link>
               </div>
             </div>
           ) : null}
@@ -219,28 +223,28 @@ const MapView = ({ station }) => {
           <div id="map" className="h-full w-full z-0"></div>
 
           {/* Map Controls Overlay */}
-          <div className="absolute bottom-8 right-8 flex flex-col gap-3 z-10">
+          <div className="absolute bottom-6 right-6 flex flex-col gap-3 z-10">
             <button
               onClick={locateUser}
-              className="p-3 bg-midnight/80 backdrop-blur-md border border-white/10 rounded-xl text-white hover:bg-white/10 transition-all shadow-2xl"
+              className="p-2.5 bg-midnight/80 backdrop-blur-md border border-white/10 rounded-xl text-white hover:bg-white/10 transition-all shadow-2xl"
               title="Locate Me"
             >
-              <LocateFixed size={20} />
+              <LocateFixed size={18} />
             </button>
             <div className="flex flex-col bg-midnight/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-2xl">
               <button
                 onClick={zoomIn}
-                className="p-3 text-white hover:bg-white/10 transition-all border-b border-white/5"
+                className="p-2.5 text-white hover:bg-white/10 transition-all border-b border-white/5"
                 title="Zoom In"
               >
-                <ZoomIn size={20} />
+                <ZoomIn size={18} />
               </button>
               <button
                 onClick={zoomOut}
-                className="p-3 text-white hover:bg-white/10 transition-all"
+                className="p-2.5 text-white hover:bg-white/10 transition-all"
                 title="Zoom Out"
               >
-                <ZoomOut size={20} />
+                <ZoomOut size={18} />
               </button>
             </div>
           </div>
@@ -249,7 +253,7 @@ const MapView = ({ station }) => {
 
       <style dangerouslySetInnerHTML={{
         __html: `
-        .leaflet-container { background: #030014 !important; }
+        .leaflet-container { background: #eef2f7 !important; }
         .custom-popup .leaflet-popup-content-wrapper {
           background: transparent !important;
           box-shadow: none !important;

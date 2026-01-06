@@ -27,7 +27,7 @@ const Dashboard = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   const stats = useMemo(() => {
     return {
@@ -139,74 +139,78 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-midnight text-white pt-40 pb-32 px-8 relative overflow-hidden">
-      {/* Aurora Background Effect */}
-      <div className="fixed inset-0 bg-aurora pointer-events-none opacity-30" />
+    <div className="min-h-screen bg-midnight text-white pt-32 pb-24 px-6 relative overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-grid opacity-20 animate-move-grid" />
+      <div className="absolute inset-0 grid-dots opacity-40 animate-move-grid [animation-duration:10s]" />
 
-      <main className="relative z-10 max-w-7xl mx-auto">
+      {/* Aurora Background Effect */}
+      <div className="fixed inset-0 bg-aurora pointer-events-none opacity-20" />
+
+      <main className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="animate-slide-up">
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-bold text-reflect-muted mb-6 uppercase tracking-[0.2em]">
-              <Sparkles className="h-3 w-3 mr-2 text-blue-500" />
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold text-slate-500 mb-5 uppercase tracking-[0.2em]">
+              <Sparkles className="h-2.5 w-2.5 mr-2 text-brand-primary" />
               Network Management
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
-              Your <span className="text-reflect-muted opacity-40">Dashboard.</span>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">
+              Your <span className="text-slate-500 opacity-40">Dashboard.</span>
             </h1>
           </div>
 
-          <div className="flex flex-wrap gap-4 animate-fade-in">
+          <div className="flex flex-wrap gap-3 animate-fade-in">
             <button
               onClick={handleShowAddForm}
-              className="btn-primary flex items-center gap-3 !rounded-full px-8 py-3.5 text-[13px] font-bold uppercase tracking-widest"
+              className="btn-primary flex items-center gap-2 !rounded-full px-6 py-2.5 text-[11px] font-bold uppercase tracking-widest"
             >
-              <Plus size={18} />
+              <Plus size={16} />
               Add Station
             </button>
-            <Link to="/map" className="btn-secondary flex items-center gap-3 !rounded-full px-8 py-3.5 text-[13px] font-bold uppercase tracking-widest">
-              <MapPin size={18} />
+            <Link to="/map" className="btn-secondary flex items-center gap-2 !rounded-full px-6 py-2.5 text-[11px] font-bold uppercase tracking-widest">
+              <MapPin size={16} />
               Map View
             </Link>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 animate-fade-in">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 animate-fade-in">
           <StatCard
-            icon={<Zap size={20} className="text-blue-500" />}
+            icon={<Zap size={16} className="text-brand-primary" />}
             value={stats.totalStations}
             label="Total Stations"
             description="Across your network"
           />
           <StatCard
-            icon={<CheckCircle size={20} className="text-emerald-500" />}
+            icon={<CheckCircle size={16} className="text-emerald-500" />}
             value={stats.activeStations}
             label="Active Now"
             description="Ready for charging"
           />
           <StatCard
-            icon={<Battery size={20} className="text-purple-500" />}
+            icon={<Battery size={16} className="text-purple-500" />}
             value={`${Math.round(stats.totalPower)} kW`}
             label="Total Capacity"
             description="Combined power"
           />
           <StatCard
-            icon={<Star size={20} className="text-blue-500" />}
+            icon={<Star size={16} className="text-brand-primary" />}
             value={stats.avgRating.toFixed(1)}
             label="Avg Rating"
             description="Network performance"
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-fade-in">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
           {/* Main Content Area */}
-          <div className="lg:col-span-8 space-y-12">
+          <div className="lg:col-span-8 space-y-8">
             <div className="glass-panel overflow-hidden border-white/5">
-              <div className="px-10 py-8 border-b border-white/5 flex items-center justify-between">
-                <h2 className="text-xl font-bold tracking-tight text-white">Your Stations</h2>
-                <Link to="/stations" className="text-[11px] font-bold uppercase tracking-widest text-reflect-muted hover:text-white flex items-center gap-2 transition-colors">
-                  View all <ArrowRight size={14} />
+              <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
+                <h2 className="text-lg font-bold tracking-tight text-white">Your Stations</h2>
+                <Link to="/stations" className="text-[9px] font-bold uppercase tracking-widest text-slate-500 hover:text-white flex items-center gap-2 transition-colors">
+                  View all <ArrowRight size={12} />
                 </Link>
               </div>
               <ChargingStations
@@ -214,7 +218,7 @@ const Dashboard = () => {
                 setStations={setStations}
                 onEdit={handleEdit}
               />
-              <div className="p-8 border-t border-white/5">
+              <div className="p-6 border-t border-white/5">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={paginatedData.totalPages}
@@ -225,18 +229,18 @@ const Dashboard = () => {
           </div>
 
           {/* Sidebar Area */}
-          <div className="lg:col-span-4 space-y-12">
-            <div className="glass-panel p-8 border-white/5">
+          <div className="lg:col-span-4 space-y-8">
+            <div className="glass-panel p-6 border-white/5">
               <RecentlyViewed />
             </div>
 
-            <div className="glass-panel p-8 bg-reflect-gradient/5 border-blue-500/20">
-              <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-widest">Need help?</h3>
-              <p className="text-xs text-reflect-muted mb-6 leading-relaxed font-medium">
+            <div className="glass-panel p-6 bg-brand-primary/[0.02] border-brand-primary/10">
+              <h3 className="text-[10px] font-bold text-white mb-2 uppercase tracking-widest">Need help?</h3>
+              <p className="text-[11px] text-slate-500 mb-5 leading-relaxed font-medium">
                 Manage your charging infrastructure with ease. Add new stations, update existing ones, or monitor performance.
               </p>
-              <button className="text-[11px] font-bold uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2">
-                Read documentation <ArrowRight size={12} />
+              <button className="text-[10px] font-bold uppercase tracking-widest text-brand-primary hover:text-brand-secondary transition-colors flex items-center gap-2">
+                Read documentation <ArrowRight size={10} />
               </button>
             </div>
           </div>
@@ -247,13 +251,13 @@ const Dashboard = () => {
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-midnight/80 backdrop-blur-sm" onClick={() => setShowForm(false)} />
-          <div className="relative w-full max-w-lg glass-panel p-8 animate-slide-up">
+          <div className="relative w-full max-w-lg glass-panel p-8 animate-slide-up border-white/10">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-bold text-white">
+              <h3 className="text-lg font-bold text-white tracking-tight">
                 {editingStation ? "Edit Station" : "Add New Station"}
               </h3>
-              <button onClick={() => setShowForm(false)} className="text-reflect-muted hover:text-white transition-colors">
-                <Plus className="rotate-45" size={24} />
+              <button onClick={() => setShowForm(false)} className="text-slate-500 hover:text-white transition-colors">
+                <Plus className="rotate-45" size={20} />
               </button>
             </div>
             <StationForm
@@ -278,18 +282,18 @@ const Dashboard = () => {
 };
 
 const StatCard = ({ icon, value, label, description }) => (
-  <div className="glass-panel p-6 flex flex-col gap-3 hover:bg-white/[0.04] transition-all duration-300">
+  <div className="glass-panel p-5 flex flex-col gap-3 hover:bg-white/[0.04] transition-all duration-300 border-white/5">
     <div className="p-2 rounded-lg bg-white/5 w-fit">
       {icon}
     </div>
     <div>
-      <p className="text-xs font-medium text-reflect-muted uppercase tracking-wider mb-1">
+      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1">
         {label}
       </p>
-      <p className="text-2xl font-bold text-white mb-1">
+      <p className="text-xl font-bold text-white mb-0.5">
         {value}
       </p>
-      <p className="text-[10px] text-reflect-muted leading-relaxed">
+      <p className="text-[10px] text-slate-600 leading-relaxed font-medium">
         {description}
       </p>
     </div>

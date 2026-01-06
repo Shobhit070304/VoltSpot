@@ -1,228 +1,200 @@
 import { Link } from "react-router-dom";
 import {
   Zap,
-  Shield,
-  ArrowRight,
-  Star,
+  ChevronRight,
+  BarChart3,
+  Layers,
   Search,
+  Star,
   Bookmark,
-  User,
   MapIcon,
-  Sparkles,
-  Globe,
-  Smartphone,
-  Cpu,
-  Layout,
-  Activity,
+  Shield,
+  User,
 } from "lucide-react";
+import heroCover from "/C:/Users/Shobhit sharma/.gemini/antigravity/brain/afba9dfa-0750-4882-b6fe-14012d81c85a/voltspot_hero_cover_1767700389842.png";
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-midnight text-white overflow-x-hidden relative">
-      {/* Hero Section with Grid Background */}
-      <section className="relative pt-40 pb-24 px-8 overflow-hidden">
-        {/* Grid Pattern - Only for Hero */}
-        <div className="absolute inset-0 bg-grid opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
+    <div className="min-h-screen bg-midnight text-slate-200 selection:bg-brand-primary/30">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+        {/* Animated Grid Background */}
+        <div className="absolute inset-0 bg-grid opacity-80 animate-move-grid" />
+        <div className="absolute inset-0 grid-dots opacity-80 animate-move-grid [animation-duration:10s]" />
 
         {/* Background Glows */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-brand-primary/10 blur-[160px] pointer-events-none" />
-        <div className="absolute top-1/4 -right-1/4 w-[600px] h-[600px] bg-brand-secondary/10 blur-[140px] pointer-events-none animate-pulse-subtle" />
-        <div className="absolute bottom-0 -left-1/4 w-[600px] h-[600px] bg-brand-accent/10 blur-[140px] pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-brand-primary/10 blur-[120px] pointer-events-none" />
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-secondary/10 blur-[100px] pointer-events-none animate-pulse-subtle" />
 
-        <div className="max-w-6xl mx-auto text-center relative z-10 animate-slide-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-[0.3em] text-brand-accent mb-8 shadow-2xl shadow-brand-accent/10">
-            <Sparkles className="h-3 w-3" />
-            The future of EV charging
+        <div className="max-w-5xl mx-auto relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-md mb-6 animate-fade-in">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-accent"></span>
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-brand-accent">Simplifying EV Infrastructure</span>
           </div>
 
-          <h1 className="text-4xl md:text-7xl font-bold tracking-tighter mb-6 leading-[1.1] lg:px-20">
-            Find your next charge <br className="hidden md:block" />
-            <span className="text-gradient">with absolute ease.</span>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 animate-slide-up leading-[1.1]">
+            Find your next <br />
+            <span className="text-gradient">charge in seconds.</span>
           </h1>
 
-          <p className="text-sm md:text-base text-slate-400 mb-10 max-w-lg mx-auto leading-relaxed font-medium">
-            VoltSpot is the premium platform to discover, review, and manage EV charging infrastructure.
-            Join the global network making electric mobility seamless.
+          <p className="text-base md:text-lg text-muted max-w-2xl mx-auto mb-10 animate-slide-up [animation-delay:0.1s] leading-relaxed">
+            VoltSpot is the simple way to discover and manage charging stations.
+            Built for the modern driver who values speed and reliability.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-            <Link to="/register" className="btn-primary flex items-center gap-3 text-[11px] font-bold uppercase tracking-widest px-8 py-3.5 w-full sm:w-auto !rounded-full">
-              Get started
-              <ArrowRight size={14} />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up [animation-delay:0.2s]">
+            <Link to="/register" className="btn-primary group w-full sm:w-auto flex items-center justify-center">
+              Get Started Free
+              <ChevronRight className="inline-block ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link to="/stations" className="btn-secondary text-[11px] font-bold uppercase tracking-widest px-8 py-3.5 w-full sm:w-auto !rounded-full">
-              Explore network
+            <Link to="/stations" className="btn-secondary w-full sm:w-auto flex items-center justify-center">
+              Explore Network
             </Link>
           </div>
 
-          {/* Floating Dashboard Preview */}
-          <div className="relative max-w-4xl mx-auto group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
-            <div className="relative glass-panel border-white/10 overflow-hidden shadow-2xl">
-              <div className="bg-white/5 border-b border-white/5 px-4 py-2 flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                  <div className="w-2 h-2 rounded-full bg-amber-500/50" />
-                  <div className="w-2 h-2 rounded-full bg-emerald-500/50" />
+          {/* Hero Cover Image - Premium Mixed Visual */}
+          <div className="mt-20 relative animate-slide-up [animation-delay:0.3s]">
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary/20 via-brand-secondary/20 to-brand-accent/20 rounded-2xl blur-2xl opacity-50" />
+            <div className="glass-panel p-2 max-w-4xl mx-auto relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent z-10 opacity-60" />
+              <img
+                src={heroCover}
+                alt="VoltSpot Hero"
+                className="w-full h-auto rounded-lg shadow-2xl transition-transform duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute bottom-6 left-6 z-20 text-left">
+                <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[9px] font-bold uppercase tracking-widest text-white mb-2">
+                  Live Network Status
                 </div>
-                <div className="h-4 w-px bg-white/10 mx-2" />
-                <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">voltspot.app / dashboard</div>
-              </div>
-              <div className="p-6 grid grid-cols-12 gap-4 bg-midnight/50">
-                <div className="col-span-3 space-y-3">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-8 bg-white/5 rounded-lg border border-white/5" />
-                  ))}
-                </div>
-                <div className="col-span-9 space-y-4">
-                  <div className="grid grid-cols-3 gap-3">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="h-20 bg-white/5 rounded-xl border border-white/5 p-3">
-                        <div className="w-6 h-6 rounded-lg bg-brand-primary/10 mb-2" />
-                        <div className="h-2 w-12 bg-white/10 rounded" />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="h-40 bg-white/5 rounded-xl border border-white/5 p-4 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-grid opacity-10" />
-                    <div className="relative h-full w-full flex items-end gap-2">
-                      {[40, 70, 45, 90, 65, 80, 55, 95].map((h, i) => (
-                        <div key={i} style={{ height: `${h}%` }} className="flex-1 bg-brand-primary/20 border-t border-brand-primary/40 rounded-t-sm" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <div className="text-white font-bold text-lg tracking-tight">85% Charged</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-8 relative border-y border-white/5 bg-white/[0.01] backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12">
-          {[
-            { label: "Charging Points", value: "200+", color: "text-brand-accent" },
-            { label: "Active Stations", value: "69+", color: "text-brand-primary" },
-            { label: "Cities Covered", value: "20+", color: "text-brand-secondary" },
-            { label: "User Reviews", value: "300+", color: "text-brand-primary" }
-
-          ].map((stat, i) => (
-            <div key={i} className="text-center group">
-              <p className={`text-2xl md:text-3xl font-bold tracking-tighter mb-1 transition-transform group-hover:scale-110 duration-500 ${stat.color}`}>{stat.value}</p>
-              <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-500">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Feature Grid */}
-      <section className="py-24 px-8 relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-4">Built for the modern driver.</h2>
-            <p className="text-sm text-slate-400 max-w-md mx-auto font-medium">Every tool you need to manage your EV lifestyle in one minimalist interface.</p>
+      {/* Modern Driver Section - NEW */}
+      <section className="py-24 px-6 relative overflow-hidden bg-white/[0.01]">
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Built for the modern driver.</h2>
+            <p className="text-muted text-sm max-w-lg mx-auto">Every tool you need to manage your EV lifestyle in one minimalist interface.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              {
-                icon: <Search className="text-brand-primary" size={20} />,
-                title: "Smart Search",
-                description: "Find stations by location, speed, or connector type with our advanced filters."
-              },
-              {
-                icon: <Star className="text-brand-secondary" size={20} />,
-                title: "Trusted Reviews",
-                description: "Real feedback from the EV community to help you choose the best charging spots."
-              },
-              {
-                icon: <Bookmark className="text-brand-accent" size={20} />,
-                title: "Saved Stations",
-                description: "Keep track of your favorite locations for quick access on your next trip."
-              },
-              {
-                icon: <MapIcon className="text-brand-primary" size={20} />,
-                title: "Live Map",
-                description: "Visualize all nearby charging points on an interactive, real-time map."
-              },
-              {
-                icon: <Shield className="text-brand-secondary" size={20} />,
-                title: "Reliability Reports",
-                description: "Stay informed about station status and report issues to help others."
-              },
-              {
-                icon: <User className="text-brand-accent" size={20} />,
-                title: "User Dashboard",
-                description: "Manage your own stations, reviews, and account settings in one place."
-              }
+              { icon: Search, title: "Smart Search", desc: "Find stations by location, speed, or connector type with our advanced filters." },
+              { icon: Star, title: "Trusted Reviews", desc: "Real feedback from the EV community to help you choose the best charging spots." },
+              { icon: Bookmark, title: "Saved Stations", desc: "Keep track of your favorite locations for quick access on your next trip." },
+              { icon: MapIcon, title: "Live Map", desc: "Visualize all nearby charging points on an interactive, real-time map." },
+              { icon: Shield, title: "Reliability Reports", desc: "Stay informed about station status and report issues to help others." },
+              { icon: User, title: "User Dashboard", desc: "Manage your own stations, reviews, and account settings in one place." }
             ].map((feature, i) => (
-              <div key={i} className="glass-panel p-8 hover:bg-white/[0.03] transition-all duration-500 group border-white/5 hover:border-brand-primary/20">
-                <div className="mb-6 p-3 rounded-xl bg-white/5 w-fit group-hover:scale-110 group-hover:bg-brand-primary/10 transition-all duration-500">
-                  {feature.icon}
+              <div key={i} className="bento-card group hover:bg-white/[0.04] transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-6 group-hover:bg-brand-primary/10 group-hover:border-brand-primary/20 transition-all">
+                  <feature.icon className="w-5 h-5 text-slate-400 group-hover:text-brand-primary transition-colors" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 tracking-tight group-hover:text-brand-primary transition-colors">{feature.title}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed font-medium">{feature.description}</p>
+                <h3 className="text-lg font-bold mb-3 text-white">{feature.title}</h3>
+                <p className="text-muted text-[13px] leading-relaxed">
+                  {feature.desc}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it Works */}
-      <section className="py-24 px-8 bg-white/[0.01] border-y border-white/5 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-grid opacity-5" />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-10">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Simple by design.</h2>
-              <div className="space-y-8">
-                {[
-                  { icon: <Globe size={18} />, title: "Discover", text: "Browse our global network of verified charging stations.", color: "text-brand-primary" },
-                  { icon: <Smartphone size={18} />, title: "Navigate", text: "Get real-time directions and status updates on the go.", color: "text-brand-secondary" },
-                  { icon: <Cpu size={18} />, title: "Manage", text: "Track your charging history and manage your own infrastructure.", color: "text-brand-accent" },
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-5 group">
-                    <div className={`flex-shrink-0 w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${step.color}`}>
-                      {step.icon}
-                    </div>
-                    <div>
-                      <h4 className="text-base font-bold mb-1.5 tracking-tight">{step.title}</h4>
-                      <p className="text-xs text-slate-400 leading-relaxed font-medium">{step.text}</p>
-                    </div>
-                  </div>
-                ))}
+      {/* Stats Section - Simplified */}
+      <section className="py-16 px-6 relative border-y border-white/[0.03]">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { label: "Stations", value: "2,400+" },
+            { label: "Users", value: "15k+" },
+            { label: "Cities", value: "42+" },
+            { label: "Uptime", value: "99.9%" }
+          ].map((stat, i) => (
+            <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
+              <div className="text-[10px] uppercase tracking-widest text-muted font-bold">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features Section - Bento Grid Scaled Down */}
+      <section className="py-20 px-6 relative">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Everything you need.</h2>
+            <p className="text-muted text-sm max-w-lg mx-auto">Simple tools to keep you moving without the clutter.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 bento-card group">
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Zap className="w-24 h-24 text-brand-primary" />
+              </div>
+              <div className="relative z-10">
+                <div className="w-8 h-8 rounded-lg bg-brand-primary/10 flex items-center justify-center mb-4">
+                  <Zap className="w-4 h-4 text-brand-primary" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Precision Mapping</h3>
+                <p className="text-muted text-sm leading-relaxed max-w-sm">
+                  Find the exact location of any charging point with real-time status updates.
+                </p>
               </div>
             </div>
-            <div className="relative group">
-              <div className="absolute inset-0 bg-brand-primary/20 blur-[120px] rounded-full group-hover:bg-brand-secondary/20 transition-colors duration-1000" />
-              <div className="relative glass-panel aspect-video flex items-center justify-center border-white/10 overflow-hidden group-hover:border-white/20 transition-all duration-500">
-                <div className="p-10 text-center animate-float">
-                  <Zap size={48} className="text-brand-accent mx-auto mb-6 animate-pulse" />
-                  <p className="text-xl font-bold tracking-tighter">Interactive Experience</p>
-                  <p className="text-xs text-slate-400 mt-3 font-medium">Visualizing the future of energy.</p>
-                </div>
+
+            <div className="bento-card group">
+              <div className="w-8 h-8 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
+                <BarChart3 className="w-4 h-4 text-brand-accent" />
               </div>
+              <h3 className="text-lg font-bold mb-2">Smart Analytics</h3>
+              <p className="text-muted text-sm leading-relaxed">
+                Track your usage and optimize your charging schedule effortlessly.
+              </p>
+            </div>
+
+            <div className="bento-card group">
+              <div className="w-8 h-8 rounded-lg bg-brand-secondary/10 flex items-center justify-center mb-4">
+                <Layers className="w-4 h-4 text-brand-secondary" />
+              </div>
+              <h3 className="text-lg font-bold mb-2">Verified Data</h3>
+              <p className="text-muted text-sm leading-relaxed">
+                Community-driven insights ensure you always have accurate info.
+              </p>
+            </div>
+
+            <div className="md:col-span-2 bento-card group flex items-center justify-between">
+              <div className="relative z-10">
+                <h3 className="text-lg font-bold mb-2">Ready to start?</h3>
+                <p className="text-muted text-sm">Join thousands of drivers today.</p>
+              </div>
+              <Link to="/register" className="btn-primary">Sign Up Now</Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-32 px-8 relative">
-        <div className="max-w-4xl mx-auto glass-panel p-16 md:p-24 text-center relative overflow-hidden border-white/10">
-          <div className="absolute inset-0 bg-brand-gradient opacity-10 pointer-events-none" />
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-primary/20 blur-[100px] rounded-full" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-brand-secondary/20 blur-[100px] rounded-full" />
-
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-[1.1]">
-              Ready to simplify <br /> your experience?
-            </h2>
-            <Link to="/register" className="btn-primary text-[13px] font-bold uppercase tracking-widest px-10 py-4 inline-flex items-center gap-3 !rounded-full">
-              Get started now
-              <ArrowRight size={18} />
-            </Link>
+      {/* CTA Section - Scaled Down */}
+      <section className="py-20 px-6 relative">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass-panel p-10 md:p-16 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-grid opacity-10 animate-move-grid" />
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Power up your journey.</h2>
+              <p className="text-muted text-base mb-10 max-w-xl mx-auto">
+                Experience the future of EV charging with VoltSpot.
+                Simple, fast, and reliable.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link to="/register" className="btn-primary w-full sm:w-auto flex items-center justify-center">Get Started Free</Link>
+                <Link to="/stations" className="btn-secondary w-full sm:w-auto flex items-center justify-center">View All Features</Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

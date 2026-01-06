@@ -64,23 +64,23 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
       <div className="p-6 border-b border-white/5">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-reflect-muted group-focus-within:text-blue-500 transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500 group-focus-within:text-brand-primary transition-colors" />
             <input
               type="text"
               placeholder="Search your stations..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-reflect-muted/50 focus:outline-none focus:border-blue-500 transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-white/[0.03] border border-white/10 rounded-xl text-[13px] text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-all font-medium"
             />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="btn-secondary flex items-center justify-center gap-2 !py-2.5"
+            className="btn-secondary flex items-center justify-center gap-2 !py-2 !px-4"
           >
-            <Filter size={16} />
-            <span className="text-sm">Filters</span>
+            <Filter size={14} />
+            <span className="text-[11px] font-bold uppercase tracking-widest">Filters</span>
             <ChevronDown
-              size={16}
+              size={14}
               className={`transition-transform duration-300 ${showFilters ? "rotate-180" : ""}`}
             />
           </button>
@@ -88,28 +88,28 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
 
         {showFilters && (
           <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fade-in">
-            <div className="space-y-2">
-              <label className="text-[10px] font-medium text-reflect-muted uppercase tracking-wider">
+            <div className="space-y-1.5">
+              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">
                 Status
               </label>
               <select
                 value={filters.status}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2 text-[13px] text-white focus:outline-none focus:border-brand-primary transition-colors font-medium"
               >
                 <option value="" className="bg-midnight">All Statuses</option>
                 <option value="Active" className="bg-midnight">Active</option>
                 <option value="Inactive" className="bg-midnight">Inactive</option>
               </select>
             </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-medium text-reflect-muted uppercase tracking-wider">
+            <div className="space-y-1.5">
+              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">
                 Connector
               </label>
               <select
                 value={filters.connectorType}
                 onChange={(e) => setFilters({ ...filters, connectorType: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2 text-[13px] text-white focus:outline-none focus:border-brand-primary transition-colors font-medium"
               >
                 <option value="" className="bg-midnight">All Types</option>
                 {connectorTypes.map((type) => (
@@ -126,61 +126,61 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
         <ul className="divide-y divide-white/5">
           {filteredStations.map((station) => (
             <li key={station._id} className="group hover:bg-white/[0.02] transition-colors">
-              <div className="px-8 py-6">
+              <div className="px-6 py-5">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${station.status === "Active"
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${station.status === "Active"
                       ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                       : "bg-amber-500/10 text-amber-500 border-amber-500/20"
                       }`}>
-                      <Zap size={18} />
+                      <Zap size={16} />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors">
+                      <h3 className="text-[13px] font-bold text-white group-hover:text-brand-primary transition-colors tracking-tight">
                         {station.name}
                       </h3>
-                      <p className="text-xs text-reflect-muted mt-0.5">
+                      <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
                         {station.location}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     <button
                       onClick={() => onEdit(station)}
-                      className="p-2 text-reflect-muted hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                      className="p-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                       title="Edit station"
                     >
-                      <Edit size={16} />
+                      <Edit size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteStation(station._id)}
-                      className="p-2 text-reflect-muted hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                      className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
                       title="Delete station"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={14} />
                     </button>
-                    <div className="w-px h-4 bg-white/10 mx-2" />
+                    <div className="w-px h-3 bg-white/10 mx-1" />
                     <Link
                       to={`/station/${station._id}`}
-                      className="p-2 text-reflect-muted hover:text-blue-400 transition-all"
+                      className="p-2 text-slate-500 hover:text-brand-primary transition-all"
                     >
-                      <ChevronRight size={18} />
+                      <ChevronRight size={16} />
                     </Link>
                   </div>
                 </div>
 
-                <div className="mt-4 flex items-center gap-3">
-                  <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full border ${station.status === "Active"
+                <div className="mt-4 flex items-center gap-2.5">
+                  <span className={`px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded-full border ${station.status === "Active"
                     ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                     : "bg-amber-500/10 text-amber-500 border-amber-500/20"
                     }`}>
                     {station.status}
                   </span>
-                  <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-white/5 text-reflect-muted border border-white/10">
+                  <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded-full bg-white/5 text-slate-500 border border-white/10">
                     {station.powerOutput} kW
                   </span>
-                  <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-white/5 text-reflect-muted border border-white/10">
+                  <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded-full bg-white/5 text-slate-500 border border-white/10">
                     {station.connectorType}
                   </span>
                 </div>
@@ -189,12 +189,12 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
           ))}
         </ul>
       ) : (
-        <div className="py-20 text-center">
-          <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
-            <Zap size={20} className="text-reflect-muted" />
+        <div className="py-16 text-center">
+          <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+            <Zap size={16} className="text-slate-600" />
           </div>
-          <h3 className="text-sm font-medium text-white mb-1">No stations found</h3>
-          <p className="text-xs text-reflect-muted">Try adjusting your search or filters.</p>
+          <h3 className="text-[13px] font-bold text-white mb-1">No stations found</h3>
+          <p className="text-[11px] text-slate-500 font-medium">Try adjusting your search or filters.</p>
         </div>
       )}
     </div>

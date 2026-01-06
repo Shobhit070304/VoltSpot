@@ -1,69 +1,76 @@
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin, Twitter, Mail, Zap, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="py-20 bg-midnight border-t border-white/5 relative overflow-hidden">
-      <div className="absolute inset-0 bg-aurora pointer-events-none opacity-10" />
-
-      <div className="max-w-7xl mx-auto px-8 relative z-10">
+    <footer className="relative pt-20 pb-10 overflow-hidden border-t border-white/[0.03] bg-white/[0.01]">
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="md:col-span-2 space-y-6">
-            <Link to="/" className="flex items-center gap-3 group w-fit">
-              <span className="text-2xl font-bold tracking-tighter text-white group-hover:text-blue-400 transition-colors">
-                voltspot
-              </span>
-            </Link>
-            <p className="text-sm text-reflect-muted max-w-xs leading-relaxed">
-              The simplest way to discover, review, and manage EV charging infrastructure.
-              Join the community making electric mobility accessible to everyone.
+          <div className="col-span-1 md:col-span-1">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 rounded-lg bg-brand-primary flex items-center justify-center shadow-lg shadow-brand-primary/20">
+                <Zap className="w-4 h-4 text-white" fill="currentColor" />
+              </div>
+              <span className="text-lg font-bold tracking-tighter text-white">voltspot</span>
+            </div>
+            <p className="text-muted text-[11px] leading-relaxed mb-8 max-w-[200px]">
+              The simple infrastructure for the next generation of
+              electric mobility.
             </p>
-            <div className="flex gap-5">
-              <a
-                href="https://github.com/Shobhit070304"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-reflect-muted hover:text-white hover:border-blue-500/50 transition-all"
-                aria-label="GitHub"
-              >
-                <Github size={18} />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/shobhit-kumar-sharma-17bb4223a"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-reflect-muted hover:text-white hover:border-blue-500/50 transition-all"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={18} />
-              </a>
+            <div className="space-y-4">
+              <div className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Stay Updated</div>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="bg-white/[0.03] border border-white/[0.08] rounded-lg px-3 py-1.5 text-[11px] w-full focus:outline-none focus:border-brand-primary/50 transition-colors"
+                />
+                <button className="w-8 h-8 rounded-lg bg-white text-midnight flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all">
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
             </div>
           </div>
 
           <div>
-            <h4 className="text-[11px] font-bold uppercase tracking-widest text-white mb-6">Product</h4>
-            <ul className="space-y-4">
-              <li><Link to="/stations" className="text-sm text-reflect-muted hover:text-white transition-colors">Stations</Link></li>
-              <li><Link to="/map" className="text-sm text-reflect-muted hover:text-white transition-colors">Live Map</Link></li>
-              <li><Link to="/dashboard" className="text-sm text-reflect-muted hover:text-white transition-colors">Dashboard</Link></li>
-              <li><Link to="/saved-stations" className="text-sm text-reflect-muted hover:text-white transition-colors">Saved</Link></li>
+            <h4 className="text-[9px] font-bold uppercase tracking-widest text-white mb-6">Platform</h4>
+            <ul className="space-y-3">
+              <li><Link to="/stations" className="text-muted hover:text-brand-primary transition-colors text-[11px]">Stations</Link></li>
+              <li><Link to="/map" className="text-muted hover:text-brand-primary transition-colors text-[11px]">Live Map</Link></li>
+              <li><Link to="/dashboard" className="text-muted hover:text-brand-primary transition-colors text-[11px]">Dashboard</Link></li>
+              <li><Link to="/saved" className="text-muted hover:text-brand-primary transition-colors text-[11px]">Saved</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-[11px] font-bold uppercase tracking-widest text-white mb-6">Company</h4>
-            <ul className="space-y-4">
-              <li><button className="text-sm text-reflect-muted hover:text-white transition-colors">About Us</button></li>
-              <li><button className="text-sm text-reflect-muted hover:text-white transition-colors">Privacy Policy</button></li>
-              <li><button className="text-sm text-reflect-muted hover:text-white transition-colors">Terms of Service</button></li>
-              <li><button className="text-sm text-reflect-muted hover:text-white transition-colors">Contact</button></li>
+            <h4 className="text-[9px] font-bold uppercase tracking-widest text-white mb-6">Company</h4>
+            <ul className="space-y-3">
+              <li><Link to="/about" className="text-muted hover:text-brand-primary transition-colors text-[11px]">About Us</Link></li>
+              <li><Link to="/privacy" className="text-muted hover:text-brand-primary transition-colors text-[11px]">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="text-muted hover:text-brand-primary transition-colors text-[11px]">Terms of Service</Link></li>
+              <li><Link to="/contact" className="text-muted hover:text-brand-primary transition-colors text-[11px]">Contact</Link></li>
             </ul>
+          </div>
+
+          <div>
+            <h4 className="text-[9px] font-bold uppercase tracking-widest text-white mb-6">Connect</h4>
+            <div className="flex gap-3">
+              {[Github, Linkedin, Twitter, Mail].map((Icon, i) => (
+                <a key={i} href="#" className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/[0.08] flex items-center justify-center text-muted hover:text-white hover:bg-white/[0.08] transition-all">
+                  <Icon className="w-3.5 h-3.5" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[11px] font-medium text-reflect-muted uppercase tracking-widest">
-            &copy; {new Date().getFullYear()} VoltSpot. Built for the future.
+        <div className="pt-8 border-t border-white/[0.03] flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-[9px] text-slate-500 font-medium uppercase tracking-widest">
+            © 2026 VoltSpot. All rights reserved.
           </p>
-          <div className="flex gap-8">
-            <button className="text-[11px] font-medium text-reflect-muted hover:text-white uppercase tracking-widest transition-colors">Status</button>
-            <button className="text-[11px] font-medium text-reflect-muted hover:text-white uppercase tracking-widest transition-colors">Security</button>
+          <div className="flex gap-6">
+            <a href="#" className="text-[9px] text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-medium">System Status</a>
+            <a href="#" className="text-[9px] text-slate-500 hover:text-white transition-colors uppercase tracking-widest font-medium">Security</a>
           </div>
         </div>
       </div>
