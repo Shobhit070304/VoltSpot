@@ -27,11 +27,21 @@ const Home = () => {
 
     const { user, setUser } = useAuth();
 
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+    // Debounce search term
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
     const fetchStations = useCallback(async () => {
         try {
             setLoading(true);
             const params = new URLSearchParams();
-            if (searchTerm) params.append("search", searchTerm);
+            if (debouncedSearchTerm) params.append("search", debouncedSearchTerm);
             if (filters.status) params.append("status", filters.status);
             if (filters.connectorType) params.append("connectorType", filters.connectorType);
             if (filters.minPower) params.append("minPower", filters.minPower);
@@ -42,11 +52,12 @@ const Home = () => {
                 setStations(response.data.stations);
             }
         } catch (error) {
+            // Component-level error handling
             toast.error("Failed to fetch stations");
         } finally {
             setLoading(false);
         }
-    }, [searchTerm, filters]);
+    }, [debouncedSearchTerm, filters]);
 
     useEffect(() => {
         fetchStations();
@@ -165,12 +176,6 @@ const Home = () => {
                         </div>
                     ) : (
                         <div className="glass-panel overflow-hidden border-white/5">
-                            <StationsList
-                                stations={paginatedData.currentItems}
-                                viewMode={viewMode}
-                                handleSaveStation={handleSaveStation}
-                                user={user}
-                            />
                             <div className="p-8 border-t border-white/5">
                                 <Pagination
                                     currentPage={currentPage}
@@ -178,6 +183,12 @@ const Home = () => {
                                     setCurrentPage={setCurrentPage}
                                 />
                             </div>
+                            <StationsList
+                                stations={paginatedData.currentItems}
+                                viewMode={viewMode}
+                                handleSaveStation={handleSaveStation}
+                                user={user}
+                            />
                         </div>
                     )}
                 </div>

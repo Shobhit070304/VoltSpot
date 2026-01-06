@@ -24,11 +24,21 @@ const Dashboard = () => {
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [stats, setStats] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const stats = useMemo(() => {
+    return {
+      totalStations: stations.length,
+      activeStations: stations.filter((station) => station.status === "Active").length,
+      totalPower: stations.reduce((sum, station) => sum + (station.powerOutput || 0), 0),
+      avgRating: stations.length > 0
+        ? stations.reduce((sum, station) => sum + (station.averageRating || 0), 0) / stations.length
+        : 0,
+    };
+  }, [stations]);
 
   const paginatedData = useMemo(() => {
     const totalPages = Math.ceil(stations.length / itemsPerPage);
@@ -45,25 +55,6 @@ const Dashboard = () => {
       if (response.status === 200) {
         const stationsData = response.data.stations || [];
         setStations(stationsData);
-
-        const statsData = {
-          totalStations: stationsData.length,
-          activeStations: stationsData.filter(
-            (station) => station.status === "Active",
-          ).length,
-          totalPower: stationsData.reduce(
-            (sum, station) => sum + (station.powerOutput || 0),
-            0,
-          ),
-          avgRating:
-            stationsData.length > 0
-              ? stationsData.reduce(
-                (sum, station) => sum + (station.averageRating || 0),
-                0,
-              ) / stationsData.length
-              : 0,
-        };
-        setStats(statsData);
       }
     } catch (error) {
       setError(error);
@@ -82,11 +73,16 @@ const Dashboard = () => {
       const response = await api.post("/station/create", stationData);
       if (response.status === 200) {
         toast.success("Station created successfully");
-        fetchStations();
+        const newStation = response.data.station;
+        if (newStation) {
+          setStations(prev => [newStation, ...prev]);
+        } else {
+          fetchStations();
+        }
         setShowForm(false);
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Error creating station");
+      // Error is already handled by interceptor or can be handled here if specific
     }
   };
 
@@ -95,12 +91,17 @@ const Dashboard = () => {
       const response = await api.put(`/station/update/${id}`, stationData);
       if (response.status === 200) {
         toast.success("Station updated successfully");
-        fetchStations();
+        const updatedStation = response.data.station;
+        if (updatedStation) {
+          setStations(prev => prev.map(s => s._id === id ? updatedStation : s));
+        } else {
+          fetchStations();
+        }
         setEditingStation(null);
         setShowForm(false);
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Error updating station");
+      // Error handled by interceptor
     }
   };
 
@@ -129,7 +130,7 @@ const Dashboard = () => {
           <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-white mb-2">Error Loading Dashboard</h3>
           <p className="text-reflect-muted mb-6">{error.message || "Failed to fetch dashboard data."}</p>
-          <button onClick={() => window.location.reload()} className="btn-primary w-full">
+          <button onClick={fetchStations} className="btn-primary w-full">
             Retry
           </button>
         </div>

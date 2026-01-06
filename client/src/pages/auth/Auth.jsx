@@ -21,7 +21,6 @@ const Auth = () => {
             const idToken = await result.user.getIdToken();
             await authLogin(idToken);
         } catch (err) {
-            console.error(err);
             toast.error("Google authentication failed. Please try again.");
         }
     };
@@ -33,7 +32,6 @@ const Auth = () => {
             const idToken = await result.user.getIdToken();
             await authLogin(idToken);
         } catch (err) {
-            console.error(err);
             toast.error("GitHub authentication failed. Please try again.");
         }
     };
@@ -45,22 +43,12 @@ const Auth = () => {
                 {},
                 {
                     headers: {
-                        Authorization: `Bearer ${idToken}`  ,
+                        Authorization: `Bearer ${idToken}`,
                     },
                 }
             );
 
-            console.log("Login response:", res);
-
-            // Use AuthContext to manage user state
-            if (res.data && res.data.token) {
-                login(res.data);
-                navigate("/");
-            } else {
-                toast.error("Authentication successful but no token received");
-            }
         } catch (error) {
-            console.error(error);
             toast.error("Authentication failed. Please try again.");
         }
     }

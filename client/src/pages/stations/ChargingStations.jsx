@@ -40,7 +40,7 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
       const response = await api.delete(`/station/delete/${id}`);
       if (response.status === 200) {
         toast.success("Station deleted successfully");
-        setStations(stations.filter((station) => station._id !== id));
+        setStations((prevStations) => prevStations.filter((station) => station._id !== id));
       }
     } catch (err) {
       toast.error("Failed to delete station");
@@ -130,8 +130,8 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${station.status === "Active"
-                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                        : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                      ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                      : "bg-amber-500/10 text-amber-500 border-amber-500/20"
                       }`}>
                       <Zap size={18} />
                     </div>
@@ -172,8 +172,8 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
 
                 <div className="mt-4 flex items-center gap-3">
                   <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full border ${station.status === "Active"
-                      ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                      : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                    ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                    : "bg-amber-500/10 text-amber-500 border-amber-500/20"
                     }`}>
                     {station.status}
                   </span>

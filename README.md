@@ -18,11 +18,11 @@ VoltSpot is a comprehensive web application for finding, reviewing, and managing
 
 ### User Experience
 
-- **User Authentication** - Secure login and registration system
+- **User Authentication** - Secure login and registration system (including Firebase OAuth)
 - **Personal Dashboard** - Manage your stations, reviews, and saved locations
 - **Responsive Design** - Works seamlessly on mobile and desktop devices
 - **Dynamic Loading** - Optimized performance with lazy loading components
-- **Real-time Updates** - Live data updates and notifications
+- **Optimized API Calls** - Debounced search and local state updates for a smooth experience
 
 ### Advanced Features
 
@@ -30,7 +30,6 @@ VoltSpot is a comprehensive web application for finding, reviewing, and managing
 - **Smart Filtering** - Filter stations by connector type, power output, and status
 - **Recently Viewed** - Quick access to recently visited stations
 - **Global Search** - Search across all stations with autocomplete suggestions
-- **Theme Support** - Light and dark theme options
 
 ## 🛠️ Tech Stack
 
@@ -40,9 +39,10 @@ VoltSpot is a comprehensive web application for finding, reviewing, and managing
 - **Vite** - Fast build tool and development server
 - **Tailwind CSS** - Utility-first CSS framework for styling
 - **React Router** - Client-side routing
-- **Axios** - HTTP client for API requests
+- **Axios** - HTTP client for API requests with interceptors
 - **React Hot Toast** - Beautiful notifications
 - **Lucide React** - Modern icon library
+- **Firebase** - Authentication and OAuth support
 
 ### Backend
 
@@ -50,9 +50,11 @@ VoltSpot is a comprehensive web application for finding, reviewing, and managing
 - **Express.js** - Web application framework
 - **MongoDB** - NoSQL database
 - **Mongoose** - MongoDB object modeling
+- **Upstash Redis** - Serverless Redis for caching and performance
 - **JWT** - JSON Web Tokens for authentication
 - **Bcrypt** - Password hashing
 - **Express Validator** - Input validation middleware
+- **Firebase Admin** - Server-side Firebase integration
 
 ### Development Tools
 
@@ -60,6 +62,7 @@ VoltSpot is a comprehensive web application for finding, reviewing, and managing
 - **Nodemon** - Development server auto-restart
 - **Compression** - Response compression middleware
 - **Morgan** - HTTP request logger
+- **Helmet** - Security headers middleware
 - **CORS** - Cross-origin resource sharing
 
 ## 📁 Project Structure
@@ -70,6 +73,7 @@ VoltSpot/
 │   ├── src/
 │   │   ├── components/         # Reusable UI components
 │   │   │   ├── cards/         # Card components (StationCard, CostEstimator, etc.)
+│   │   │   ├── fallback/      # Fallback components (LoadingSpinner, ErrorBoundary)
 │   │   │   ├── forms/         # Form components (StationForm, ReviewForm, etc.)
 │   │   │   ├── Home/          # Home page specific components
 │   │   │   ├── layout/        # Layout components (Navbar, Footer)
@@ -80,7 +84,8 @@ VoltSpot/
 │   │   │   ├── general/       # General pages (Home, Landing, 404)
 │   │   │   ├── map/           # Map view pages
 │   │   │   └── stations/      # Station-related pages
-│   │   ├── context/           # React context providers
+│   │   ├── config/            # Firebase and app configuration
+│   │   ├── context/           # React context providers (AuthContext)
 │   │   ├── hooks/             # Custom React hooks
 │   │   ├── services/          # API service functions
 │   │   └── assets/            # Static assets
@@ -88,18 +93,17 @@ VoltSpot/
 │   └── package.json
 ├── server/                     # Backend Node.js application
 │   ├── src/
+│   │   ├── config/            # Configuration files (db, redis, firebase, etc.)
 │   │   ├── controllers/       # Route controllers
-│   │   │   ├── cars/          # EV car controllers
-│   │   │   ├── stations/      # Station controllers
-│   │   │   └── users/         # User controllers
-│   │   ├── models/            # MongoDB schemas
-│   │   │   ├── cars/          # EV car models
-│   │   │   ├── stations/      # Station models
-│   │   │   └── users/         # User models
-│   │   ├── routes/            # API routes
 │   │   ├── middleware/        # Custom middleware
-│   │   └── config/            # Configuration files
-│   ├── server.js              # Main server file
+│   │   ├── models/            # MongoDB schemas
+│   │   ├── repositories/      # Data access layer
+│   │   ├── routes/            # API routes
+│   │   ├── seed/              # Database seeding scripts
+│   │   ├── services/          # Business logic layer
+│   │   ├── utils/             # Utility functions
+│   │   └── index.js           # Express app setup
+│   ├── server.js              # Entry point
 │   └── package.json
 └── README.md
 ```
@@ -153,6 +157,7 @@ PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 CLIENT_URL=http://localhost:5173
+CORS_ORIGIN=http://localhost:5173,https://voltspot.vercel.app
 NODE_ENV=development
 ```
 
@@ -233,23 +238,27 @@ npm run lint         # Run ESLint
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `POST /api/auth/logout` - User logout
+- `POST /api/auth/firebase` - Firebase OAuth login
 - `GET /api/auth/profile` - Get user profile
 
 ### Stations
 
-- `GET /api/station` - Get all stations
+- `GET /api/station` - Get all stations (with search/filter)
+- `GET /api/station/me` - Get current user's stations
+- `GET /api/station/saved-stations` - Get user's bookmarked stations
+- `GET /api/station/search` - Autocomplete suggestions
 - `GET /api/station/:id` - Get station by ID
-- `POST /api/station` - Create new station
-- `PUT /api/station/:id` - Update station
-- `DELETE /api/station/:id` - Delete station
+- `POST /api/station/create` - Create new station
+- `PUT /api/station/update/:id` - Update station
+- `DELETE /api/station/delete/:id` - Delete station
+- `POST /api/station/save/:id` - Toggle save station
 - `POST /api/station/estimate` - Calculate charging cost
 
 ### Reviews & Reports
 
 - `GET /api/review/:stationId` - Get station reviews
-- `POST /api/review` - Create review
-- `GET /api/report/:stationId` - Get station reports
-- `POST /api/report` - Create report
+- `POST /api/review/:stationId` - Create review for a station
+- `POST /api/report/:stationId` - Create report for a station
 
 ### EV Database
 

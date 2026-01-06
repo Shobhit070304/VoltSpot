@@ -25,7 +25,7 @@ const ReviewForm = ({ stationId, onSuccess }) => {
       });
       if (response.status === 201) {
         toast.success("Review submitted successfully");
-        onSuccess();
+        onSuccess(response.data.review);
       }
     } catch (error) {
       toast.error("Failed to submit review");
@@ -53,8 +53,8 @@ const ReviewForm = ({ stationId, onSuccess }) => {
               <Star
                 size={28}
                 className={`${star <= (hover || rating)
-                    ? "text-blue-500 fill-blue-500"
-                    : "text-white/10"
+                  ? "text-blue-500 fill-blue-500"
+                  : "text-white/10"
                   } transition-colors`}
               />
             </button>

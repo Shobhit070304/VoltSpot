@@ -41,8 +41,9 @@ api.interceptors.response.use(
       const message =
         error.response?.data?.message || error?.message || "An error occurred";
 
-      // Show toast for user-facing errors
-      if (status >= 400) {
+      // Show toast for server-side or unexpected errors
+      // 4xx errors are typically handled by components
+      if (status >= 500) {
         toast.error(message);
       }
 

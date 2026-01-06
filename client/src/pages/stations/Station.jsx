@@ -284,7 +284,8 @@ function Station() {
         <Modal title="Write a Review" onClose={() => setShowReviewForm(false)}>
           <ReviewForm
             stationId={id}
-            onSuccess={() => {
+            onSuccess={(newReview) => {
+              setReviews((prev) => [newReview, ...prev]);
               setShowReviewForm(false);
             }}
           />
