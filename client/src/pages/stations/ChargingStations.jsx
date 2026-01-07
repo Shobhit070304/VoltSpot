@@ -23,12 +23,15 @@ const connectorTypes = [
   "Tesla",
 ];
 
-const ChargingStations = ({ stations, setStations, onEdit }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({
-    status: "",
-    connectorType: "",
-  });
+const ChargingStations = ({
+  stations,
+  setStations,
+  onEdit,
+  searchTerm,
+  setSearchTerm,
+  filters,
+  setFilters
+}) => {
   const [showFilters, setShowFilters] = useState(false);
 
   const handleDeleteStation = async (id) => {
@@ -47,16 +50,8 @@ const ChargingStations = ({ stations, setStations, onEdit }) => {
     }
   };
 
-  const filteredStations = stations.filter((station) => {
-    const matchesSearch =
-      station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      station.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = !filters.status || station.status === filters.status;
-    const matchesConnector =
-      !filters.connectorType || station.connectorType === filters.connectorType;
-
-    return matchesSearch && matchesStatus && matchesConnector;
-  });
+  // Stations are already filtered by parent component
+  const filteredStations = stations;
 
   return (
     <div className="flex flex-col">

@@ -165,7 +165,7 @@ function Station() {
 
             {/* Map */}
             <div className="glass-panel overflow-hidden h-[350px] border-white/5 shadow-2xl">
-              <MapView station={station} />
+              <MapView station={station} embedded={true} />
             </div>
 
             {/* Reviews Section */}

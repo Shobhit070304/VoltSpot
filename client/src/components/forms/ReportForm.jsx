@@ -17,11 +17,11 @@ const ReportForm = ({ stationId, onSuccess }) => {
 
     try {
       setLoading(true);
-      const response = await api.post("/report/create", {
-        stationId,
+      const response = await api.post(`/report/create/${stationId}`, {
         issueType,
         description,
       });
+      
       if (response.status === 201) {
         toast.success("Report submitted successfully");
         onSuccess();

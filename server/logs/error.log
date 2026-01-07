@@ -4,3 +4,5 @@
 {"level":"error","message":"User not found","method":"GET","path":"/api/station/saved-stations","statusCode":404,"timestamp":"2025-12-11T16:13:29.577Z"}
 {"level":"error","message":"Cast to ObjectId failed for value \"tesla_model3\" (type string) at path \"_id\" for model \"EV\"","method":"POST","path":"/api/station/estimate","statusCode":500,"timestamp":"2025-12-11T16:18:23.494Z"}
 {"level":"error","message":"User already exists with this email","method":"POST","path":"/api/auth/register","statusCode":400,"timestamp":"2026-01-01T19:29:05.809Z"}
+{"level":"error","message":"Report validation failed: station: Cast to ObjectId failed for value \"create\" (type string) at path \"station\" because of \"BSONError\"","method":"POST","path":"/api/report/create","statusCode":500,"timestamp":"2026-01-07T08:40:38.871Z"}
+{"level":"error","message":"Report validation failed: station: Cast to ObjectId failed for value \"create\" (type string) at path \"station\" because of \"BSONError\"","method":"POST","path":"/api/report/create","statusCode":500,"timestamp":"2026-01-07T08:42:41.574Z"}

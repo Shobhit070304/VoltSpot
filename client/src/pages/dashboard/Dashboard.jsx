@@ -29,6 +29,25 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    status: "",
+    connectorType: "",
+  });
+
+  const filteredStations = useMemo(() => {
+    return stations.filter((station) => {
+      const matchesSearch =
+        station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        station.location.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = !filters.status || station.status === filters.status;
+      const matchesConnector =
+        !filters.connectorType || station.connectorType === filters.connectorType;
+
+      return matchesSearch && matchesStatus && matchesConnector;
+    });
+  }, [stations, searchTerm, filters]);
+
   const stats = useMemo(() => {
     return {
       totalStations: stations.length,
@@ -41,11 +60,11 @@ const Dashboard = () => {
   }, [stations]);
 
   const paginatedData = useMemo(() => {
-    const totalPages = Math.ceil(stations.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredStations.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentItems = stations.slice(startIndex, startIndex + itemsPerPage);
+    const currentItems = filteredStations.slice(startIndex, startIndex + itemsPerPage);
     return { totalPages, currentItems };
-  }, [stations, currentPage, itemsPerPage]);
+  }, [filteredStations, currentPage, itemsPerPage]);
 
   const fetchStations = async () => {
     try {
@@ -217,6 +236,10 @@ const Dashboard = () => {
                 stations={paginatedData.currentItems}
                 setStations={setStations}
                 onEdit={handleEdit}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                filters={filters}
+                setFilters={setFilters}
               />
               <div className="p-6 border-t border-white/5">
                 <Pagination

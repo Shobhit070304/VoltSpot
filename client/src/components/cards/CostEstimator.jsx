@@ -6,9 +6,12 @@ const CostEstimator = ({ station }) => {
   const [currentCharge, setCurrentCharge] = useState(20);
   const [targetCharge, setTargetCharge] = useState(80);
 
-  const energyNeeded = (batteryCapacity * (targetCharge - currentCharge)) / 100;
-  const estimatedCost = energyNeeded * (station?.price || 15);
-  const estimatedTime = (energyNeeded / (station?.powerOutput || 50)) * 60;
+  const energyNeeded = Math.max(0, (batteryCapacity * (targetCharge - currentCharge)) / 100);
+  const price = station?.price ?? 15; // Default price if missing
+  const power = station?.powerOutput || 50; // Default power if missing or 0
+
+  const estimatedCost = energyNeeded * price;
+  const estimatedTime = (energyNeeded / power) * 60;
 
   return (
     <div className="space-y-5">

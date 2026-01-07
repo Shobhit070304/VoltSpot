@@ -1,12 +1,12 @@
 # Client-side ignores
 /client/node_modules/
-/client/package-lock.json
 /client/.env
+/client/dist
 
 # Server-side ignores
 /server/node_modules/
-/server/package-lock.json
 /server/.env
 /server/src/seed
+/server/dist
 
 

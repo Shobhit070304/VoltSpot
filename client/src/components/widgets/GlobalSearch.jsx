@@ -22,14 +22,14 @@ function GlobalSearch({ searchTerm, setSearchTerm, showSuggestions, setShowSugge
       />
 
       {showSuggestions && suggestions?.length > 0 && (
-        <div className="absolute top-full left-0 w-full mt-2 glass-panel overflow-hidden z-50 animate-fade-in border-white/10 shadow-2xl">
+        <div className="absolute top-full left-0 w-full mt-2 glass-panel bg-midnight overflow-hidden z-50 animate-fade-in border-white/10 shadow-2xl">
           <ul className="py-1">
             {suggestions?.map((station) => (
               <li key={station?._id}>
                 <Link
                   to={`/station/${station?._id}`}
                   className="block px-4 py-2.5 hover:bg-white/5 transition-colors"
-                  onClick={() => setQuery("")}
+                  onClick={() => setSearchTerm("")}
                 >
                   <p className="text-xs font-bold text-white mb-0.5">{station?.name}</p>
                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{station?.location}</p>

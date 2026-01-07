@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { AlertTriangle, MapPin, ChevronLeft, LocateFixed, ZoomIn, ZoomOut, Zap, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const MapView = ({ station }) => {
+const MapView = ({ station, embedded = false }) => {
   const [stations, setStations] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -92,22 +92,43 @@ const MapView = ({ station }) => {
         13,
       );
 
-      // Voyager tiles for a more "natural" theme as requested
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
+      // Google Maps Roadmap tiles
+      L.tileLayer("https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+        attribution: '&copy; Google Maps',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
         maxZoom: 20
       }).addTo(mapRef.current);
     }
 
     stations.forEach((st) => {
       const markerColor = st.status === "Active" ? "#10b981" : "#f59e0b";
-      const icon = L.divIcon({
-        className: "custom-div-icon",
-        html: `<div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 15px ${markerColor}66;"></div>`,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
-      });
+      let icon;
+
+      if (station) {
+        // Station Page: Use Pin Icon
+        icon = L.divIcon({
+          className: "custom-div-icon",
+          html: `
+            <div style="filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.15));">
+              <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 0C7.163 0 0 7.163 0 16C0 27 16 42 16 42C16 42 32 27 32 16C32 7.163 24.837 0 16 0Z" fill="${markerColor}"/>
+                <path d="M15 10L11 17H15L14 23L20 14H16L17 10H15Z" fill="white" stroke="white" stroke-width="1" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          `,
+          iconSize: [32, 42],
+          iconAnchor: [16, 42],
+          popupAnchor: [0, -42]
+        });
+      } else {
+        // Map Page: Use Dot Icon
+        icon = L.divIcon({
+          className: "custom-div-icon",
+          html: `<div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 15px ${markerColor}66;"></div>`,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+        });
+      }
 
       const marker = L.marker([st.latitude, st.longitude], { icon }).addTo(
         mapRef.current,
@@ -149,17 +170,107 @@ const MapView = ({ station }) => {
         (pos) => {
           const L = window.L;
           mapRef.current.flyTo([pos.coords.latitude, pos.coords.longitude], 13);
-          L.circle([pos.coords.latitude, pos.coords.longitude], {
-            radius: 200,
-            color: '#4F46E5',
-            fillColor: '#4F46E5',
-            fillOpacity: 0.2
-          }).addTo(mapRef.current);
+
+          const userIcon = L.divIcon({
+            className: "custom-div-icon",
+            html: `
+              <div style="filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.15));">
+                <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 0C7.163 0 0 7.163 0 16C0 27 16 42 16 42C16 42 32 27 32 16C32 7.163 24.837 0 16 0Z" fill="#3B82F6"/>
+                  <circle cx="16" cy="16" r="6" fill="white"/>
+                </svg>
+              </div>
+            `,
+            iconSize: [32, 42],
+            iconAnchor: [16, 42],
+            popupAnchor: [0, -42]
+          });
+
+          L.marker([pos.coords.latitude, pos.coords.longitude], { icon: userIcon }).addTo(mapRef.current);
         },
         () => toast.error("Could not get your location")
       );
     }
   };
+
+  const mapContainer = (
+    <div className={embedded ? "relative w-full h-full" : "relative glass-panel overflow-hidden h-[calc(100vh-350px)] min-h-[500px] animate-fade-in border-white/5"}>
+      {loading ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/10 border-t-brand-primary mb-4"></div>
+          <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">Loading map data</p>
+        </div>
+      ) : error ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
+          <div className="glass-panel p-8 max-w-md text-center border-white/10">
+            <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-white mb-2">Map Error</h3>
+            <p className="text-[13px] text-slate-500 mb-6">{error}</p>
+            <button onClick={() => window.location.reload()} className="btn-primary w-full py-3 text-[11px] font-bold uppercase tracking-widest">Retry</button>
+          </div>
+        </div>
+      ) : stations.length === 0 ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
+          <div className="text-center">
+            <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/10">
+              <MapPin className="h-7 w-7 text-slate-500" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">No Stations Found</h3>
+            <p className="text-[13px] text-slate-500 mb-8">There are no charging stations to display right now.</p>
+            <Link to="/stations" className="btn-primary px-8 py-3 text-[13px] font-bold uppercase tracking-widest">Browse List</Link>
+          </div>
+        </div>
+      ) : null}
+
+      <div id="map" className="h-full w-full z-0"></div>
+
+      {/* Map Controls Overlay */}
+      <div className="absolute bottom-6 right-6 flex flex-col gap-3 z-10">
+        <button
+          onClick={locateUser}
+          className="p-2.5 bg-midnight/80 backdrop-blur-md border border-white/10 rounded-xl text-white hover:bg-white/10 transition-all shadow-2xl"
+          title="Locate Me"
+        >
+          <LocateFixed size={18} />
+        </button>
+        <div className="flex flex-col bg-midnight/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+          <button
+            onClick={zoomIn}
+            className="p-2.5 text-white hover:bg-white/10 transition-all border-b border-white/5"
+            title="Zoom In"
+          >
+            <ZoomIn size={18} />
+          </button>
+          <button
+            onClick={zoomOut}
+            className="p-2.5 text-white hover:bg-white/10 transition-all"
+            title="Zoom Out"
+          >
+            <ZoomOut size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (embedded) {
+    return (
+      <div className="w-full h-full relative">
+        {mapContainer}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+        .leaflet-container { background: #eef2f7 !important; }
+        .custom-popup .leaflet-popup-content-wrapper {
+          background: transparent !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+        .custom-popup .leaflet-popup-tip { display: none !important; }
+        .leaflet-popup-content { margin: 0 !important; }
+      `}} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-midnight text-white pt-32 pb-24 px-6 relative overflow-hidden">
@@ -191,64 +302,7 @@ const MapView = ({ station }) => {
           </Link>
         </header>
 
-        {/* Map Container */}
-        <div className="relative glass-panel overflow-hidden h-[calc(100vh-350px)] min-h-[500px] animate-fade-in border-white/5">
-          {loading ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/10 border-t-brand-primary mb-4"></div>
-              <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">Loading map data</p>
-            </div>
-          ) : error ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
-              <div className="glass-panel p-8 max-w-md text-center border-white/10">
-                <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-4" />
-                <h3 className="text-lg font-bold text-white mb-2">Map Error</h3>
-                <p className="text-[13px] text-slate-500 mb-6">{error}</p>
-                <button onClick={() => window.location.reload()} className="btn-primary w-full py-3 text-[11px] font-bold uppercase tracking-widest">Retry</button>
-              </div>
-            </div>
-          ) : stations.length === 0 ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-midnight/50 backdrop-blur-sm z-20">
-              <div className="text-center">
-                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/10">
-                  <MapPin className="h-7 w-7 text-slate-500" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2 tracking-tight">No Stations Found</h3>
-                <p className="text-[13px] text-slate-500 mb-8">There are no charging stations to display right now.</p>
-                <Link to="/stations" className="btn-primary px-8 py-3 text-[13px] font-bold uppercase tracking-widest">Browse List</Link>
-              </div>
-            </div>
-          ) : null}
-
-          <div id="map" className="h-full w-full z-0"></div>
-
-          {/* Map Controls Overlay */}
-          <div className="absolute bottom-6 right-6 flex flex-col gap-3 z-10">
-            <button
-              onClick={locateUser}
-              className="p-2.5 bg-midnight/80 backdrop-blur-md border border-white/10 rounded-xl text-white hover:bg-white/10 transition-all shadow-2xl"
-              title="Locate Me"
-            >
-              <LocateFixed size={18} />
-            </button>
-            <div className="flex flex-col bg-midnight/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-2xl">
-              <button
-                onClick={zoomIn}
-                className="p-2.5 text-white hover:bg-white/10 transition-all border-b border-white/5"
-                title="Zoom In"
-              >
-                <ZoomIn size={18} />
-              </button>
-              <button
-                onClick={zoomOut}
-                className="p-2.5 text-white hover:bg-white/10 transition-all"
-                title="Zoom Out"
-              >
-                <ZoomOut size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
+        {mapContainer}
       </div>
 
       <style dangerouslySetInnerHTML={{
