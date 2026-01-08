@@ -6,3 +6,6 @@
 {"level":"error","message":"User already exists with this email","method":"POST","path":"/api/auth/register","statusCode":400,"timestamp":"2026-01-01T19:29:05.809Z"}
 {"level":"error","message":"Report validation failed: station: Cast to ObjectId failed for value \"create\" (type string) at path \"station\" because of \"BSONError\"","method":"POST","path":"/api/report/create","statusCode":500,"timestamp":"2026-01-07T08:40:38.871Z"}
 {"level":"error","message":"Report validation failed: station: Cast to ObjectId failed for value \"create\" (type string) at path \"station\" because of \"BSONError\"","method":"POST","path":"/api/report/create","statusCode":500,"timestamp":"2026-01-07T08:42:41.574Z"}
+{"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T06:40:46.610Z"}
+{"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T06:41:55.852Z"}
+{"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T07:47:56.799Z"}

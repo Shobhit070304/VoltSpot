@@ -18,8 +18,7 @@ const ReviewForm = ({ stationId, onSuccess }) => {
 
     try {
       setLoading(true);
-      const response = await api.post("/review/create", {
-        stationId,
+      const response = await api.post(`/review/${stationId}`, {
         rating,
         comment,
       });

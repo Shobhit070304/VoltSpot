@@ -42,7 +42,7 @@ const getReviewsByStation = async (req: Request, res: Response, next: NextFuncti
 
     const reviews = await reviewService.getByStation(stationId);
 
-    res.status(200).json(reviews);
+    res.status(200).json({ reviews });
   } catch (error) {
     next(error);
   }

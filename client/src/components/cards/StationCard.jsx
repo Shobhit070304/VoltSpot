@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MapPin, Zap, Star, Heart, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { api } from "../../services/api";
@@ -6,8 +6,19 @@ import toast from "react-hot-toast";
 
 const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) => {
   const isGrid = viewMode === "grid";
+  const [reviews, setReviews] = useState();
 
-  const reviews = station.reviews || [];
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await api.get(`/review/${station._id}`);
+        setReviews(response.data.reviews);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, [station._id]);
 
   return (
     <div className={`glass-panel group hover:bg-white/[0.03] transition-all duration-500 border-white/5 hover:border-brand-primary/20 ${isGrid ? "p-5" : "p-4"}`}>

@@ -40,6 +40,7 @@ router.post(
       .isFloat({ min: 0 })
       .withMessage('Power output must be a positive number'),
     body('connectorType').notEmpty().withMessage('Connector type is required'),
+    body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
   ],
   stationController.createStation,
 );

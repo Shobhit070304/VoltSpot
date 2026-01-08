@@ -90,7 +90,7 @@ const Dashboard = () => {
   const handleAddStation = async (stationData) => {
     try {
       const response = await api.post("/station/create", stationData);
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast.success("Station created successfully");
         const newStation = response.data.station;
         if (newStation) {

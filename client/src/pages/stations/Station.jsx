@@ -48,7 +48,7 @@ function Station() {
         setLoading(true);
         const [stationRes, reviewsRes] = await Promise.all([
           api.get(`/station/${id}`),
-          api.get(`/review/${id}`)
+          api.get(`/review/${id}`).catch(() => ({ status: 200, data: [] })) // Fallback for reviews
         ]);
 
         if (stationRes.status === 200) {
@@ -56,7 +56,7 @@ function Station() {
           addStation(stationRes.data.station);
         }
         if (reviewsRes.status === 200) {
-          setReviews(reviewsRes.data);
+          setReviews(Array.isArray(reviewsRes.data.reviews) ? reviewsRes.data.reviews : []);
         }
       } catch (error) {
         toast.error("Error loading station details");
@@ -288,8 +288,13 @@ function Station() {
           <ReviewForm
             stationId={id}
             onSuccess={(newReview) => {
-              setReviews((prev) => [newReview, ...prev]);
+              setReviews((prev) => {
+                const currentReviews = Array.isArray(prev) ? prev : [];
+                return [newReview, ...currentReviews];
+              });
               setShowReviewForm(false);
+              // Optionally refresh the station data to update average rating
+              toast.success("Review submitted successfully!");
             }}
           />
         </Modal>

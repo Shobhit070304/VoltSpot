@@ -13,6 +13,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
     powerOutput: initialData?.powerOutput || "",
     connectorType: initialData?.connectorType || "",
     amenities: initialData?.amenities || [],
+    price: initialData?.price || "",
   });
 
   const [errors, setErrors] = useState({});
@@ -40,6 +41,7 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
     if (!formData.longitude) newErrors.longitude = "Longitude is required";
     if (!formData.powerOutput) newErrors.powerOutput = "Power output is required";
     if (!formData.connectorType) newErrors.connectorType = "Connector type is required";
+    if (!formData.price) newErrors.price = "Price is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -182,6 +184,22 @@ const StationForm = ({ initialData, onSubmit, onCancel }) => {
               <option key={type} value={type} className="bg-midnight">{type}</option>
             ))}
           </select>
+        </div>
+
+        {/* Price */}
+        <div className="space-y-1.5">
+          <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+            Price
+          </label>
+          <input
+            type="number"
+            step="any"
+            name="price"
+            value={formData.price}
+            onChange={handleChange}
+            className={`w-full bg-white/[0.03] border ${errors.price ? 'border-red-500/30' : 'border-white/10'} rounded-xl px-4 py-2.5 text-[13px] text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-primary transition-all duration-300 font-medium`}
+            placeholder="e.g. 5.0"
+          />
         </div>
       </div>
 
