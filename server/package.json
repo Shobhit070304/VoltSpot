@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "dev": "nodemon --exec tsx server.ts",
     "build": "tsc",
-    "prod": "npm run build && NODE_ENV=production node dist/server.js",
+    "prod": "npm run build && cross-env NODE_ENV=production node dist/server.js",
     "lint": "eslint . --ext .ts,.js"
   },
   "keywords": [
@@ -46,10 +46,14 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/bcrypt": "^6.0.0",
     "@types/compression": "^1.8.1",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
+    "@typescript-eslint/eslint-plugin": "^8.52.0",
+    "@typescript-eslint/parser": "^8.52.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

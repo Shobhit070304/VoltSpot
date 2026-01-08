@@ -37,7 +37,7 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
 
       (req as AuthRequest).user = {
         userEmail: decoded.userEmail,
-        userId: (user._id as any).toString(),
+        userId: String(user._id),
       };
     } else {
       return res.status(401).json({ message: 'Invalid token structure' });
