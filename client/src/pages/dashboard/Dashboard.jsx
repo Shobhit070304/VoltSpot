@@ -34,19 +34,37 @@ const Dashboard = () => {
     status: "",
     connectorType: "",
   });
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [debouncedFilters, setDebouncedFilters] = useState(filters);
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Debounce filters
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedFilters(filters);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [filters]);
 
   const filteredStations = useMemo(() => {
     return stations.filter((station) => {
       const matchesSearch =
-        station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        station.location.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = !filters.status || station.status === filters.status;
+        station.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        station.location.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      const matchesStatus = !debouncedFilters.status || station.status === debouncedFilters.status;
       const matchesConnector =
-        !filters.connectorType || station.connectorType === filters.connectorType;
+        !debouncedFilters.connectorType || station.connectorType === debouncedFilters.connectorType;
 
       return matchesSearch && matchesStatus && matchesConnector;
     });
-  }, [stations, searchTerm, filters]);
+  }, [stations, debouncedSearchTerm, debouncedFilters]);
 
   const stats = useMemo(() => {
     return {

@@ -6,7 +6,7 @@ import SearchFilterCard from "../../components/Home/SearchFilterCard";
 import StationsList from "../../components/Home/StationsList";
 import QuickStats from "../../components/Home/QuickStats";
 import { useAuth } from "../../context/AuthContext";
-import { ArrowRight, LayoutGrid, Link, List } from "lucide-react";
+import { ArrowRight, LayoutGrid, Link, List, Zap } from "lucide-react";
 import Pagination from "../../components/Home/Pagination";
 
 const Home = () => {
@@ -28,6 +28,7 @@ const Home = () => {
     const { user, setUser } = useAuth();
 
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+    const [debouncedFilters, setDebouncedFilters] = useState(filters);
 
     // Debounce search term
     useEffect(() => {
@@ -37,15 +38,28 @@ const Home = () => {
         return () => clearTimeout(timer);
     }, [searchTerm]);
 
+    // Debounce filters
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedFilters(filters);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [filters]);
+
+    // Reset page when search term or filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [debouncedSearchTerm, debouncedFilters]);
+
     const fetchStations = useCallback(async () => {
         try {
             setLoading(true);
             const params = new URLSearchParams();
             if (debouncedSearchTerm) params.append("search", debouncedSearchTerm);
-            if (filters.status) params.append("status", filters.status);
-            if (filters.connectorType) params.append("connectorType", filters.connectorType);
-            if (filters.minPower) params.append("minPower", filters.minPower);
-            if (filters.maxPower) params.append("maxPower", filters.maxPower);
+            if (debouncedFilters.status) params.append("status", debouncedFilters.status);
+            if (debouncedFilters.connectorType) params.append("connectorType", debouncedFilters.connectorType);
+            if (debouncedFilters.minPower) params.append("minPower", debouncedFilters.minPower);
+            if (debouncedFilters.maxPower) params.append("maxPower", debouncedFilters.maxPower);
 
             const response = await api.get(`/station?${params.toString()}`);
             if (response.status === 200) {
@@ -57,7 +71,7 @@ const Home = () => {
         } finally {
             setLoading(false);
         }
-    }, [debouncedSearchTerm, filters]);
+    }, [debouncedSearchTerm, debouncedFilters]);
 
     useEffect(() => {
         fetchStations();
@@ -66,6 +80,7 @@ const Home = () => {
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prev) => ({ ...prev, [name]: value }));
+        setCurrentPage(1); // Reset to first page when filters change
     };
 
     const clearFilters = () => {
@@ -76,6 +91,7 @@ const Home = () => {
             maxPower: "",
         });
         setSearchTerm("");
+        setCurrentPage(1); // Reset to first page when clearing filters
     };
 
     const handleSaveStation = async (stationId) => {
@@ -85,7 +101,7 @@ const Home = () => {
         }
 
         try {
-            const response = await api.post(`/user/save-station/${stationId}`);
+            const response = await api.post(`/station/save/${stationId}`);
             if (response.status === 200) {
                 setUser(response.data.user);
                 toast.success(response.data.message);
@@ -111,7 +127,7 @@ const Home = () => {
         return { totalPages, currentItems };
     }, [stations, currentPage, itemsPerPage]);
 
-    const connectorTypes = [...new Set(stations.map((s) => s.connectorType))];
+    const connectorTypes = [...new Set(stations.map((s) => s.connectorType))].filter(Boolean);
 
     return (
         <div className="min-h-screen bg-midnight text-white pt-32 pb-24 px-6 relative overflow-hidden">
@@ -171,6 +187,23 @@ const Home = () => {
                             {[1, 2, 3, 4].map((i) => (
                                 <div key={i} className="glass-panel h-40 animate-pulse bg-white/[0.02] border-white/5" />
                             ))}
+                        </div>
+                    ) : stations.length === 0 ? (
+                        <div className="glass-panel p-12 text-center border-white/5">
+                            <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+                                <Zap size={20} className="text-slate-600" />
+                            </div>
+                            <h3 className="text-lg font-bold text-white mb-2">No stations found</h3>
+                            <p className="text-sm text-slate-500 mb-6">
+                                {debouncedSearchTerm || Object.values(debouncedFilters).some(f => f) 
+                                    ? "Try adjusting your search or filters." 
+                                    : "No charging stations are available at the moment."}
+                            </p>
+                            {(debouncedSearchTerm || Object.values(debouncedFilters).some(f => f)) && (
+                                <button onClick={clearFilters} className="btn-secondary">
+                                    Clear Filters
+                                </button>
+                            )}
                         </div>
                     ) : (
                         <div className="space-y-8">

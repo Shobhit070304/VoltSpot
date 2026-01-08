@@ -16,11 +16,12 @@ import { Link } from "react-router-dom";
 
 const connectorTypes = [
   "Type 1",
-  "Type 2",
+  "Type 2", 
   "CCS",
   "CHAdeMO",
   "CCS/CHAdeMO",
   "Tesla",
+  "Universal"
 ];
 
 const ChargingStations = ({
