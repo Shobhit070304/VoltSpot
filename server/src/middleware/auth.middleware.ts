@@ -28,7 +28,6 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(500).json({ message: 'JWT secret not configured' });
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as any;
-    // Token now contains userEmail, so we need to fetch the user
     if (decoded.userEmail) {
       const user = await User.findOne({ email: decoded.userEmail });
       if (!user) {
@@ -57,9 +56,7 @@ const verifyFirebaseToken = async (req: Request, res: Response, next: NextFuncti
     }
 
     const idToken = authHeader.split(' ')[1];
-
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-
     (req as AuthRequest).firebaseUser = decodedToken;
 
     next();

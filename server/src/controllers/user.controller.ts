@@ -78,9 +78,7 @@ const authUser = async (req: Request, res: Response) => {
   // @ts-ignore
   const { email, name, displayName } = req.firebaseUser;
 
-  // Firebase tokens may have 'name' or 'displayName'
   const userName = name || displayName || email.split('@')[0];
-
   let newUser = await User.findOne({ email });
 
   if (!newUser) {
@@ -102,7 +100,6 @@ const authUser = async (req: Request, res: Response) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
 
-  // Return token and user in response body (consistent with login endpoint)
   res.status(200).json({ token, user: { ...newUser.toObject() } });
 };
 

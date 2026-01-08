@@ -40,6 +40,7 @@ app.use(
     origin: [
       'https://voltspot.vercel.app', 
       'http://localhost:5173',
+      'http://localhost:3000',
       process.env.FRONTEND_URL || 'https://voltspot.vercel.app'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],

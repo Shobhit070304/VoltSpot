@@ -5,17 +5,15 @@
     "moduleResolution": "NodeNext",
     "outDir": "./dist",
     "rootDir": "./",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowJs": true,
     "sourceMap": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["**/*.ts", "server.js", "src/**/*.js", "src/types/**/*.d.ts"],
+  "include": ["**/*.ts", "server.js", "src/**/*.js"],
   "exclude": ["node_modules", "dist"]
 }

@@ -19,9 +19,17 @@ const Auth = () => {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
             const idToken = await result.user.getIdToken();
+            console.log("Google login successful, got ID token");
             await authLogin(idToken);
         } catch (err) {
-            toast.error("Google authentication failed. Please try again.");
+            console.error("Google auth error:", err);
+            if (err.code === 'auth/popup-closed-by-user') {
+                toast.error("Sign-in was cancelled");
+            } else if (err.code === 'auth/popup-blocked') {
+                toast.error("Popup was blocked. Please allow popups and try again.");
+            } else {
+                toast.error("Google authentication failed. Please try again.");
+            }
         }
     };
 
@@ -30,14 +38,23 @@ const Auth = () => {
             const provider = new GithubAuthProvider();
             const result = await signInWithPopup(auth, provider);
             const idToken = await result.user.getIdToken();
+            console.log("GitHub login successful, got ID token");
             await authLogin(idToken);
         } catch (err) {
-            toast.error("GitHub authentication failed. Please try again.");
+            console.error("GitHub auth error:", err);
+            if (err.code === 'auth/popup-closed-by-user') {
+                toast.error("Sign-in was cancelled");
+            } else if (err.code === 'auth/popup-blocked') {
+                toast.error("Popup was blocked. Please allow popups and try again.");
+            } else {
+                toast.error("GitHub authentication failed. Please try again.");
+            }
         }
     };
 
     async function authLogin(idToken) {
         try {
+            console.log("Sending Firebase token to backend...");
             const res = await api.post(
                 '/auth/firebase',
                 {},
@@ -48,8 +65,20 @@ const Auth = () => {
                 }
             );
 
+            console.log("Backend response:", res.data);
+
+            if (res.status === 200 && res.data) {
+                login(res.data);
+                toast.success("Authentication successful!");
+                navigate("/");
+            } else {
+                throw new Error("Invalid response from server");
+            }
         } catch (error) {
-            toast.error("Authentication failed. Please try again.");
+            console.error("Auth error:", error);
+            console.error("Error response:", error.response?.data);
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || "Authentication failed";
+            toast.error(errorMessage);
         }
     }
 
