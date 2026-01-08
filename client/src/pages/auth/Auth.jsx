@@ -65,8 +65,6 @@ const Auth = () => {
                 }
             );
 
-            console.log("Backend response:", res.data);
-
             if (res.status === 200 && res.data) {
                 login(res.data);
                 toast.success("Authentication successful!");
