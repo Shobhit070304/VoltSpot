@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import admin from '../config/firebase.js';
 import User from '../models/User.js';
 import { NextFunction, Request, Response } from 'express';
@@ -8,7 +8,7 @@ export interface AuthRequest extends Request {
     userId: string;
     userEmail: string;
   };
-  firebaseUser?: admin.auth.DecodedIdToken;
+  firebaseUser?: any;
 }
 
 const authUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,7 +27,7 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({ message: 'JWT secret not configured' });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as any;
     // Token now contains userEmail, so we need to fetch the user
     if (decoded.userEmail) {
       const user = await User.findOne({ email: decoded.userEmail });

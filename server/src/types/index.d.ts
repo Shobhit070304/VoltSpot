@@ -5,3 +5,9 @@ declare module 'xss-clean' {
   function xssClean(): RequestHandler;
   export = xssClean;
 }
+
+declare module 'express-mongo-sanitize' {
+  import { RequestHandler } from 'express';
+  function mongoSanitize(options?: any): RequestHandler;
+  export = mongoSanitize;
+}

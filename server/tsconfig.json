@@ -12,7 +12,9 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "sourceMap": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false
   },
   "include": ["**/*.ts", "server.js", "src/**/*.js", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
