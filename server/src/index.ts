@@ -26,9 +26,9 @@ import apiLimiter from './config/rateLimiter.js';
 // Error Handlers
 import errorHandlerMiddleware from './middleware/error.middleware.js';
 
-const app : Application = express();
+const app: Application = express();
 // Connect to MongoDB
-connectDB().catch((error : any) => {
+connectDB().catch((error: any) => {
   console.error('Failed to connect to MongoDB:', error.message);
   process.exit(1);
 });
@@ -38,10 +38,7 @@ testConnection();
 app.use(
   cors({
     origin: [
-      'https://voltspot.vercel.app', 
-      'http://localhost:5173',
-      'http://localhost:3000',
-      process.env.FRONTEND_URL || 'https://voltspot.vercel.app'
+      process.env.FRONTEND_URL
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
@@ -70,7 +67,7 @@ app.use(
   compression({
     level: 6, // compression level
     threshold: 100, // only compress responses larger than 100 bytes
-    filter: (req :  Request, res : Response) => {
+    filter: (req: Request, res: Response) => {
       // don't compress responses with this header
       if (req.headers['x-no-compression']) {
         return false;
