@@ -10,7 +10,7 @@ const router = express.Router();
 
 // Register a new user
 router.post(
-  '/register',
+  '/',
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Please provide a valid email'),

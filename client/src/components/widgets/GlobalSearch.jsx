@@ -27,7 +27,7 @@ function GlobalSearch({ searchTerm, setSearchTerm, showSuggestions, setShowSugge
             {suggestions?.map((station) => (
               <li key={station?._id}>
                 <Link
-                  to={`/station/${station?._id}`}
+                  to={`/stations/${station?._id}`}
                   className="block px-4 py-2.5 hover:bg-white/5 transition-colors"
                   onClick={() => setSearchTerm("")}
                 >

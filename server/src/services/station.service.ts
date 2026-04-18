@@ -4,6 +4,7 @@ import evRepository from '../repositories/car.repository.js';
 import { redis } from '../config/redisConnection.js';
 import ApiError from '../config/ApiError.js';
 import { IStation } from '../models/Station.js';
+import { ERROR_CODES } from '../utils/errorCodes.js';
 
 const getAllStations = async (filters: any = {}): Promise<IStation[]> => {
   // Create a unique cache key based on filters
@@ -36,7 +37,7 @@ const getStationById = async (id: string): Promise<IStation> => {
   if (cached) return cached as IStation;
 
   const station = await stationRepository.findById(id);
-  if (!station) throw new ApiError(404, 'Station not found');
+  if (!station) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
 
   await redis.set(cacheKey, station, { ex: 3600 });
   return station;
@@ -56,7 +57,7 @@ const create = async ({ body, userId }: { body: any, userId: string }): Promise<
 
 const update = async ({ stationId, body, userId }: { stationId: string, body: any, userId: string }): Promise<IStation> => {
   const station = await stationRepository.update(stationId, userId, body);
-  if (!station) throw new ApiError(404, 'Station not found');
+  if (!station) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
 
   await redis.del('stations');
   await redis.del(`myStations:${userId}`);
@@ -67,7 +68,7 @@ const update = async ({ stationId, body, userId }: { stationId: string, body: an
 
 const remove = async (stationId: string, userId: string): Promise<boolean> => {
   const deleted = await stationRepository.delete(stationId, userId);
-  if (!deleted) throw new ApiError(404, 'Station not found');
+  if (!deleted) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
 
   await redis.del('stations');
   await redis.del(`myStations:${userId}`);
@@ -80,28 +81,27 @@ const toggleSave = async ({ userId, stationId }: { userId: string, stationId: st
   const user = await userRepository.findById(userId);
   const station = await stationRepository.findById(stationId);
 
-  if (!station) throw new ApiError(404, 'Station not found');
-  if (!user) throw new ApiError(404, 'User not found');
-
-  let message = '';
+  if (!station) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
+  if (!user) throw new ApiError('User not found', 404, ERROR_CODES.NOT_FOUND);
 
   // Convert ObjectIds to strings for comparison
   const savedStationIds = user.savedStations.map((s) => s.toString());
 
   if (savedStationIds.includes(stationId.toString())) {
+    // Unsave the station
     user.savedStations = user.savedStations.filter(
       (s) => s.toString() !== stationId.toString(),
     );
-    message = 'Station removed from saved stations';
+    await user.save();
+    await redis.del(`savedStations:${userId}`);
+    return { action: 'unsaved', savedStations: user.savedStations };
   } else {
+    // Save the station
     user.savedStations.push(stationId as any);
-    message = 'Station saved successfully';
+    await user.save();
+    await redis.del(`savedStations:${userId}`);
+    return { action: 'saved', savedStations: user.savedStations };
   }
-
-  await user.save();
-  await redis.del(`savedStations:${userId}`);
-
-  return { message, savedStations: user.savedStations };
 };
 
 const getSaved = async (userId: string) => {
@@ -110,7 +110,7 @@ const getSaved = async (userId: string) => {
   if (cached) return cached;
 
   const user = await userRepository.getSaved(userId);
-  if (!user) throw new ApiError(404, 'User not found');
+  if (!user) throw new ApiError('User not found', 404, ERROR_CODES.NOT_FOUND);
 
   await redis.set(cacheKey, user.savedStations, { ex: 3600 });
   return user.savedStations;
@@ -133,7 +133,7 @@ const estimateCharging = async (data: EstimateChargingParams) => {
   const { stationPower, pricePerKWh, evId, chargeFrom, chargeTo } = data;
   const ev = await evRepository.findById(evId);
 
-  if (!ev) throw new ApiError(404, 'EV not found');
+  if (!ev) throw new ApiError('EV not found', 404, ERROR_CODES.NOT_FOUND);
 
   const batterySize = ev.batterySize;
   const energyNeeded = ((chargeTo - chargeFrom) / 100) * batterySize;

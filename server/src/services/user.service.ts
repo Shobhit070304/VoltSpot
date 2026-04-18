@@ -2,6 +2,7 @@ import userRepository from '../repositories/user.repository.js';
 import jwt from 'jsonwebtoken';
 import ApiError from '../config/ApiError.js';
 import { IUser } from '../models/User.js';
+import { ERROR_CODES } from '../utils/errorCodes.js';
 
 interface RegisterParams {
   name: string;
@@ -18,7 +19,7 @@ const register = async ({ name, email, password }: RegisterParams): Promise<IUse
   // Check if user exists
   const existing = await userRepository.findByEmail(email);
   if (existing) {
-    throw new ApiError(400, 'User already exists with this email');
+    throw new ApiError('User already exists with this email', 409, ERROR_CODES.DUPLICATE_ENTRY);
   }
 
   // Create user
@@ -36,13 +37,13 @@ const login = async ({ email, password }: LoginParams): Promise<{ token: string;
   const user = await userRepository.findByEmail(email);
 
   if (!user) {
-    throw new ApiError(404, 'User not found');
+    throw new ApiError('User not found', 404, ERROR_CODES.NOT_FOUND);
   }
 
   // Compare password
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    throw new ApiError(401, 'Invalid credentials');
+    throw new ApiError('Invalid credentials', 401, ERROR_CODES.UNAUTHORIZED);
   }
 
   // Ensure secret is present
@@ -71,7 +72,7 @@ const getProfile = async (userId: string): Promise<IUser> => {
   const user = await userRepository.findById(userId);
 
   if (!user) {
-    throw new ApiError(404, 'User not found');
+    throw new ApiError('User not found', 404, ERROR_CODES.NOT_FOUND);
   }
 
   // @ts-ignore

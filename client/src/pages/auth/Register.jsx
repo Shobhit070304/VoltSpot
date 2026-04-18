@@ -46,7 +46,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post("/auth/register", formData);
+      const response = await api.post("/users", formData);
       if (response.status === 201) {
         navigate("/login");
       } else {

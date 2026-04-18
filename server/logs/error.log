@@ -9,3 +9,4 @@
 {"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T06:40:46.610Z"}
 {"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T06:41:55.852Z"}
 {"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T07:47:56.799Z"}
+{"level":"error","message":"fetch failed","method":"GET","path":"/api/station?","statusCode":500,"timestamp":"2026-04-18T12:09:25.925Z"}

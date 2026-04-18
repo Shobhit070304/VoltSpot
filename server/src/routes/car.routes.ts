@@ -4,6 +4,6 @@ import { authUser } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.get('/evs', authUser, carController.fetchCars);
+router.get('/', authUser, carController.fetchCars);
 
 export default router;

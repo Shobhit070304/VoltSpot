@@ -7,8 +7,9 @@ const router = express.Router();
 
 // Post a report
 router.post(
-  '/create/:stationId',
+  '/',
   [
+    body('stationId').notEmpty().withMessage('Station ID is required'),
     body('issueType').notEmpty().withMessage('Issue type is required'),
     body('description').notEmpty().withMessage('Description is required'),
   ],

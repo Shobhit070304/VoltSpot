@@ -87,10 +87,10 @@ const Dashboard = () => {
   const fetchStations = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/station/me");
+      const response = await api.get("/stations/me");
 
       if (response.status === 200) {
-        const stationsData = response.data.stations || [];
+        const stationsData = response.data.data.stations || [];
         setStations(stationsData);
       }
     } catch (error) {
@@ -107,10 +107,10 @@ const Dashboard = () => {
 
   const handleAddStation = async (stationData) => {
     try {
-      const response = await api.post("/station/create", stationData);
+      const response = await api.post("/stations", stationData);
       if (response.status === 201) {
         toast.success("Station created successfully");
-        const newStation = response.data.station;
+        const newStation = response.data.data.station;
         if (newStation) {
           setStations(prev => [newStation, ...prev]);
         } else {
@@ -125,10 +125,10 @@ const Dashboard = () => {
 
   const handleUpdateStation = async (id, stationData) => {
     try {
-      const response = await api.put(`/station/update/${id}`, stationData);
+      const response = await api.put(`/stations/${id}`, stationData);
       if (response.status === 200) {
         toast.success("Station updated successfully");
-        const updatedStation = response.data.station;
+        const updatedStation = response.data.data.station;
         if (updatedStation) {
           setStations(prev => prev.map(s => s._id === id ? updatedStation : s));
         } else {

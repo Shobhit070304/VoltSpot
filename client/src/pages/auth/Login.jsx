@@ -37,9 +37,9 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post("/auth/login", formData);
+      const response = await api.post("/users/login", formData);
       if (response.status === 200) {
-        login(response.data);
+        login(response.data.data);
         navigate("/", { state: { message: "Login successful!" } });
       } else {
         setError(response.data.message);

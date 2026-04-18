@@ -41,7 +41,7 @@ const ChargingStations = ({
     }
 
     try {
-      const response = await api.delete(`/station/delete/${id}`);
+      const response = await api.delete(`/stations/${id}`);
       if (response.status === 200) {
         toast.success("Station deleted successfully");
         setStations((prevStations) => prevStations.filter((station) => station._id !== id));
@@ -158,7 +158,7 @@ const ChargingStations = ({
                     </button>
                     <div className="w-px h-3 bg-white/10 mx-1" />
                     <Link
-                      to={`/station/${station._id}`}
+                      to={`/stations/${station._id}`}
                       className="p-2 text-slate-500 hover:text-brand-primary transition-all"
                     >
                       <ChevronRight size={16} />

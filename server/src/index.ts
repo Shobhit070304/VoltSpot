@@ -80,11 +80,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/api/auth', userRoutes);
-app.use('/api/station', stationRoutes);
-app.use('/api/review', reviewRoutes);
-app.use('/api/report', reportRoutes);
-app.use('/api/car', carRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/stations', stationRoutes);
+app.use('/api/stations/:stationId/reviews', reviewRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/cars', carRoutes);
 
 // 404 and Error handlers
 app.use(errorHandlerMiddleware.notFound);

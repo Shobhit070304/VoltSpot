@@ -12,8 +12,8 @@ function useGlobalAutocomplete(query) {
 
     const delayDebounce = setTimeout(async () => {
       try {
-        const res = await api.get(`/station/search?query=${query}`);
-        setSuggestions(res.data);
+        const res = await api.get(`/stations/search?query=${query}`);
+        setSuggestions(res.data.data);
       } catch {
         setSuggestions([]);
       }

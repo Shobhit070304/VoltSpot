@@ -23,9 +23,9 @@ function SavedStations() {
   const fetchSavedStations = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/station/saved-stations");
+      const response = await api.get("/stations/saved-stations");
       if (response.status === 200) {
-        setSavedStations(response.data.savedStations);
+        setSavedStations(response.data.data.savedStations);
       }
     } catch (error) {
       setError(error.message);
@@ -37,15 +37,15 @@ function SavedStations() {
 
   const handleUnsaveStation = async (stationId) => {
     try {
-      const response = await api.post(`/station/save/${stationId}`);
+      const response = await api.post(`/stations/save/${stationId}`);
       if (response.status === 200) {
-        toast.success(response.data.message);
+        toast.success(response.data.data.message);
         setSavedStations(
           savedStations.filter((station) => station._id !== stationId),
         );
         setUser((prev) => ({
           ...prev,
-          savedStations: response.data.savedStations,
+          savedStations: response.data.data.savedStations,
         }));
       }
     } catch (error) {
@@ -174,7 +174,7 @@ function SavedStations() {
                   </div>
 
                   <Link
-                    to={`/station/${station._id}`}
+                    to={`/stations/${station._id}`}
                     className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-brand-primary hover:text-brand-secondary transition-colors group/link"
                   >
                     Details

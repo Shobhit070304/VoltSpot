@@ -2,17 +2,22 @@ import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import reviewService from '../services/review.service.js';
 import ApiError from '../config/ApiError.js';
+import { sendSuccess, sendValidationError } from '../utils/response.js';
 
 const createReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) throw new ApiError(400, errors.array()[0].msg);
+    if (!errors.isEmpty()) {
+      sendValidationError(res, errors.array()[0].msg);
+      return;
+    }
 
     const { stationId } = req.params;
     const { rating, comment } = req.body;
 
-    if (!stationId || !rating || !comment) {
-      throw new ApiError(400, 'All fields are required.');
+    if (!rating) {
+      sendValidationError(res, 'Rating is required.');
+      return;
     }
 
     const review = await reviewService.create({
@@ -23,10 +28,7 @@ const createReview = async (req: Request, res: Response, next: NextFunction) => 
       comment,
     });
 
-    res.status(201).json({
-      message: 'Review submitted successfully',
-      review,
-    });
+    sendSuccess(res, { message: 'Review submitted successfully', review }, 201, req);
   } catch (error) {
     next(error);
   }
@@ -35,14 +37,8 @@ const createReview = async (req: Request, res: Response, next: NextFunction) => 
 const getReviewsByStation = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { stationId } = req.params;
-
-    if (!stationId) {
-      throw new ApiError(400, 'Station ID is required.');
-    }
-
     const reviews = await reviewService.getByStation(stationId);
-
-    res.status(200).json({ reviews });
+    sendSuccess(res, { reviews });
   } catch (error) {
     next(error);
   }

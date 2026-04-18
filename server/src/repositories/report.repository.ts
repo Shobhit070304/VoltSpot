@@ -8,4 +8,8 @@ const findAllReports = (): Promise<IReport[]> => {
   return Report.find();
 };
 
-export default { create, findAllReports };
+const findByUserAndStation = (userId: string, stationId: string): Promise<IReport | null> => {
+  return Report.findOne({ user: userId, station: stationId });
+};
+
+export default { create, findAllReports, findByUserAndStation };

@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Post review for a station
 router.post(
-  '/:stationId',
+  '/',
   [
     body('rating')
       .isInt({ min: 1, max: 5 })
@@ -22,6 +22,6 @@ router.post(
 );
 
 // Get reviews for a station
-router.get('/:stationId', reviewRoutes.getReviewsByStation);
+router.get('/', reviewRoutes.getReviewsByStation);
 
 export default router;

@@ -17,7 +17,7 @@ function RecentlyViewed() {
           {recentStations?.map((station) => (
             <li key={station._id}>
               <Link
-                to={`/station/${station._id}`}
+                to={`/stations/${station._id}`}
                 className="block p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-blue-500/30 transition-all group"
               >
                 <p className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">{station.name}</p>

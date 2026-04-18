@@ -56,8 +56,10 @@ const Auth = () => {
         try {
             console.log("Sending Firebase token to backend...");
             const res = await api.post(
-                '/auth/firebase',
-                {},
+                "/users/firebase",
+                {
+                    idToken,
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${idToken}`,
@@ -66,7 +68,7 @@ const Auth = () => {
             );
 
             if (res.status === 200 && res.data) {
-                login(res.data);
+                login(res.data.data);
                 toast.success("Authentication successful!");
                 navigate("/");
             } else {
@@ -74,8 +76,7 @@ const Auth = () => {
             }
         } catch (error) {
             console.error("Auth error:", error);
-            console.error("Error response:", error.response?.data);
-            const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || "Authentication failed";
+            const errorMessage = error.response?.data?.message || error.message || "Authentication failed";
             toast.error(errorMessage);
         }
     }

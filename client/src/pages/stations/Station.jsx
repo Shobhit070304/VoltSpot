@@ -47,16 +47,16 @@ function Station() {
       try {
         setLoading(true);
         const [stationRes, reviewsRes] = await Promise.all([
-          api.get(`/station/${id}`),
-          api.get(`/review/${id}`).catch(() => ({ status: 200, data: [] })) // Fallback for reviews
+          api.get(`/stations/${id}`),
+          api.get(`/stations/${id}/reviews`).catch(() => ({ status: 200, data: [] })) // Fallback for reviews
         ]);
 
         if (stationRes.status === 200) {
-          setStation(stationRes.data.station);
-          addStation(stationRes.data.station);
+          setStation(stationRes.data.data.station);
+          addStation(stationRes.data.data.station);
         }
         if (reviewsRes.status === 200) {
-          setReviews(Array.isArray(reviewsRes.data.reviews) ? reviewsRes.data.reviews : []);
+          setReviews(Array.isArray(reviewsRes.data.data.reviews) ? reviewsRes.data.data.reviews : []);
         }
       } catch (error) {
         toast.error("Error loading station details");

@@ -17,7 +17,8 @@ const ReportForm = ({ stationId, onSuccess }) => {
 
     try {
       setLoading(true);
-      const response = await api.post(`/report/create/${stationId}`, {
+      const response = await api.post(`/reports`, {
+        stationId,
         issueType,
         description,
       });

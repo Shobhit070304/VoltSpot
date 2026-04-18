@@ -9,7 +9,8 @@ const MapView = ({ station, embedded = false }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const mapRef = useRef(null);
+  const mapRef = useRef(null);       // Leaflet map instance
+  const mapDivRef = useRef(null);    // DOM element ref (replaces id="map" lookup)
   const markersRef = useRef([]);
 
   useEffect(() => {
@@ -55,13 +56,13 @@ const MapView = ({ station, embedded = false }) => {
         if (station) {
           stationsData = [station];
         } else {
-          const response = await api.get("/station");
-          stationsData = response.data.stations || [];
+          const response = await api.get("/stations");
+          stationsData = response.data.data?.stations || [];
         }
 
         if (isMounted) {
           const validStations = stationsData.filter(
-            (s) => s && typeof s.latitude === "number" && typeof s.longitude === "number",
+            (s) => s && !isNaN(Number(s.latitude)) && !isNaN(Number(s.longitude)),
           );
           setStations(validStations);
           setLoading(false);
@@ -79,7 +80,7 @@ const MapView = ({ station, embedded = false }) => {
   }, [station]);
 
   useEffect(() => {
-    if (!mapLoaded || stations.length === 0) return;
+    if (!mapLoaded || stations.length === 0 || !mapDivRef.current) return;
 
     const L = window.L;
     markersRef.current.forEach((marker) => marker.remove());
@@ -87,7 +88,7 @@ const MapView = ({ station, embedded = false }) => {
 
     if (!mapRef.current) {
       const centerStation = station || stations[0];
-      mapRef.current = L.map("map", { zoomControl: false }).setView(
+      mapRef.current = L.map(mapDivRef.current, { zoomControl: false }).setView(
         [centerStation.latitude, centerStation.longitude],
         13,
       );
@@ -143,7 +144,7 @@ const MapView = ({ station, embedded = false }) => {
               <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${st.status === "Active" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"}">${st.status}</span>
               <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-blue-500/10 text-blue-600 border border-blue-500/20">${st.powerOutput} kW</span>
             </div>
-            <a href="/station/${st._id}" class="text-[10px] font-bold uppercase tracking-widest text-brand-primary hover:text-brand-secondary transition-colors flex items-center gap-1.5">
+            <a href="/stations/${st._id}" class="text-[10px] font-bold uppercase tracking-widest text-brand-primary hover:text-brand-secondary transition-colors flex items-center gap-1.5">
               View details <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
           </div>
@@ -222,7 +223,7 @@ const MapView = ({ station, embedded = false }) => {
         </div>
       ) : null}
 
-      <div id="map" className="h-full w-full z-0"></div>
+      <div ref={mapDivRef} className="h-full w-full z-0"></div>
 
       {/* Map Controls Overlay */}
       <div className="absolute bottom-6 right-6 flex flex-col gap-3 z-10">

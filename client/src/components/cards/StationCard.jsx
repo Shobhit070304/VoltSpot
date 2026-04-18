@@ -11,8 +11,8 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await api.get(`/review/${station._id}`);
-        setReviews(response.data.reviews);
+        const response = await api.get(`/stations/${station._id}/reviews`);
+        setReviews(response.data.data.reviews);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -75,7 +75,7 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
             </div>
 
             <Link
-              to={`/station/${station._id}`}
+              to={`/stations/${station._id}`}
               className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-brand-primary hover:text-brand-secondary transition-colors group/link"
             >
               Details

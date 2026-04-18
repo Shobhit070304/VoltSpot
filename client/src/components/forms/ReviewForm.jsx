@@ -18,13 +18,13 @@ const ReviewForm = ({ stationId, onSuccess }) => {
 
     try {
       setLoading(true);
-      const response = await api.post(`/review/${stationId}`, {
+      const response = await api.post(`/stations/${stationId}/reviews`, {
         rating,
         comment,
       });
       if (response.status === 201) {
         toast.success("Review submitted successfully");
-        onSuccess(response.data.review);
+        onSuccess(response.data.data.review);
       }
     } catch (error) {
       toast.error("Failed to submit review");

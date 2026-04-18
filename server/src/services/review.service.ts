@@ -22,7 +22,7 @@ const create = async ({ stationId, userId, rating, comment }: CreateReviewParams
   // Get all reviews for average calculation
   const reviews = await reviewRepository.findByStation(stationId);
 
-  const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+  const avg = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : rating;
 
   // Update station’s avg rating
   await stationRepository.updateAverageRating(stationId, parseFloat(avg.toFixed(1)));

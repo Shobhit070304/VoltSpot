@@ -22,7 +22,7 @@ router.get('/:id', stationController.getStationById);
 
 // Create a new station
 router.post(
-  '/create',
+  '/',
   authUser,
   [
     body('name').notEmpty().withMessage('Name is required'),
@@ -47,7 +47,7 @@ router.post(
 
 // Update a station
 router.put(
-  '/update/:id',
+  '/:id',
   authUser,
   [
     body('name').notEmpty().withMessage('Name is required'),
@@ -70,7 +70,7 @@ router.put(
 );
 
 // Delete a station
-router.delete('/delete/:id', authUser, stationController.deleteStation);
+router.delete('/:id', authUser, stationController.deleteStation);
 
 // Save a station
 router.post('/save/:id', authUser, stationController.saveStation);

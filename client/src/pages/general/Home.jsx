@@ -61,9 +61,9 @@ const Home = () => {
             if (debouncedFilters.minPower) params.append("minPower", debouncedFilters.minPower);
             if (debouncedFilters.maxPower) params.append("maxPower", debouncedFilters.maxPower);
 
-            const response = await api.get(`/station?${params.toString()}`);
+            const response = await api.get(`/stations?${params.toString()}`);
             if (response.status === 200) {
-                setStations(response.data.stations);
+                setStations(response.data.data.stations);
             }
         } catch (error) {
             // Component-level error handling
@@ -101,13 +101,13 @@ const Home = () => {
         }
 
         try {
-            const response = await api.post(`/station/save/${stationId}`);
+            const response = await api.post(`/stations/save/${stationId}`);
             if (response.status === 200) {
-                setUser(response.data.user);
-                toast.success(response.data.message);
+                setUser(response.data.data.user);
+                toast.success(response.data.data.message);
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "Error saving station");
+            toast.error(error.response?.data?.message || error.response?.data?.data?.message || "Error saving station");
         }
     };
 
