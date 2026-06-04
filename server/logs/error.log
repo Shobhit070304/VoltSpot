@@ -10,3 +10,8 @@
 {"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T06:41:55.852Z"}
 {"level":"error","message":"Station validation failed: price: Path `price` is required.","method":"POST","path":"/api/station/create","statusCode":500,"timestamp":"2026-01-08T07:47:56.799Z"}
 {"level":"error","message":"fetch failed","method":"GET","path":"/api/station?","statusCode":500,"timestamp":"2026-04-18T12:09:25.925Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:33:53.735Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:33:56.841Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:33:59.589Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:35:21.702Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:35:25.182Z"}

@@ -21,9 +21,61 @@ const Home = () => {
         connectorType: "",
         minPower: "",
         maxPower: "",
+        sortByDistance: false,
+        maxDistance: 50000,
     });
+    const [userLocation, setUserLocation] = useState(null);
+    const [fetchingLocation, setFetchingLocation] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
+
+    // Browser Geolocation integration
+    useEffect(() => {
+        if (filters.sortByDistance && !userLocation) {
+            setFetchingLocation(true);
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setUserLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    });
+                    setFetchingLocation(false);
+                },
+                (error) => {
+                    toast.error("Failed to get location. Please enable location permissions.");
+                    setFilters((prev) => ({ ...prev, sortByDistance: false }));
+                    setFetchingLocation(false);
+                }
+            );
+        }
+    }, [filters.sortByDistance, userLocation]);
+
+    // WebSocket real-time updates listener
+    useEffect(() => {
+        const wsUrl = (import.meta.env.VITE_BASE_URL || "http://localhost:5000/api")
+            .replace("http://", "ws://")
+            .replace("https://", "wss://")
+            .replace("/api", "");
+
+        const socket = new WebSocket(wsUrl);
+
+        socket.onmessage = (event) => {
+            try {
+                const message = JSON.parse(event.data);
+                if (message.type === "station-updated") {
+                    const updated = message.data;
+                    setStations((prev) =>
+                        prev.map((s) => (s._id === updated._id ? { ...s, ...updated } : s))
+                    );
+                } else if (message.type === "station-deleted") {
+                    const deletedId = message.data._id;
+                    setStations((prev) => prev.filter((s) => s._id !== deletedId));
+                }
+            } catch (err) {}
+        };
+
+        return () => socket.close();
+    }, []);
 
     const { user, setUser } = useAuth();
 
@@ -61,6 +113,12 @@ const Home = () => {
             if (debouncedFilters.minPower) params.append("minPower", debouncedFilters.minPower);
             if (debouncedFilters.maxPower) params.append("maxPower", debouncedFilters.maxPower);
 
+            if (debouncedFilters.sortByDistance && userLocation) {
+                params.append("latitude", userLocation.latitude);
+                params.append("longitude", userLocation.longitude);
+                params.append("maxDistance", debouncedFilters.maxDistance);
+            }
+
             const response = await api.get(`/stations?${params.toString()}`);
             if (response.status === 200) {
                 setStations(response.data.data.stations);
@@ -71,15 +129,18 @@ const Home = () => {
         } finally {
             setLoading(false);
         }
-    }, [debouncedSearchTerm, debouncedFilters]);
+    }, [debouncedSearchTerm, debouncedFilters, userLocation]);
 
     useEffect(() => {
         fetchStations();
     }, [fetchStations]);
 
     const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters((prev) => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setFilters((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value
+        }));
         setCurrentPage(1); // Reset to first page when filters change
     };
 
@@ -89,8 +150,11 @@ const Home = () => {
             connectorType: "",
             minPower: "",
             maxPower: "",
+            sortByDistance: false,
+            maxDistance: 50000,
         });
         setSearchTerm("");
+        setUserLocation(null);
         setCurrentPage(1); // Reset to first page when clearing filters
     };
 
@@ -157,6 +221,7 @@ const Home = () => {
                         connectorTypes={connectorTypes}
                         showSuggestions={showSuggestions}
                         setShowSuggestions={setShowSuggestions}
+                        fetchingLocation={fetchingLocation}
                     />
 
                     <div className="flex items-center justify-between mb-8">
@@ -212,6 +277,7 @@ const Home = () => {
                                 viewMode={viewMode}
                                 handleSaveStation={handleSaveStation}
                                 user={user}
+                                userLocation={userLocation}
                             />
 
                             <div className="flex justify-center pt-8">

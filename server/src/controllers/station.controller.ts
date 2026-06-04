@@ -13,6 +13,9 @@ const getStations = async (req: Request, res: Response, next: NextFunction) => {
       minPower: req.query.minPower,
       maxPower: req.query.maxPower,
       search: req.query.search,
+      latitude: req.query.latitude,
+      longitude: req.query.longitude,
+      maxDistance: req.query.maxDistance,
     };
     const stations = await stationService.getAllStations(filters);
     sendSuccess(res, { stations });
@@ -137,6 +140,15 @@ const estimateChargingPrice = async (req: Request, res: Response, next: NextFunc
   }
 };
 
+const toggleChargeStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const station = await stationService.toggleCharge(req.params.id);
+    sendSuccess(res, { station });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getStations,
   getMyStations,
@@ -148,4 +160,5 @@ export default {
   getSavedStations,
   getStationSuggestions,
   estimateChargingPrice,
+  toggleChargeStatus,
 };

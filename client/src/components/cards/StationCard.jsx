@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { api } from "../../services/api";
 import toast from "react-hot-toast";
 
-const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) => {
+const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved, userLocation }) => {
   const isGrid = viewMode === "grid";
   const [reviews, setReviews] = useState();
 
@@ -19,6 +19,24 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
     };
     fetchReviews();
   }, [station._id]);
+
+  const distance = React.useMemo(() => {
+    if (!userLocation || !station.latitude || !station.longitude) return null;
+    const lat1 = userLocation.latitude;
+    const lon1 = userLocation.longitude;
+    const lat2 = station.latitude;
+    const lon2 = station.longitude;
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const d = R * c; // Distance in km
+    return d.toFixed(1); // 1 decimal place
+  }, [userLocation, station.latitude, station.longitude]);
 
   return (
     <div className={`glass-panel group hover:bg-white/[0.03] transition-all duration-500 border-white/5 hover:border-brand-primary/20 ${isGrid ? "p-5" : "p-4"}`}>
@@ -59,6 +77,12 @@ const StationCard = ({ station, viewMode, handleSaveStation, isStationSaved }) =
               <span className={`w-1 h-1 rounded-full ${station.status === "Active" ? "bg-emerald-500" : "bg-amber-500"}`} />
               {station.status}
             </div>
+            {distance && (
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-[9px] font-bold uppercase tracking-widest text-brand-primary animate-fade-in">
+                <MapPin size={10} className="text-brand-primary" />
+                {distance} km away
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-white/5">

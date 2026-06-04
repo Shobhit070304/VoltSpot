@@ -21,33 +21,6 @@ const seedEVs = async (): Promise<void> => {
   }
 };
 
-const scaleStationPrices = async (): Promise<void> => {
-  try {
-    const stations = await Station.find({});
-    let updatedCount = 0;
-    
-    for (const station of stations) {
-      // Scale prices down to a realistic range of ₹8 to ₹13 per kWh (average commercial rates in India)
-      if (station.price > 13) {
-        // Divide by 1.8 and round to nearest whole number
-        const newPrice = Math.max(8, Math.round(station.price / 1.8));
-        station.price = newPrice;
-        await station.save();
-        updatedCount++;
-      } else if (station.price < 8) {
-        station.price = 8;
-        await station.save();
-        updatedCount++;
-      }
-    }
-    if (updatedCount > 0) {
-      console.log(`Successfully migrated and scaled down prices for ${updatedCount} stations.`);
-    }
-  } catch (error: any) {
-    console.error('Failed to scale station prices:', error.message);
-  }
-};
-
 // Function to connect to MongoDB
 const connectDB = async (): Promise<void> => {
   try {
@@ -62,9 +35,7 @@ const connectDB = async (): Promise<void> => {
 
     // Auto-seed EV models
     await seedEVs();
-    
-    // Scale station prices to realistic Indian EV pricing
-    await scaleStationPrices();
+
   } catch (error: any) {
     console.error('MongoDB connection error:', error.message);
     if (process.env.NODE_ENV === 'development') {

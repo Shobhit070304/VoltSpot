@@ -104,4 +104,7 @@ router.post(
   stationController.estimateChargingPrice,
 );
 
+// Toggle charging status on a station (simulated session)
+router.post('/:id/charge', authUser, stationController.toggleChargeStatus);
+
 export default router;

@@ -29,6 +29,37 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  // WebSocket real-time updates listener
+  useEffect(() => {
+    const wsUrl = (import.meta.env.VITE_BASE_URL || "http://localhost:5000/api")
+      .replace("http://", "ws://")
+      .replace("https://", "wss://")
+      .replace("/api", "");
+
+    const socket = new WebSocket(wsUrl);
+
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "station-updated") {
+          const updated = message.data;
+          setStations((prev) => {
+            // Only update if it already exists in our list
+            if (prev.some((s) => s._id === updated._id)) {
+              return prev.map((s) => (s._id === updated._id ? { ...s, ...updated } : s));
+            }
+            return prev;
+          });
+        } else if (message.type === "station-deleted") {
+          const deletedId = message.data._id;
+          setStations((prev) => prev.filter((s) => s._id !== deletedId));
+        }
+      } catch (err) {}
+    };
+
+    return () => socket.close();
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     status: "",
@@ -75,6 +106,28 @@ const Dashboard = () => {
         ? stations.reduce((sum, station) => sum + (station.averageRating || 0), 0) / stations.length
         : 0,
     };
+  }, [stations]);
+
+  const statusCounts = useMemo(() => {
+    const counts = { Active: 0, Maintenance: 0, Inactive: 0 };
+    stations.forEach((s) => {
+      if (counts[s.status] !== undefined) {
+        counts[s.status]++;
+      }
+    });
+    return counts;
+  }, [stations]);
+
+  const connectorCounts = useMemo(() => {
+    const counts = {};
+    stations.forEach((s) => {
+      if (s.connectorType) {
+        counts[s.connectorType] = (counts[s.connectorType] || 0) + 1;
+      }
+    });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4); // Top 4
   }, [stations]);
 
   const paginatedData = useMemo(() => {
@@ -240,6 +293,196 @@ const Dashboard = () => {
           />
         </div>
 
+        {/* Visual Analytics Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 animate-fade-in">
+          {/* Status Distribution Donut Chart */}
+          <div className="glass-panel p-6 border-white/5 flex flex-col justify-between">
+            <div>
+              <div className="inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-bold text-slate-500 mb-3 uppercase tracking-widest">
+                Real-Time
+              </div>
+              <h3 className="text-sm font-bold text-white mb-6 tracking-tight uppercase">
+                Status Distribution
+              </h3>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <div className="relative w-36 h-36 flex-shrink-0">
+                <svg viewBox="0 0 160 160" width="100%" height="100%">
+                  <circle cx="80" cy="80" r="50" fill="transparent" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="12" />
+                  {stats.totalStations > 0 ? (
+                    <>
+                      {/* Active segment (emerald-500) */}
+                      {((statusCounts.Active / stats.totalStations) * 314.16) > 0 && (
+                        <circle
+                          cx="80"
+                          cy="80"
+                          r="50"
+                          fill="transparent"
+                          stroke="#10b981"
+                          strokeWidth="12"
+                          strokeDasharray={`${(statusCounts.Active / stats.totalStations) * 314.16} 314.16`}
+                          strokeDashoffset={0}
+                          strokeLinecap="round"
+                          transform="rotate(-90 80 80)"
+                          className="transition-all duration-1000 ease-out"
+                        />
+                      )}
+                      {/* Maintenance segment (amber-500) */}
+                      {((statusCounts.Maintenance / stats.totalStations) * 314.16) > 0 && (
+                        <circle
+                          cx="80"
+                          cy="80"
+                          r="50"
+                          fill="transparent"
+                          stroke="#f59e0b"
+                          strokeWidth="12"
+                          strokeDasharray={`${(statusCounts.Maintenance / stats.totalStations) * 314.16} 314.16`}
+                          strokeDashoffset={-((statusCounts.Active / stats.totalStations) * 314.16)}
+                          strokeLinecap="round"
+                          transform="rotate(-90 80 80)"
+                          className="transition-all duration-1000 ease-out"
+                        />
+                      )}
+                      {/* Inactive segment (red-500) */}
+                      {((statusCounts.Inactive / stats.totalStations) * 314.16) > 0 && (
+                        <circle
+                          cx="80"
+                          cy="80"
+                          r="50"
+                          fill="transparent"
+                          stroke="#ef4444"
+                          strokeWidth="12"
+                          strokeDasharray={`${(statusCounts.Inactive / stats.totalStations) * 314.16} 314.16`}
+                          strokeDashoffset={-(((statusCounts.Active + statusCounts.Maintenance) / stats.totalStations) * 314.16)}
+                          strokeLinecap="round"
+                          transform="rotate(-90 80 80)"
+                          className="transition-all duration-1000 ease-out"
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <circle cx="80" cy="80" r="50" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="12" />
+                  )}
+                  {/* Inner text */}
+                  <text x="80" y="76" textAnchor="middle" fill="#ffffff" className="text-xl font-bold font-sans">
+                    {stats.totalStations}
+                  </text>
+                  <text x="80" y="94" textAnchor="middle" fill="#64748b" className="text-[9px] font-bold uppercase tracking-widest font-sans">
+                    Stations
+                  </text>
+                </svg>
+              </div>
+
+              <div className="flex-1 grid grid-cols-1 gap-2.5 w-full">
+                <LegendItem
+                  color="bg-emerald-500"
+                  label="Active"
+                  count={statusCounts.Active}
+                  pct={stats.totalStations > 0 ? statusCounts.Active / stats.totalStations : 0}
+                />
+                <LegendItem
+                  color="bg-amber-500"
+                  label="Maintenance"
+                  count={statusCounts.Maintenance}
+                  pct={stats.totalStations > 0 ? statusCounts.Maintenance / stats.totalStations : 0}
+                />
+                <LegendItem
+                  color="bg-red-500"
+                  label="Inactive"
+                  count={statusCounts.Inactive}
+                  pct={stats.totalStations > 0 ? statusCounts.Inactive / stats.totalStations : 0}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Connector Popularity Bar Chart */}
+          <div className="glass-panel p-6 border-white/5 flex flex-col justify-between">
+            <div>
+              <div className="inline-flex items-center px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-bold text-slate-500 mb-3 uppercase tracking-widest">
+                Capabilities
+              </div>
+              <h3 className="text-sm font-bold text-white mb-6 tracking-tight uppercase">
+                Connector Type Breakdown
+              </h3>
+            </div>
+
+            <div className="w-full">
+              {connectorCounts.length > 0 ? (
+                <svg viewBox="0 0 350 160" width="100%" height="100%">
+                  <defs>
+                    <linearGradient id="barGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="100%" stopColor="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                  {connectorCounts.map(([type, count], idx) => {
+                    const y = idx * 36 + 15;
+                    const maxCount = Math.max(...connectorCounts.map(c => c[1]), 1);
+                    const barWidth = (count / maxCount) * 200;
+                    return (
+                      <g key={type}>
+                        {/* Label */}
+                        <text
+                          x="10"
+                          y={y + 6}
+                          fill="#94a3b8"
+                          fontSize="10"
+                          fontWeight="bold"
+                          textAnchor="start"
+                          dominantBaseline="middle"
+                          className="font-sans uppercase tracking-wider"
+                        >
+                          {type}
+                        </text>
+                        {/* Track */}
+                        <rect
+                          x="90"
+                          y={y}
+                          width="200"
+                          height="12"
+                          rx="6"
+                          fill="rgba(255,255,255,0.02)"
+                          stroke="rgba(255,255,255,0.05)"
+                          strokeWidth="1"
+                        />
+                        {/* Fill */}
+                        <rect
+                          x="90"
+                          y={y}
+                          width={barWidth}
+                          height="12"
+                          rx="6"
+                          fill="url(#barGradient)"
+                          className="transition-all duration-1000 ease-out"
+                        />
+                        {/* Count */}
+                        <text
+                          x="305"
+                          y={y + 6}
+                          fill="#ffffff"
+                          fontSize="11"
+                          fontWeight="bold"
+                          textAnchor="start"
+                          dominantBaseline="middle"
+                          className="font-sans"
+                        >
+                          {count}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </svg>
+              ) : (
+                <div className="h-40 flex items-center justify-center text-xs text-slate-500 font-medium">
+                  No connector data available
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
           {/* Main Content Area */}
           <div className="lg:col-span-8 space-y-8">
@@ -337,6 +580,19 @@ const StatCard = ({ icon, value, label, description }) => (
       <p className="text-[10px] text-slate-600 leading-relaxed font-medium">
         {description}
       </p>
+    </div>
+  </div>
+);
+
+const LegendItem = ({ color, label, count, pct }) => (
+  <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300">
+    <div className="flex items-center gap-3">
+      <div className={`w-2.5 h-2.5 rounded-full ${color}`} />
+      <span className="text-[13px] font-medium text-slate-400">{label}</span>
+    </div>
+    <div className="flex items-center gap-3">
+      <span className="text-[13px] font-bold text-white">{count}</span>
+      <span className="text-[10px] font-bold text-slate-500">({(pct * 100).toFixed(0)}%)</span>
     </div>
   </div>
 );

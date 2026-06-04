@@ -1,6 +1,6 @@
 import StationCard from "../../components/cards/StationCard";
 
-const StationsList = ({ stations, viewMode, handleSaveStation, user }) => (
+const StationsList = ({ stations, viewMode, handleSaveStation, user, userLocation }) => (
   <div
     className={
       viewMode === "grid"
@@ -15,6 +15,7 @@ const StationsList = ({ stations, viewMode, handleSaveStation, user }) => (
         viewMode={viewMode}
         handleSaveStation={handleSaveStation}
         isStationSaved={user?.savedStations?.includes(station._id)}
+        userLocation={userLocation}
       />
     ))}
   </div>

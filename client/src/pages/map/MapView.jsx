@@ -14,6 +14,35 @@ const MapView = ({ station, embedded = false }) => {
   const mapDivRef = useRef(null);    // DOM element ref (replaces id="map" lookup)
   const markersRef = useRef([]);
 
+  // WebSocket real-time updates listener
+  useEffect(() => {
+    const wsUrl = (import.meta.env.VITE_BASE_URL || "http://localhost:5000/api")
+      .replace("http://", "ws://")
+      .replace("https://", "wss://")
+      .replace("/api", "");
+
+    const socket = new WebSocket(wsUrl);
+
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "station-updated") {
+          const updated = message.data;
+          setStations((prev) =>
+            prev.map((s) => (s._id === updated._id ? { ...s, ...updated } : s))
+          );
+        } else if (message.type === "station-deleted") {
+          const deletedId = message.data._id;
+          setStations((prev) => prev.filter((s) => s._id !== deletedId));
+        }
+      } catch (err) {
+        console.error("WS error parsing:", err);
+      }
+    };
+
+    return () => socket.close();
+  }, []);
+
   useEffect(() => {
     return () => {
       if (mapRef.current) {

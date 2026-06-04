@@ -42,6 +42,49 @@ function Station() {
     window.scrollTo(0, 0);
   }, []);
 
+  // WebSocket real-time updates listener for this specific station
+  useEffect(() => {
+    const wsUrl = (import.meta.env.VITE_BASE_URL || "http://localhost:5000/api")
+      .replace("http://", "ws://")
+      .replace("https://", "wss://")
+      .replace("/api", "");
+
+    const socket = new WebSocket(wsUrl);
+
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "station-updated" && message.data._id === id) {
+          setStation(message.data);
+        }
+      } catch (err) {}
+    };
+
+    return () => socket.close();
+  }, [id]);
+
+  const handleToggleCharge = async () => {
+    if (!user) {
+      toast.error("Please login to start charging");
+      return;
+    }
+
+    try {
+      const res = await api.post(`/stations/${id}/charge`);
+      if (res.status === 200) {
+        const updatedStation = res.data.data.station;
+        setStation(updatedStation);
+        toast.success(
+          updatedStation.status === "Inactive"
+            ? "Charging session started!"
+            : "Charging session stopped!"
+        );
+      }
+    } catch (error) {
+      toast.error("Failed to update charging session");
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -245,11 +288,15 @@ function Station() {
               <h2 className="text-[9px] font-bold text-slate-500 mb-5 uppercase tracking-widest">Quick Actions</h2>
               <div className="space-y-3">
                 <button
-                  disabled={station.status !== "Active"}
-                  className="btn-primary w-full flex items-center justify-center gap-2 py-3 !rounded-xl font-bold text-[11px] uppercase tracking-widest shadow-2xl shadow-brand-primary/20"
+                  onClick={handleToggleCharge}
+                  className={`w-full flex items-center justify-center gap-2 py-3 !rounded-xl font-bold text-[11px] uppercase tracking-widest shadow-2xl transition-all ${
+                    station.status === "Active"
+                      ? "btn-primary shadow-brand-primary/20"
+                      : "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20"
+                  }`}
                 >
                   <Zap size={16} />
-                  Start Charging
+                  {station.status === "Active" ? "Start Charging" : "Stop Charging"}
                 </button>
                 <button
                   onClick={() => {

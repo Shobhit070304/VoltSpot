@@ -3,6 +3,7 @@ import userRepository from '../repositories/user.repository.js';
 import evRepository from '../repositories/car.repository.js';
 import { redis } from '../config/redisConnection.js';
 import ApiError from '../config/ApiError.js';
+import { broadcast } from '../config/websocket.js';
 import { IStation } from '../models/Station.js';
 import { ERROR_CODES } from '../utils/errorCodes.js';
 
@@ -109,6 +110,9 @@ const update = async ({ stationId, body, userId }: { stationId: string, body: an
     // Ignore cache error
   }
 
+  // Broadcast the update in real-time
+  broadcast('station-updated', station);
+
   return station;
 };
 
@@ -123,6 +127,9 @@ const remove = async (stationId: string, userId: string): Promise<boolean> => {
   } catch (error) {
     // Ignore cache error
   }
+
+  // Broadcast deletion in real-time
+  broadcast('station-deleted', { _id: stationId });
 
   return true;
 };
@@ -198,6 +205,25 @@ const estimateCharging = async (data: EstimateChargingParams) => {
   };
 };
 
+const toggleCharge = async (stationId: string): Promise<IStation> => {
+  const station = await stationRepository.findById(stationId);
+  if (!station) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
+
+  // Toggle status between 'Active' and 'Inactive' to simulate charging
+  station.status = station.status === 'Active' ? 'Inactive' : 'Active';
+  await station.save();
+
+  try {
+    await redis.incr('stations:version');
+    await redis.del(`station:${stationId}`);
+  } catch (err) {}
+
+  // Broadcast real-time status change to all connected WebSockets
+  broadcast('station-updated', station);
+
+  return station;
+};
+
 export default {
   getAllStations,
   getMyStations,
@@ -209,4 +235,5 @@ export default {
   getSaved,
   suggestions,
   estimateCharging,
+  toggleCharge,
 };
