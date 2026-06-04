@@ -52,9 +52,11 @@ const login = async ({ email, password }: LoginParams): Promise<{ token: string;
   }
 
   // Generate JWT
-  const token = jwt.sign({ userEmail: user.email }, process.env.JWT_SECRET, {
-    expiresIn: '1d',
-  });
+  const token = jwt.sign(
+    { userId: String(user._id), userEmail: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
 
   // Never expose password
   // @ts-ignore

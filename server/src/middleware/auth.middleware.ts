@@ -29,7 +29,12 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(500).json({ success: false, code: ERROR_CODES.INTERNAL_ERROR, message: 'JWT secret not configured' });
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as any;
-    if (decoded.userEmail) {
+    if (decoded.userId && decoded.userEmail) {
+      (req as AuthRequest).user = {
+        userEmail: decoded.userEmail,
+        userId: decoded.userId,
+      };
+    } else if (decoded.userEmail) {
       const user = await User.findOne({ email: decoded.userEmail });
       if (!user) {
         return res.status(401).json({ success: false, code: ERROR_CODES.UNAUTHORIZED, message: 'User not found' });

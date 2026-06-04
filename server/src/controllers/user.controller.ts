@@ -19,7 +19,7 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
     
     // Generate access token for the newly registered user
     const accessToken = jwt.sign(
-      { userEmail: user.email },
+      { userId: String(user._id), userEmail: user.email },
       process.env.JWT_SECRET!,
       { expiresIn: '1d' }
     );
@@ -94,7 +94,7 @@ const authUser = async (req: Request, res: Response) => {
   }
 
   // @ts-ignore
-  const token = jwt.sign({ userEmail: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  const token = jwt.sign({ userId: String(newUser._id), userEmail: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
   res.cookie('token', token, {
     httpOnly: true,

@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import React, { Suspense, lazy, useEffect } from "react";
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthContext";
 
@@ -37,6 +37,20 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   const path = useLocation().pathname.split("/")[1];
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      logout();
+      navigate("/login", { replace: true });
+    };
+
+    window.addEventListener("auth-expired", handleAuthExpired);
+    return () => {
+      window.removeEventListener("auth-expired", handleAuthExpired);
+    };
+  }, [navigate, logout]);
 
   return (
     <div className="flex flex-col min-h-screen bg-midnight">

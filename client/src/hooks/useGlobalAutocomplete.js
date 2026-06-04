@@ -5,6 +5,8 @@ function useGlobalAutocomplete(query) {
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
+    let active = true;
+
     if (!query) {
       setSuggestions([]);
       return;
@@ -13,13 +15,20 @@ function useGlobalAutocomplete(query) {
     const delayDebounce = setTimeout(async () => {
       try {
         const res = await api.get(`/stations/search?query=${query}`);
-        setSuggestions(res.data.data);
+        if (active) {
+          setSuggestions(res.data.data || []);
+        }
       } catch {
-        setSuggestions([]);
+        if (active) {
+          setSuggestions([]);
+        }
       }
     }, 300);
 
-    return () => clearTimeout(delayDebounce);
+    return () => {
+      active = false;
+      clearTimeout(delayDebounce);
+    };
   }, [query]);
 
   return suggestions;

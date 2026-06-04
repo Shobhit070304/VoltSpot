@@ -51,7 +51,7 @@ api.interceptors.response.use(
       if (status === 401 || status === 403) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        window.location.href = "/login";
+        window.dispatchEvent(new Event("auth-expired"));
       }
     } else if (error?.code === "ECONNABORTED") {
       toast.error("Request timeout. Please try again.");

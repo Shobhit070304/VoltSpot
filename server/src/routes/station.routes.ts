@@ -92,7 +92,13 @@ router.post(
       .withMessage('Charge from must be between 0 and 100'),
     body('chargeTo')
       .isFloat({ min: 0, max: 100 })
-      .withMessage('Charge to must be between 0 and 100'),
+      .withMessage('Charge to must be between 0 and 100')
+      .custom((value, { req }) => {
+        if (parseFloat(value) <= parseFloat(req.body.chargeFrom)) {
+          throw new Error('Target charge must be greater than current charge');
+        }
+        return true;
+      }),
   ],
   authUser,
   stationController.estimateChargingPrice,

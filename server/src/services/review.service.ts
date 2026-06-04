@@ -19,16 +19,19 @@ const create = async ({ stationId, userId, rating, comment }: CreateReviewParams
     comment,
   } as any);
 
-  // Get all reviews for average calculation
-  const reviews = await reviewRepository.findByStation(stationId);
-
-  const avg = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : rating;
+  // Calculate average using database aggregation
+  const avg = await reviewRepository.calculateAverageRating(stationId);
 
   // Update station’s avg rating
   await stationRepository.updateAverageRating(stationId, parseFloat(avg.toFixed(1)));
 
   // Invalidate cache
-  await redis.del(`station:${stationId}`);
+  try {
+    await redis.del(`station:${stationId}`);
+    await redis.incr('stations:version');
+  } catch (error) {
+    // Ignore cache error
+  }
 
   return review;
 };

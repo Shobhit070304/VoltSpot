@@ -6,40 +6,78 @@ import ApiError from '../config/ApiError.js';
 import { IStation } from '../models/Station.js';
 import { ERROR_CODES } from '../utils/errorCodes.js';
 
-const getAllStations = async (filters: any = {}): Promise<IStation[]> => {
-  // Create a unique cache key based on filters
-  const filterKey = JSON.stringify(filters);
-  const cacheKey = `stations:${filterKey}`;
+const getStationsVersion = async (): Promise<number> => {
+  try {
+    let version = await redis.get<number>('stations:version');
+    if (version === null || version === undefined) {
+      version = 1;
+      await redis.set('stations:version', version);
+    }
+    return Number(version);
+  } catch (error) {
+    // Graceful fallback to version 1 if Redis fails
+    return 1;
+  }
+};
 
-  const cached = await redis.get(cacheKey);
-  if (cached) return cached as IStation[];
+const getAllStations = async (filters: any = {}): Promise<IStation[]> => {
+  const version = await getStationsVersion();
+  const filterKey = JSON.stringify(filters);
+  const cacheKey = `stations:v${version}:${filterKey}`;
+
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as IStation[];
+  } catch (error) {
+    // Ignore cache error, fallback to DB
+  }
 
   const stations = await stationRepository.findAll(filters);
 
-  // Cache for 1 hour
-  await redis.set(cacheKey, stations, { ex: 3600 });
+  try {
+    // Cache for 1 hour
+    await redis.set(cacheKey, stations, { ex: 3600 });
+  } catch (error) {
+    // Ignore cache error
+  }
   return stations;
 };
 
 const getMyStations = async (userId: string): Promise<IStation[]> => {
   const cacheKey = `myStations:${userId}`;
-  const cached = await redis.get(cacheKey);
-  if (cached) return cached as IStation[];
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as IStation[];
+  } catch (error) {
+    // Ignore cache error
+  }
 
   const stations = await stationRepository.findByUser(userId);
-  await redis.set(cacheKey, stations, { ex: 3600 });
+  try {
+    await redis.set(cacheKey, stations, { ex: 3600 });
+  } catch (error) {
+    // Ignore cache error
+  }
   return stations;
 };
 
 const getStationById = async (id: string): Promise<IStation> => {
   const cacheKey = `station:${id}`;
-  const cached = await redis.get(cacheKey);
-  if (cached) return cached as IStation;
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as IStation;
+  } catch (error) {
+    // Ignore cache error
+  }
 
   const station = await stationRepository.findById(id);
   if (!station) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
 
-  await redis.set(cacheKey, station, { ex: 3600 });
+  try {
+    await redis.set(cacheKey, station, { ex: 3600 });
+  } catch (error) {
+    // Ignore cache error
+  }
   return station;
 };
 
@@ -49,8 +87,12 @@ const create = async ({ body, userId }: { body: any, userId: string }): Promise<
     createdBy: userId,
   });
 
-  await redis.del('stations');
-  await redis.del(`myStations:${userId}`);
+  try {
+    await redis.incr('stations:version');
+    await redis.del(`myStations:${userId}`);
+  } catch (error) {
+    // Ignore cache error
+  }
 
   return station;
 };
@@ -59,9 +101,13 @@ const update = async ({ stationId, body, userId }: { stationId: string, body: an
   const station = await stationRepository.update(stationId, userId, body);
   if (!station) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
 
-  await redis.del('stations');
-  await redis.del(`myStations:${userId}`);
-  await redis.del(`station:${stationId}`);
+  try {
+    await redis.incr('stations:version');
+    await redis.del(`myStations:${userId}`);
+    await redis.del(`station:${stationId}`);
+  } catch (error) {
+    // Ignore cache error
+  }
 
   return station;
 };
@@ -70,9 +116,13 @@ const remove = async (stationId: string, userId: string): Promise<boolean> => {
   const deleted = await stationRepository.delete(stationId, userId);
   if (!deleted) throw new ApiError('Station not found', 404, ERROR_CODES.NOT_FOUND);
 
-  await redis.del('stations');
-  await redis.del(`myStations:${userId}`);
-  await redis.del(`station:${stationId}`);
+  try {
+    await redis.incr('stations:version');
+    await redis.del(`myStations:${userId}`);
+    await redis.del(`station:${stationId}`);
+  } catch (error) {
+    // Ignore cache error
+  }
 
   return true;
 };

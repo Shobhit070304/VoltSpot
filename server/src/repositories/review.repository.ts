@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Review, { IReview } from '../models/Review.js';
 
 const create = (data: IReview): Promise<IReview> => Review.create(data);
@@ -12,4 +13,17 @@ const findByStationPopulated = (stationId: string): Promise<IReview[]> => {
     .sort({ createdAt: -1 });
 };
 
-export default { create, findByStation, findByStationPopulated };
+const calculateAverageRating = async (stationId: string): Promise<number> => {
+  const stats = await Review.aggregate([
+    { $match: { station: new mongoose.Types.ObjectId(stationId) } },
+    {
+      $group: {
+        _id: '$station',
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+  return stats.length > 0 ? stats[0].avgRating : 0;
+};
+
+export default { create, findByStation, findByStationPopulated, calculateAverageRating };

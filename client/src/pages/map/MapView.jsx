@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { api } from "../../services/api";
 import toast from "react-hot-toast";
 import { AlertTriangle, MapPin, ChevronLeft, LocateFixed, ZoomIn, ZoomOut, Zap, Sparkles } from "lucide-react";
@@ -8,37 +10,11 @@ const MapView = ({ station, embedded = false }) => {
   const [stations, setStations] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [mapLoaded, setMapLoaded] = useState(false);
   const mapRef = useRef(null);       // Leaflet map instance
   const mapDivRef = useRef(null);    // DOM element ref (replaces id="map" lookup)
   const markersRef = useRef([]);
 
   useEffect(() => {
-    const loadLeaflet = () => {
-      if (window.L) {
-        setMapLoaded(true);
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-      script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
-      script.crossOrigin = "";
-
-      script.onload = () => {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-        link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
-        link.crossOrigin = "";
-        link.onload = () => setMapLoaded(true);
-        document.head.appendChild(link);
-      };
-      document.head.appendChild(script);
-    };
-
-    loadLeaflet();
-
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -80,9 +56,8 @@ const MapView = ({ station, embedded = false }) => {
   }, [station]);
 
   useEffect(() => {
-    if (!mapLoaded || stations.length === 0 || !mapDivRef.current) return;
+    if (stations.length === 0 || !mapDivRef.current) return;
 
-    const L = window.L;
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
@@ -160,7 +135,7 @@ const MapView = ({ station, embedded = false }) => {
       const bounds = L.latLngBounds(stations.map((s) => [s.latitude, s.longitude]));
       mapRef.current.fitBounds(bounds, { padding: [50, 50] });
     }
-  }, [mapLoaded, stations, station]);
+  }, [stations, station]);
 
   const zoomIn = () => mapRef.current?.zoomIn();
   const zoomOut = () => mapRef.current?.zoomOut();
