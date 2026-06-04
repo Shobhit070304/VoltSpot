@@ -6,6 +6,8 @@ import ApiError from '../config/ApiError.js';
 import { broadcast } from '../config/websocket.js';
 import { IStation } from '../models/Station.js';
 import { ERROR_CODES } from '../utils/errorCodes.js';
+import Station from '../models/Station.js';
+import Review from '../models/Review.js';
 
 const getStationsVersion = async (): Promise<number> => {
   try {
@@ -224,6 +226,47 @@ const toggleCharge = async (stationId: string): Promise<IStation> => {
   return station;
 };
 
+const getLandingStats = async (): Promise<any> => {
+  const cacheKey = 'landing:stats';
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached;
+  } catch (error) {}
+
+  const chargingPoints = await Station.countDocuments();
+  const activeStations = await Station.countDocuments({ status: 'Active' });
+  
+  const locations = await Station.find({}, { location: 1 }).lean();
+  const cities = new Set();
+  locations.forEach(loc => {
+    if (!loc.location) return;
+    const parts = loc.location.split(',');
+    if (parts.length >= 3) {
+      cities.add(parts[parts.length - 3].trim().toLowerCase());
+    } else if (parts.length === 2) {
+      cities.add(parts[0].trim().toLowerCase());
+    } else {
+      cities.add(loc.location.trim().toLowerCase());
+    }
+  });
+  const citiesCovered = cities.size || 1;
+
+  const userReviews = await Review.countDocuments();
+
+  const stats = {
+    chargingPoints,
+    activeStations,
+    citiesCovered,
+    userReviews,
+  };
+
+  try {
+    await redis.set(cacheKey, stats, { ex: 600 }); // cache for 10 minutes
+  } catch (error) {}
+
+  return stats;
+};
+
 export default {
   getAllStations,
   getMyStations,
@@ -236,4 +279,5 @@ export default {
   suggestions,
   estimateCharging,
   toggleCharge,
+  getLandingStats,
 };

@@ -17,6 +17,9 @@ router.get('/saved-stations', authUser, stationController.getSavedStations);
 // Get suggested stations
 router.get('/search', stationController.getStationSuggestions);
 
+// Get landing page stats
+router.get('/landing-stats', stationController.getLandingStats);
+
 // Get station by ID
 router.get('/:id', stationController.getStationById);
 

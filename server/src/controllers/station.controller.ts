@@ -149,6 +149,15 @@ const toggleChargeStatus = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+const getLandingStats = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const stats = await stationService.getLandingStats();
+    sendSuccess(res, stats);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getStations,
   getMyStations,
@@ -161,4 +170,5 @@ export default {
   getStationSuggestions,
   estimateChargingPrice,
   toggleChargeStatus,
+  getLandingStats,
 };
