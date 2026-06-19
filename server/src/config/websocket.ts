@@ -1,4 +1,4 @@
-import { WebSocketServer, WebSocket } from 'ws';
+import { WebSocketServer, WebSocket as wsWebSocket } from 'ws';
 import { Server } from 'http';
 import { pubClient, subClient, STATION_CHANNEL } from './redisPubSub.js';
 
@@ -7,7 +7,7 @@ const PING_INTERVAL_MS = 30_000; // Ping every 30 seconds
 const PONG_TIMEOUT_MS = 10_000;  // If no pong within 10s after ping → terminate
 
 // Extend the ws type to track liveness
-interface AliveWebSocket extends WebSocket {
+interface AliveWebSocket extends wsWebSocket {
   isAlive: boolean;
   pongTimeout?: ReturnType<typeof setTimeout>;
 }
@@ -53,7 +53,7 @@ export const initWebSocket = (server: Server): WebSocketServer => {
   // Clean up the interval when the server closes to avoid memory leaks
   wss.on('close', () => clearInterval(heartbeatInterval));
 
-  wss.on('connection', (rawWs: WebSocket) => {
+  wss.on('connection', (rawWs: wsWebSocket) => {
     const ws = rawWs as AliveWebSocket;
     ws.isAlive = true; // Mark as alive on fresh connection
 
@@ -131,7 +131,7 @@ const broadcastLocally = (type: string, data: any): void => {
   const payload = JSON.stringify({ type, data });
 
   wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
+    if (client.readyState === wsWebSocket.OPEN) {
       client.send(payload);
     }
   });
