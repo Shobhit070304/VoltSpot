@@ -3,18 +3,20 @@ import { authUser } from '../middleware/auth.middleware.js';
 import { body } from 'express-validator';
 
 import reviewRoutes from '../controllers/review.controller.js';
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 // Post review for a station
 router.post(
   '/',
   [
     body('rating')
+      .toInt()
       .isInt({ min: 1, max: 5 })
       .withMessage('Rating must be an integer between 1 and 5'),
     body('comment')
       .optional()
       .isString()
+      .trim()
       .withMessage('Comment must be a string'),
   ],
   authUser,

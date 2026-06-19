@@ -7,7 +7,7 @@ interface CreateReviewParams {
   stationId: string,
   userId: string,
   rating: number,
-  comment: string
+  comment?: string
 }
 
 const create = async ({ stationId, userId, rating, comment }: CreateReviewParams): Promise<IReview> => {

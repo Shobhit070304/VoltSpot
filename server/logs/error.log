@@ -15,3 +15,19 @@
 {"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:33:59.589Z"}
 {"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:35:21.702Z"}
 {"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-04T06:35:25.182Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:16:13.753Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:16:17.094Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:16:28.777Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:16:30.722Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:19:27.468Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:19:28.910Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:19:32.889Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:19:37.655Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:21:52.402Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:21:53.759Z"}
+{"level":"error","message":"Invalid credentials","method":"POST","path":"/api/users/login","statusCode":401,"timestamp":"2026-06-19T15:21:55.177Z"}
+{"details":"Path `station` is required.","level":"error","message":"Validation Error","method":"POST","path":"/api/stations/6a2121cc1c916f1a9d472c08/reviews","timestamp":"2026-06-19T15:24:01.119Z"}
+{"details":"Path `station` is required.","level":"error","message":"Validation Error","method":"POST","path":"/api/stations/6a2121cc1c916f1a9d472c08/reviews","timestamp":"2026-06-19T15:24:06.295Z"}
+{"details":"Path `station` is required.","level":"error","message":"Validation Error","method":"POST","path":"/api/stations/6a2121cc1c916f1a9d472c08/reviews","timestamp":"2026-06-19T15:24:15.009Z"}
+{"details":"Path `station` is required.","level":"error","message":"Validation Error","method":"POST","path":"/api/stations/68da6ad80398eb5bea9d8c6a/reviews","timestamp":"2026-06-19T15:30:55.204Z"}
+{"details":"Path `station` is required.","level":"error","message":"Validation Error","method":"POST","path":"/api/stations/68da6ad80398eb5bea9d8c6a/reviews","timestamp":"2026-06-19T15:30:58.209Z"}

@@ -112,8 +112,8 @@ const update = async ({ stationId, body, userId }: { stationId: string, body: an
     // Ignore cache error
   }
 
-  // Broadcast the update in real-time
-  broadcast('station-updated', station);
+  // Broadcast the update in real-time via Redis Pub/Sub → all server instances
+  await broadcast('station-updated', station);
 
   return station;
 };
@@ -130,8 +130,8 @@ const remove = async (stationId: string, userId: string): Promise<boolean> => {
     // Ignore cache error
   }
 
-  // Broadcast deletion in real-time
-  broadcast('station-deleted', { _id: stationId });
+  // Broadcast deletion in real-time via Redis Pub/Sub → all server instances
+  await broadcast('station-deleted', { _id: stationId });
 
   return true;
 };
@@ -220,8 +220,8 @@ const toggleCharge = async (stationId: string): Promise<IStation> => {
     await redis.del(`station:${stationId}`);
   } catch (err) {}
 
-  // Broadcast real-time status change to all connected WebSockets
-  broadcast('station-updated', station);
+  // Broadcast real-time status change via Redis Pub/Sub → all server instances
+  await broadcast('station-updated', station);
 
   return station;
 };

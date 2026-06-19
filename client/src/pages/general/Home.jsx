@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
+import useWebSocket from "../../hooks/useWebSocket";
 import { api } from "../../services/api";
 import toast from "react-hot-toast";
 import Header from "../../components/Home/Header";
@@ -50,32 +51,20 @@ const Home = () => {
         }
     }, [filters.sortByDistance, userLocation]);
 
-    // WebSocket real-time updates listener
-    useEffect(() => {
-        const wsUrl = (import.meta.env.VITE_BASE_URL || "http://localhost:5000/api")
-            .replace("http://", "ws://")
-            .replace("https://", "wss://")
-            .replace("/api", "");
-
-        const socket = new WebSocket(wsUrl);
-
-        socket.onmessage = (event) => {
-            try {
-                const message = JSON.parse(event.data);
-                if (message.type === "station-updated") {
-                    const updated = message.data;
-                    setStations((prev) =>
-                        prev.map((s) => (s._id === updated._id ? { ...s, ...updated } : s))
-                    );
-                } else if (message.type === "station-deleted") {
-                    const deletedId = message.data._id;
-                    setStations((prev) => prev.filter((s) => s._id !== deletedId));
-                }
-            } catch (err) {}
-        };
-
-        return () => socket.close();
+    // WebSocket real-time updates — handled by useWebSocket hook
+    const handleWsMessage = useCallback((message) => {
+        if (message.type === "station-updated") {
+            const updated = message.data;
+            setStations((prev) =>
+                prev.map((s) => (s._id === updated._id ? { ...s, ...updated } : s))
+            );
+        } else if (message.type === "station-deleted") {
+            const deletedId = message.data._id;
+            setStations((prev) => prev.filter((s) => s._id !== deletedId));
+        }
     }, []);
+
+    useWebSocket(handleWsMessage);
 
     const { user, setUser } = useAuth();
 

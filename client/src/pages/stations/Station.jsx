@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Zap,
   MapPin,
@@ -23,6 +23,7 @@ import ReviewForm from "../../components/forms/ReviewForm";
 import { useAuth } from "../../context/AuthContext";
 import ReportForm from "../../components/forms/ReportForm";
 import useRecentlyViewed from "../../hooks/useRecentlyViewed";
+import useWebSocket from "../../hooks/useWebSocket";
 import AmenitiesCard from "../../components/cards/AmenitiesCard";
 import CostEstimator from "../../components/cards/CostEstimator";
 import LoadingSpinner from "../../components/fallback/LoadingSpinner";
@@ -42,26 +43,14 @@ function Station() {
     window.scrollTo(0, 0);
   }, []);
 
-  // WebSocket real-time updates listener for this specific station
-  useEffect(() => {
-    const wsUrl = (import.meta.env.VITE_BASE_URL || "http://localhost:5000/api")
-      .replace("http://", "ws://")
-      .replace("https://", "wss://")
-      .replace("/api", "");
-
-    const socket = new WebSocket(wsUrl);
-
-    socket.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === "station-updated" && message.data._id === id) {
-          setStation(message.data);
-        }
-      } catch (err) {}
-    };
-
-    return () => socket.close();
+  // WebSocket real-time updates for this specific station — via useWebSocket hook
+  const handleWsMessage = useCallback((message) => {
+    if (message.type === "station-updated" && message.data._id === id) {
+      setStation(message.data);
+    }
   }, [id]);
+
+  useWebSocket(handleWsMessage);
 
   const handleToggleCharge = async () => {
     if (!user) {
