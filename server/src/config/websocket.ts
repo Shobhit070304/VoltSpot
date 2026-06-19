@@ -6,11 +6,12 @@ import { pubClient, subClient, STATION_CHANNEL } from './redisPubSub.js';
 const PING_INTERVAL_MS = 30_000; // Ping every 30 seconds
 const PONG_TIMEOUT_MS = 10_000;  // If no pong within 10s after ping → terminate
 
-// Extend the ws type to track liveness
-interface AliveWebSocket extends wsWebSocket {
+// Extend the ws type to track liveness using a type intersection
+// (avoids conflict with global DOM WebSocket interface)
+type AliveWebSocket = wsWebSocket & {
   isAlive: boolean;
   pongTimeout?: ReturnType<typeof setTimeout>;
-}
+};
 
 let wss: WebSocketServer | null = null;
 
